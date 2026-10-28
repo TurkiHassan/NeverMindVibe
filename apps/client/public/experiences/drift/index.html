@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Drift · Go somewhere that changes you (sample brand)</title>
+<meta name="description" content="A scroll-driven look at Drift, a sample slow-travel club: a route line fills along the edge as you read a year of journeys. Plan a drift.">
+<link rel="alternate" hreflang="en" href="">
+<link rel="alternate" hreflang="ar" href="ar/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23153f45'/><path d='M16 5v22' stroke='%23e6ae48' stroke-width='3' stroke-dasharray='4 3'/><circle cx='16' cy='9' r='3.5' fill='%23e6ae48'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_engine/scrollcraft.css">
+<style>
+:root{
+  --paper:#e9f5f1; --soft:#f8edcb; --ink:#153f45; --sun:#e6ae48; --sun-ink:#7a5200; --line:#c1dcd7;
+  --mute:#44676b; --mute-d:#b9d3cd; --ring:var(--ink);
+  --sc-canvas:var(--paper); --sc-surface:var(--soft); --sc-ink:var(--ink); --sc-ink-soft:var(--mute);
+  --sc-accent:var(--sun-ink); --sc-accent-ink:var(--paper);
+  --sc-font-display:var(--fd); --sc-font-text:var(--ft);
+  --rail:64px; --gut:clamp(1.25rem,4.4vw,5rem); --ds:1;
+}
+html[lang="ar"]{ --ds:.86; --fd:"Alexandria",system-ui,sans-serif; --ft:"Alexandria",system-ui,sans-serif; }
+html[lang="en"]{ --fd:"Bricolage Grotesque",system-ui,sans-serif; --ft:"Figtree",system-ui,sans-serif; }
+body{ background:var(--paper); color:var(--ink); font-family:var(--ft); }
+html[lang="ar"] body{ line-height:1.8; letter-spacing:0; font-weight:400; }
+html[lang="ar"] *{ letter-spacing:0 !important; }
+bdi{ unicode-bidi:isolate; }
+:focus-visible{ outline:3px solid var(--ring); outline-offset:3px; border-radius:6px; }
+.sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+.skip{ position:fixed; z-index:50; inset-block-start:.5rem; inset-inline-start:.5rem; padding:.7rem 1rem; min-height:44px; background:var(--ink); color:var(--paper); border-radius:8px; transform:translateY(-200%); text-decoration:none; font-weight:600; }
+.skip:focus{ transform:none; outline-color:var(--sun); }
+h1,h2,h3,p,ul,ol,dl,dd,figure,blockquote{ margin:0; padding:0; }
+ul,ol{ list-style:none; }
+.g-paper{ background:var(--paper); color:var(--ink); }
+.g-soft{ background:var(--soft); color:var(--ink); }
+.g-ink{ background:var(--ink); color:var(--paper); --ring:var(--sun); --mute:var(--mute-d); }
+.btn{ display:inline-flex; align-items:center; justify-content:center; min-height:52px; padding:0 1.7rem; border-radius:999px; background:var(--ink); color:var(--paper); border:2px solid var(--ink); font-family:var(--fd); font-weight:700; font-size:1.05rem; text-decoration:none; cursor:pointer; transition:transform .2s ease, background-color .2s ease, color .2s ease; }
+.btn:hover{ transform:translateY(-2px); }
+.g-ink .btn{ background:var(--sun); color:var(--ink); border-color:var(--sun); }
+.ticket__stub .btn:hover{ background:var(--paper); color:var(--ink); }
+.g-ink .btn:hover{ background:var(--paper); border-color:var(--paper); }
+
+/* ------------------------------------------------------------- route rail */
+.route{ position:fixed; inset-block:0; inset-inline-end:0; width:var(--rail); z-index:20; display:flex; flex-direction:column; align-items:center; padding-block:6px 10px; color:var(--rc,var(--ink)); --rc:var(--ink); --rf:var(--sun-ink); --chip:var(--paper); }
+.route.is-dark{ --rc:var(--paper); --rf:var(--sun); --ring:var(--sun); --chip:var(--ink); }
+.route__lang{ display:grid; place-items:center; min-width:44px; min-height:44px; border-radius:50%; font-family:var(--ft); font-weight:600; font-size:.95rem; color:inherit; text-decoration:none; border:1.5px solid color-mix(in oklab,var(--rc) 55%,transparent); background:var(--chip); }
+.route__lang:hover{ border-color:var(--rc); }
+.route__line{ position:relative; flex:1; width:100%; margin-block:10px; }
+.route__track{ position:absolute; inset-block:0; inset-inline-start:calc(50% - 1px); border-inline-start:2px dashed color-mix(in oklab,var(--rc) 55%,transparent); }
+.route__fill{ position:absolute; inset-block:0; inset-inline-start:calc(50% - 1.5px); width:3px; background:var(--rf); transform-origin:top; transform:scaleY(var(--f,0)); }
+.route__pin{ position:absolute; inset-block-start:0; inset-inline-start:calc(50% - 8px); width:16px; height:16px; border-radius:50%; background:var(--sun); border:2.5px solid var(--rc); transform:translateY(calc(var(--fy,0px) - 8px)); }
+.route__stop{ position:absolute; inset-inline:0; top:calc(var(--at) * 100%); height:44px; margin-top:-22px; display:grid; place-items:center; color:inherit; text-decoration:none; border-radius:10px; }
+.route__stop::before{ content:""; width:13px; height:13px; border-radius:50%; background:var(--chip); border:2.5px solid var(--rc); transition:transform .25s ease, background-color .25s ease, border-color .25s ease; }
+.route__stop.is-seen::before{ background:var(--rf); border-color:var(--rf); }
+.route__stop[aria-current]::before{ transform:scale(1.35); border-color:var(--rc); }
+.route__lab{ position:absolute; inset-inline-end:calc(100% + 2px); top:50%; transform:translateY(-50%); padding:.32rem .8rem; border-radius:999px; background:var(--chip); color:var(--rc); border:1.5px solid var(--rc); font-family:var(--ft); font-size:.9rem; font-weight:600; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity .2s ease; }
+.route__stop:hover .route__lab,.route__stop:focus-visible .route__lab,.route__stop.flash .route__lab{ opacity:1; }
+.route__days{ display:grid; justify-items:center; line-height:1; text-align:center; padding:7px 0 6px; width:calc(100% - 10px); background:var(--chip); border:1.5px solid color-mix(in oklab,var(--rc) 55%,transparent); border-radius:12px; }
+.route__days b{ font-family:var(--fd); font-weight:700; font-size:1.5rem; font-variant-numeric:tabular-nums; }
+.route__days small{ font-size:.78rem; margin-top:3px; font-weight:500; }
+
+/* ------------------------------------------------------------------- hero */
+.hero{ min-height:100svh; display:grid; align-items:center; padding:clamp(1.5rem,4vw,3.5rem) calc(var(--rail) + .75rem) clamp(1.5rem,4vw,3.5rem) var(--gut); }
+.ticket{ position:relative; display:grid; grid-template-columns:minmax(0,1fr) minmax(16rem,23rem); width:100%; max-width:82rem; margin-inline:auto; border:2px solid var(--ink); border-radius:22px; background:var(--soft); }
+.ticket__main{ padding:clamp(1.5rem,4vw,3.5rem); display:grid; gap:clamp(1.2rem,3vw,2.2rem); align-content:space-between; min-height:clamp(20rem,58svh,36rem); }
+.brand{ font-family:var(--fd); font-weight:700; font-size:1.5rem; }
+.ticket h1{ font-family:var(--fd); font-weight:700; font-size:calc(clamp(2.7rem,6.6vw,6.2rem) * var(--ds)); line-height:.98; letter-spacing:-.035em; max-width:12ch; text-wrap:balance; }
+html[lang="ar"] .ticket h1{ line-height:1.22; max-width:11ch; }
+.ticket .lede{ max-width:38ch; font-size:clamp(1.05rem,1.5vw,1.3rem); color:var(--mute); }
+.ticket__stub{ position:relative; display:grid; align-content:space-between; gap:2rem; padding:clamp(1.5rem,3vw,2.5rem); background:var(--sun); color:var(--ink); border-inline-start:2px dashed var(--ink); border-start-end-radius:20px; border-end-end-radius:20px; }
+html[dir="rtl"] .ticket__stub{ border-start-end-radius:0; border-end-end-radius:0; border-start-start-radius:20px; border-end-start-radius:20px; }
+.ticket__stub::before,.ticket__stub::after{ content:""; position:absolute; inset-inline-start:-16px; width:30px; height:30px; border-radius:50%; background:var(--paper); border:2px solid var(--ink); }
+.ticket__stub::before{ top:-16px; clip-path:inset(50% 0 0 0); }
+.ticket__stub::after{ bottom:-16px; clip-path:inset(0 0 50% 0); }
+.stubf{ display:grid; gap:1.3rem; }
+.stubf div{ display:grid; gap:.1rem; }
+.stubf dt{ font-size:1rem; font-weight:600; }
+.stubf dd{ font-family:var(--fd); font-weight:700; font-size:calc(clamp(2.8rem,5vw,4.2rem) * var(--ds)); line-height:1; }
+.ticket__stub .btn{ width:100%; }
+.ticket .fine{ grid-column:1/-1; padding:.9rem clamp(1.5rem,4vw,3.5rem); border-block-start:2px solid var(--ink); font-size:.92rem; color:var(--mute); }
+
+/* ---------------------------------------------------------------- chapters */
+.ch{ position:relative; min-height:96svh; display:flex; flex-direction:column; }
+.band{ display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:end; gap:clamp(1rem,3vw,3rem); padding:clamp(1rem,2vw,1.6rem) calc(var(--gut) + var(--rail)) clamp(1rem,2vw,1.6rem) var(--gut); background:var(--sun); color:var(--ink); }
+.band__k{ font-family:var(--fd); font-weight:700; font-size:calc(clamp(2.3rem,6.6vw,5.8rem) * var(--ds)); line-height:.92; letter-spacing:-.03em; }
+html[lang="ar"] .band__k{ line-height:1.15; }
+.band h2{ font-family:var(--fd); font-weight:500; font-size:calc(clamp(1.1rem,2.1vw,1.9rem) * var(--ds)); line-height:1.15; max-width:24ch; text-wrap:balance; padding-bottom:.25em; }
+html[lang="ar"] .band h2{ line-height:1.4; }
+.band__d{ display:flex; align-items:baseline; gap:.4em; font-family:var(--fd); font-weight:700; padding-bottom:.15em; }
+.band__d .n{ font-size:calc(clamp(1.8rem,4vw,3.4rem) * var(--ds)); line-height:1; font-variant-numeric:tabular-nums; }
+.band__d .u{ font-size:1rem; font-weight:600; }
+.spread{ flex:1; display:grid; gap:clamp(1.5rem,4vw,4.5rem); padding:clamp(2rem,5vw,4.5rem) calc(var(--gut) + var(--rail)) clamp(2.5rem,6vw,5.5rem) var(--gut); align-content:center; }
+.pic{ position:relative; }
+.pic__frame{ position:relative; overflow:hidden; border-radius:6px; background:var(--line); aspect-ratio:var(--ar,16/10); }
+.pic__frame img{ position:absolute; inset-inline:0; top:-8%; width:100%; height:116%; object-fit:cover; object-position:var(--pos,50% 50%); }
+.pic figcaption{ margin-top:.6rem; font-size:.9rem; color:var(--mute); }
+.txt{ display:grid; gap:1.25rem; align-content:start; }
+.note{ font-size:clamp(1.15rem,1.7vw,1.5rem); line-height:1.5; max-width:34ch; text-wrap:pretty; }
+html[lang="ar"] .note{ line-height:1.9; font-size:clamp(1.05rem,1.55vw,1.35rem); }
+.tags{ display:flex; flex-wrap:wrap; gap:.5rem; }
+.tags li{ border:1.5px solid var(--ink); border-radius:999px; padding:.3rem .9rem; font-size:.95rem; font-weight:500; }
+.guests{ font-weight:600; color:var(--mute); }
+@media (min-width:56rem){
+  .v1 .spread{ grid-template-columns:7fr 5fr; align-items:end; }
+  .v1 .pic{ --ar:16/11; }
+  .v2 .spread{ grid-template-columns:5fr 6fr; align-items:center; }
+  .v2 .pic{ order:2; --ar:1/1; --pos:60% 50%; }
+  .v2 .txt{ align-self:start; margin-top:8vh; }
+  .v2 .note{ font-size:clamp(1.3rem,2.2vw,2rem); }
+  .v3 .spread{ grid-template-columns:5fr 7fr; align-items:start; }
+  .v3 .pic{ grid-column:1/-1; --ar:21/7; }
+  .v4 .spread{ grid-template-columns:8fr 4fr; align-items:stretch; }
+  .v4 .txt{ align-content:center; }
+  .v4 .note{ font-family:var(--fd); font-size:calc(clamp(1.8rem,3.4vw,3.1rem) * var(--ds)); line-height:1.12; font-weight:500; max-width:22ch; letter-spacing:-.02em; }
+  html[lang="ar"] .v4 .note{ line-height:1.5; }
+  .v4 .pic{ --ar:3/4; --pos:30% 50%; align-self:end; order:2; }
+  .v5 .spread{ grid-template-columns:6fr 6fr; align-items:center; }
+  .v5 .pic{ --ar:4/3; --pos:40% 50%; }
+}
+@media (max-width:55.99rem){ .pic{ --ar:4/3; } }
+
+/* the year: the peak */
+.year{ position:relative; min-height:120svh; padding:clamp(3.5rem,7vw,6rem) calc(var(--gut) + var(--rail)) clamp(4rem,9vw,7rem) var(--gut); }
+.year__head{ max-width:44rem; display:grid; gap:1.2rem; }
+.year h2{ font-family:var(--fd); font-weight:700; font-size:calc(clamp(2.3rem,5.6vw,5rem) * var(--ds)); line-height:1; letter-spacing:-.03em; text-wrap:balance; }
+html[lang="ar"] .year h2{ line-height:1.3; }
+.year__head p{ color:var(--mute); max-width:40ch; font-size:1.1rem; }
+.year__list{ position:relative; margin-top:clamp(3rem,7vw,6rem); }
+.year__track{ position:absolute; inset-block:0; inset-inline-start:calc(50% - 1px); border-inline-start:2px dashed color-mix(in oklab,var(--paper) 45%,transparent); }
+.year__fill{ position:absolute; inset-block:0; inset-inline-start:calc(50% - 2px); width:4px; background:var(--sun); transform-origin:top; transform:scaleY(var(--t,1)); }
+.year__list>ol{ position:relative; }
+.yr{ position:relative; display:grid; grid-template-columns:1fr 1fr; min-height:clamp(9rem,23svh,14rem); }
+.yr__in{ grid-column:2; padding-inline-start:clamp(1.8rem,5vw,4.5rem); padding-bottom:2rem; display:grid; gap:.3rem; align-content:start; }
+.yr:nth-child(even) .yr__in{ grid-column:1; grid-row:1; padding-inline-start:0; padding-inline-end:clamp(1.8rem,5vw,4.5rem); text-align:end; justify-items:end; }
+.yr::before{ content:""; position:absolute; inset-inline-start:calc(50% - 10px); top:.7em; width:20px; height:20px; border-radius:50%; background:var(--ink); border:3px solid color-mix(in oklab,var(--paper) 55%,transparent); z-index:1; transition:background-color .3s ease, border-color .3s ease; }
+.yr.is-on::before{ background:var(--sun); border-color:var(--sun); }
+.yr__m{ font-family:var(--fd); font-weight:700; font-size:calc(clamp(2.2rem,5vw,4.4rem) * var(--ds)); line-height:1; }
+.yr h3{ font-family:var(--fd); font-weight:500; font-size:calc(clamp(1.05rem,1.8vw,1.5rem) * var(--ds)); line-height:1.25; max-width:24ch; }
+.yr__d{ display:flex; gap:1.2rem; align-items:baseline; flex-wrap:wrap; font-weight:600; }
+.yr__d .sum{ color:var(--sun); }
+.yr__d b{ font-family:var(--fd); font-weight:700; }
+.year__sum{ position:relative; margin-top:clamp(1rem,3vw,2.5rem); display:grid; gap:.4rem; justify-items:center; text-align:center; padding-top:clamp(1.5rem,3vw,2.5rem); }
+.year__sum b{ font-family:var(--fd); font-weight:700; color:var(--sun); font-size:calc(clamp(6rem,19vw,16rem) * var(--ds)); line-height:.85; font-variant-numeric:tabular-nums; }
+.year__sum span{ font-size:calc(clamp(1.2rem,2.4vw,2rem) * var(--ds)); font-weight:600; }
+.js .yr__in{ opacity:0; transform:translateY(14px); transition:opacity .5s ease, transform .5s ease; }
+.js .yr.is-on .yr__in{ opacity:1; transform:none; }
+.js .year__sum{ opacity:0; transition:opacity .6s ease; }
+.js .year__sum.is-on{ opacity:1; }
+@media (max-width:47.99rem){
+  .year__track{ inset-inline-start:11px; }
+  .year__fill{ inset-inline-start:10px; }
+  .yr{ grid-template-columns:1fr; }
+  .yr__in,.yr:nth-child(even) .yr__in{ grid-column:1; grid-row:auto; padding-inline-start:3rem; padding-inline-end:0; text-align:start; justify-items:start; }
+  .yr::before{ inset-inline-start:2px; }
+  .year__sum{ justify-items:start; text-align:start; padding-inline-start:3rem; }
+}
+
+/* field guide + journal */
+.guide .spread{ grid-template-columns:1fr; align-content:start; }
+.guide__lede{ font-size:clamp(1.15rem,1.7vw,1.5rem); max-width:30ch; line-height:1.5; }
+.guide__grid{ display:grid; gap:clamp(1.5rem,3vw,3rem) clamp(1.5rem,4vw,4rem); }
+.gnote{ display:grid; gap:.6rem; align-content:start; padding-top:1rem; border-block-start:2px solid var(--ink); }
+.gnote h3{ font-family:var(--fd); font-weight:700; font-size:calc(clamp(1.3rem,2.2vw,1.9rem) * var(--ds)); line-height:1.15; text-wrap:balance; }
+html[lang="ar"] .gnote h3{ line-height:1.4; }
+.gnote p{ max-width:36ch; text-wrap:pretty; }
+.gnote .src{ color:var(--mute); font-size:.95rem; font-weight:600; }
+@media (min-width:56rem){
+  .guide .spread{ grid-template-columns:4fr 8fr; align-items:start; }
+  .guide__grid{ grid-template-columns:1fr 1fr; }
+  .gnote:nth-child(even){ margin-top:clamp(2rem,6vw,5rem); }
+}
+.jr .spread{ grid-template-columns:1fr; }
+.jr blockquote{ font-family:var(--fd); font-weight:500; font-size:calc(clamp(1.7rem,3.8vw,3.4rem) * var(--ds)); line-height:1.12; letter-spacing:-.02em; text-wrap:balance; }
+html[lang="ar"] .jr blockquote{ line-height:1.5; }
+.jr cite{ display:block; margin-top:1.2rem; font-style:normal; font-weight:600; color:var(--mute); font-size:1.05rem; }
+.facts{ display:grid; grid-template-columns:1fr 1fr; gap:1.6rem 2rem; align-content:start; }
+.facts div{ display:grid; gap:.2rem; padding-top:.9rem; border-block-start:2px solid var(--ink); }
+.facts dd{ order:-1; font-family:var(--fd); font-weight:700; font-size:calc(clamp(2rem,4vw,3.4rem) * var(--ds)); line-height:1; font-variant-numeric:tabular-nums; }
+.facts dt{ font-weight:600; color:var(--mute); }
+@media (min-width:56rem){ .jr .spread{ grid-template-columns:7fr 5fr; align-items:center; } }
+
+/* the plan: the sentence is the form */
+.plan{ min-height:92svh; padding:clamp(4rem,9vw,8rem) calc(var(--gut) + var(--rail)) clamp(2.5rem,5vw,4rem) var(--gut); display:flex; flex-direction:column; justify-content:center; gap:clamp(2rem,4vw,3.5rem); }
+.plan h2{ font-family:var(--fd); font-weight:700; font-size:calc(clamp(2.3rem,5.4vw,4.8rem) * var(--ds)); line-height:1; letter-spacing:-.03em; max-width:16ch; text-wrap:balance; }
+html[lang="ar"] .plan h2{ line-height:1.3; }
+.plan .lede{ max-width:46ch; font-size:1.15rem; color:var(--mute); }
+.sentence{ font-family:var(--fd); font-weight:500; font-size:calc(clamp(1.35rem,2.8vw,2.45rem) * var(--ds)); line-height:2.25; max-width:58rem; text-wrap:pretty; }
+html[lang="ar"] .sentence{ line-height:2.5; }
+.blank{ display:inline-block; vertical-align:bottom; margin-inline:.15em; line-height:1.1; text-align:start; position:relative; }
+.blank input,.blank select,.blank textarea{ display:block; width:100%; background:transparent; color:var(--paper); border:0; border-bottom:3px solid var(--sun); border-radius:0; padding:.1em .25em .15em; font:inherit; line-height:1.3; outline-offset:4px; }
+.blank input,.blank select{ min-height:44px; }
+.blank select{ appearance:none; padding-inline-end:1.5em; cursor:pointer; }
+.blank select option{ color:var(--ink); background:var(--paper); font-size:1rem; }
+.fld{ display:flex; align-items:baseline; }
+.fld .p{ white-space:pre; }
+.ctl{ position:relative; flex:1; min-width:0; }
+.ctl:has(select)::after{ content:""; position:absolute; inset-inline-end:.35em; top:.5em; width:.5em; height:.5em; border-inline-end:3px solid var(--sun); border-block-end:3px solid var(--sun); transform:rotate(45deg); pointer-events:none; }
+.blank textarea{ resize:vertical; min-height:2.6em; }
+.blank label{ display:block; margin-top:.5rem; font-family:var(--ft); font-weight:500; font-size:.9rem; line-height:1.3; color:var(--mute); }
+.b-name{ width:min(13rem,70vw); } .b-mail{ width:min(17rem,80vw); } .b-sel{ width:min(12.5rem,70vw); } .b-sel2{ width:min(15rem,76vw); } .b-wide{ width:min(34rem,100%); display:block; margin-top:.6rem; margin-inline:0; }
+.blank input[aria-invalid="true"]{ border-bottom-color:#ff9b8a; }
+.plan__act{ display:flex; flex-wrap:wrap; align-items:center; gap:1.2rem; }
+.err{ min-height:1.4em; color:#ffb4a6; font-weight:600; }
+.ok{ font-family:var(--fd); font-size:1.4rem; max-width:34ch; line-height:1.4; }
+.ok small{ display:block; margin-top:.6rem; font-family:var(--ft); font-size:.95rem; color:var(--mute); }
+.plan .fine{ font-size:.95rem; color:var(--mute); max-width:60ch; }
+
+/* ----------------------------------------------------------------- phone */
+@media (max-width:47.99rem){
+  :root{ --rail:44px; }
+  .route__days b{ font-size:1.15rem; } .route__days small{ font-size:.72rem; }
+  .route__lang{ min-width:44px; }
+  .ticket{ grid-template-columns:1fr; }
+  .ticket__stub{ border-inline-start:0; border-block-start:2px dashed var(--ink); border-radius:0 0 20px 20px; grid-template-columns:1fr; }
+  html[dir="rtl"] .ticket__stub{ border-radius:0 0 20px 20px; }
+  .ticket__stub::before,.ticket__stub::after{ display:none; }
+  .stubf{ grid-template-columns:1fr 1fr; }
+  .ticket__main{ min-height:0; padding-bottom:2.2rem; }
+  .band{ grid-template-columns:1fr auto; gap:.3rem 1rem; padding-block:.9rem; }
+  .band h2{ grid-column:1/-1; grid-row:2; max-width:none; padding-bottom:0; }
+  .band__d{ grid-column:2; grid-row:1; }
+  .spread{ padding-block:1.75rem 2.25rem; }
+  .ch{ min-height:100svh; }
+  .facts{ grid-template-columns:1fr 1fr; }
+  .plan{ padding-block:3.5rem 2rem; }
+  .sentence{ line-height:2.4; }
+}
+@media (prefers-reduced-motion:reduce){
+  .btn,.route__stop::before,.route__lab,.yr::before{ transition:none; }
+  .js .yr__in{ transform:none; transition:none; }
+}
+
+</style>
+<script>document.documentElement.classList.add("js")</script>
+</head>
+<body>
+<a class="skip" href="#c1">Skip to the journeys</a>
+
+<nav class="route" id="route" aria-label="Journey chapters" data-sc-verify-state="">
+  <a class="route__lang" href="ar/" hreflang="ar" lang="ar" aria-label="العربية">العربية</a>
+  <div class="route__line" id="routeLine"><span class="route__track" aria-hidden="true"></span><span class="route__fill" id="routeFill" aria-hidden="true"></span><a class="route__stop" href="#c1" aria-label="February: Sleeper Train to Lofoten"><span class="route__lab" aria-hidden="true">February</span></a><a class="route__stop" href="#c2" aria-label="May: Tea Terraces of Rize"><span class="route__lab" aria-hidden="true">May</span></a><a class="route__stop" href="#c3" aria-label="June: Lake and Monasteries of Ohrid"><span class="route__lab" aria-hidden="true">June</span></a><a class="route__stop" href="#c4" aria-label="September: Salt Roads of the Algarve"><span class="route__lab" aria-hidden="true">September</span></a><a class="route__stop" href="#c5" aria-label="November: Date Groves and Dune Camps of Al Ahsa"><span class="route__lab" aria-hidden="true">November</span></a><a class="route__stop" href="#c6" aria-label="What our hosts tell you before you land"><span class="route__lab" aria-hidden="true">Field guide</span></a><a class="route__stop" href="#c7" aria-label="Notes from the road"><span class="route__lab" aria-hidden="true">Journal</span></a><span class="route__pin" id="routePin" aria-hidden="true"></span></div>
+  <p class="route__days" aria-hidden="true"><b id="routeDays">0</b><small>days</small></p>
+</nav>
+
+<main id="main">
+
+<section class="hero g-paper" id="top" data-ground="light" aria-labelledby="h-top">
+  <div class="ticket">
+    <div class="ticket__main">
+      <p class="brand" lang="en">Drift</p>
+      <h1 id="h-top">Go somewhere that changes you.</h1>
+      <p class="lede">A slow-travel club: forty-two routes, eight local hosts, and more texture than itinerary.</p>
+    </div>
+    <div class="ticket__stub">
+      <dl class="stubf"><div><dt>Slow routes</dt><dd>42</dd></div><div><dt>Local hosts</dt><dd>8</dd></div></dl>
+      <a class="btn" href="#plan">Plan a drift</a>
+    </div>
+    <p class="fine">Drift is a fictional brand. Every route, host, quote and figure on this page is sample content.</p>
+  </div>
+</section>
+
+<section class="ch v1 g-paper" id="c1" data-ch="1" data-days="11" data-ground="light" data-sc-act="flow" aria-labelledby="h-c1">
+  <header class="band" data-sc-reveal="left" data-sc-reveal-at="0.02 0.17">
+    <p class="band__k">February</p>
+    <h2 id="h-c1">Sleeper Train to Lofoten</h2>
+    <p class="band__d"><span class="n">11</span><span class="u">days</span></p>
+  </header>
+  <div class="spread"><figure class="pic"><div class="pic__frame"><img src="/assets/domain-stills/drift-3.webp" width="960" height="540" alt="A sample relief map of ridges and valleys with one lit route winding through it." data-sc-parallax="0.5"></div><figcaption>Sample image, not the place</figcaption></figure><div class="txt" data-sc-in data-sc-stagger="90"><p class="note">Rail north from Oslo, then a fishing boat between islands, chasing the green light without a schedule.</p><ul class="tags"><li>Rail</li><li>Winter</li></ul><p class="guests">10 guests</p></div></div>
+</section>
+
+<section class="ch v2 g-soft" id="c2" data-ch="2" data-days="7" data-ground="light" data-sc-act="flow" aria-labelledby="h-c2">
+  <header class="band" data-sc-reveal="left" data-sc-reveal-at="0.02 0.17">
+    <p class="band__k">May</p>
+    <h2 id="h-c2">Tea Terraces of Rize</h2>
+    <p class="band__d"><span class="n">7</span><span class="u">days</span></p>
+  </header>
+  <div class="spread"><figure class="pic"><div class="pic__frame"><img src="/assets/domain-stills/drift-2.webp" width="960" height="540" alt="A sample relief map of ridges and valleys with one lit route winding through it." loading="lazy" data-sc-parallax="0.5"></div><figcaption>Sample image, not the place</figcaption></figure><div class="txt" data-sc-in data-sc-stagger="90"><p class="note">Stay with two harvesting families on the Black Sea slopes and learn why the first flush is picked by hand.</p><ul class="tags"><li>Mountain</li><li>Food</li></ul><p class="guests">6 guests</p></div></div>
+</section>
+
+<section class="ch v3 g-paper" id="c3" data-ch="3" data-days="8" data-ground="light" data-sc-act="flow" aria-labelledby="h-c3">
+  <header class="band" data-sc-reveal="left" data-sc-reveal-at="0.02 0.17">
+    <p class="band__k">June</p>
+    <h2 id="h-c3">Lake and Monasteries of Ohrid</h2>
+    <p class="band__d"><span class="n">8</span><span class="u">days</span></p>
+  </header>
+  <div class="spread"><figure class="pic"><div class="pic__frame"><img src="/assets/domain-stills/drift-1.webp" width="960" height="540" alt="A sample relief map of ridges and valleys with one lit route winding through it." loading="lazy" data-sc-parallax="0.5"></div><figcaption>Sample image, not the place</figcaption></figure><div class="txt" data-sc-in data-sc-stagger="90"><p class="note">Swim before breakfast, hike to hillside churches after, and spend evenings with a woodcarver who still takes apprentices.</p><ul class="tags"><li>Lakeside</li><li>Slow hikes</li></ul><p class="guests">8 guests</p></div></div>
+</section>
+
+<section class="ch v4 g-soft" id="c4" data-ch="4" data-days="9" data-ground="light" data-sc-act="flow" aria-labelledby="h-c4">
+  <header class="band" data-sc-reveal="left" data-sc-reveal-at="0.02 0.17">
+    <p class="band__k">September</p>
+    <h2 id="h-c4">Salt Roads of the Algarve</h2>
+    <p class="band__d"><span class="n">9</span><span class="u">days</span></p>
+  </header>
+  <div class="spread"><figure class="pic"><div class="pic__frame"><img src="/assets/domain-stills/drift-3.webp" width="960" height="540" alt="A sample relief map of ridges and valleys with one lit route winding through it." loading="lazy" data-sc-parallax="0.5"></div><figcaption>Sample image, not the place</figcaption></figure><div class="txt" data-sc-in data-sc-stagger="90"><p class="note">Walk between salt pans and fishing villages, then sleep in a family-run quinta above the estuary.</p><ul class="tags"><li>Coastal</li><li>Walking</li></ul><p class="guests">8 guests</p></div></div>
+</section>
+
+<section class="ch v5 g-paper" id="c5" data-ch="5" data-days="5" data-ground="light" data-sc-act="flow" aria-labelledby="h-c5">
+  <header class="band" data-sc-reveal="left" data-sc-reveal-at="0.02 0.17">
+    <p class="band__k">November</p>
+    <h2 id="h-c5">Date Groves and Dune Camps of Al Ahsa</h2>
+    <p class="band__d"><span class="n">5</span><span class="u">days</span></p>
+  </header>
+  <div class="spread"><figure class="pic"><div class="pic__frame"><img src="/assets/domain-stills/drift-4.webp" width="960" height="540" alt="A sample relief map of ridges and valleys with one lit route winding through it." loading="lazy" data-sc-parallax="0.5"></div><figcaption>Sample image, not the place</figcaption></figure><div class="txt" data-sc-in data-sc-stagger="90"><p class="note">Spring-fed oases by day, a quiet dune camp by night, and breakfast with the family who tends the palms.</p><ul class="tags"><li>Desert</li><li>Culture</li></ul><p class="guests">8 guests</p></div></div>
+</section>
+
+<section class="year g-ink" id="year" data-ground="dark" aria-labelledby="h-year">
+  <div class="year__head" data-sc-in data-sc-stagger="90"><h2 id="h-year">One slow year, in the order you read it.</h2><p>Five journeys placed by month. The days are summed from the journeys above.</p></div>
+  <div class="year__list" id="yearList"><span class="year__track" aria-hidden="true"></span><span class="year__fill" aria-hidden="true"></span><ol><li class="yr"><div class="yr__in"><p class="yr__m">February</p><h3>Sleeper Train to Lofoten</h3><p class="yr__d"><span><b>11</b> days</span><span class="sum">11 so far</span></p></div></li><li class="yr"><div class="yr__in"><p class="yr__m">May</p><h3>Tea Terraces of Rize</h3><p class="yr__d"><span><b>7</b> days</span><span class="sum">18 so far</span></p></div></li><li class="yr"><div class="yr__in"><p class="yr__m">June</p><h3>Lake and Monasteries of Ohrid</h3><p class="yr__d"><span><b>8</b> days</span><span class="sum">26 so far</span></p></div></li><li class="yr"><div class="yr__in"><p class="yr__m">September</p><h3>Salt Roads of the Algarve</h3><p class="yr__d"><span><b>9</b> days</span><span class="sum">35 so far</span></p></div></li><li class="yr"><div class="yr__in"><p class="yr__m">November</p><h3>Date Groves and Dune Camps of Al Ahsa</h3><p class="yr__d"><span><b>5</b> days</span><span class="sum">40 so far</span></p></div></li></ol></div>
+  <div class="year__sum" id="yearSum"><b>40</b><span>days on the road</span></div>
+</section>
+
+<section class="ch guide g-paper" id="c6" data-ch="6" data-ground="light" aria-labelledby="h-c6">
+  <header class="band"><p class="band__k">Field guide</p><h2 id="h-c6">What our hosts tell you before you land</h2><p class="band__d"></p></header>
+  <div class="spread">
+    <p class="guide__lede" data-sc-in>Short notes from the people who live along our routes. They are the reason the days feel unplanned.</p>
+    <div class="guide__grid" data-sc-in data-sc-stagger="110"><article class="gnote"><h3>Eat where the ferry crews eat</h3><p>The lakeside kitchen with no menu opens at six. Ask for whatever came off the boat that morning.</p><p class="src">Local custom · Ohrid</p></article><article class="gnote"><h3>Take the 14:10, not the 09:30</h3><p>The afternoon train has window seats on the fjord side and nobody in a hurry.</p><p class="src">Tip · Northern Norway</p></article><article class="gnote"><h3>Leave the ridge before sunset</h3><p>The best light is on the walk down, when the pickers head home and the valley smells of woodsmoke.</p><p class="src">Place · Rize hills</p></article><article class="gnote"><h3>Bring something small from home</h3><p>A tin of your local tea or a postcard of your street. Every host asks, and every host remembers.</p><p class="src">Local custom · Everywhere</p></article></div>
+  </div>
+</section>
+
+<section class="ch jr g-soft" id="c7" data-ch="7" data-ground="light" aria-labelledby="h-c7">
+  <header class="band"><p class="band__k">Journal</p><h2 id="h-c7">Notes from the road</h2><p class="band__d"></p></header>
+  <div class="spread">
+    <figure data-sc-in style="margin:0"><blockquote><p>On day four I stopped checking my phone. On day six I knew the baker's name, and I still write to her.</p></blockquote><cite>Marta Weiss, guest on Salt Roads of the Algarve</cite></figure>
+    <dl class="facts" data-sc-in data-sc-stagger="90"><div><dt>Slow routes</dt><dd><span data-sc-count="0 42">42</span></dd></div><div><dt>Local hosts</dt><dd><span data-sc-count="0 8">8</span></dd></div><div><dt>Guests per journey</dt><dd>6 to 10</dd></div><div><dt>Nights in one place</dt><dd>3 on average</dd></div></dl>
+  </div>
+</section>
+
+<section class="plan g-ink" id="plan" data-ground="dark" aria-labelledby="h-plan">
+  <h2 id="h-plan" data-sc-in>Tell us where you want to slow down.</h2>
+  <p class="lede" data-sc-in>Share a month and a mood. A route planner will write back within two working days with one or two journeys, not a catalogue.</p>
+  <form id="form" novalidate data-err="Add your name and a valid email.">
+    <p class="sentence">My name is <span class="blank b-name"><span class="fld"><span class="ctl"><input id="f-name" name="name" type="text" autocomplete="name" aria-invalid="false" aria-describedby="err"></span><span class="p"></span></span><label for="f-name">Your name</label></span> and my email is <span class="blank b-mail"><span class="fld"><span class="ctl"><input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" dir="ltr" aria-invalid="false" aria-describedby="err"></span><span class="p">.</span></span><label for="f-email">Email</label></span> I would like to go: <span class="blank b-sel"><span class="fld"><span class="ctl"><select id="f-month" name="month"><option>Spring</option><option>Summer</option><option>Autumn</option><option>Winter</option><option>Flexible</option></select></span><span class="p">,</span></span><label for="f-month">When would you like to go?</label></span> travelling as <span class="blank b-sel2"><span class="fld"><span class="ctl"><select id="f-who" name="travellers"><option>Just me</option><option>Two of us</option><option>3 to 5 friends or family</option><option>A larger group</option></select></span><span class="p">.</span></span><label for="f-who">Who is travelling?</label></span> It will be worth it if <span class="blank b-wide"><span class="fld"><span class="ctl"><textarea id="f-wish" name="wish" rows="2"></textarea></span><span class="p">.</span></span><label for="f-wish">What would make the trip worth it?</label></span></p>
+    <p class="err" id="err" role="alert"></p>
+    <div class="plan__act"><button class="btn" type="submit">Plan a drift</button></div>
+  </form>
+  <p class="ok" id="ok" role="status" tabindex="-1" hidden>Thank you. A route planner will write to you within two working days.<small>Sample form: nothing was sent.</small></p>
+  <p class="fine">Drift is a fictional brand. This form is a sample: nothing is sent or stored.</p>
+</section>
+</main>
+
+<script src="../_engine/scrollcraft.js"></script>
+<script>ScrollCraft.mount(document.body);</script>
+<script>
+/* Drift. The route line is computed from the page: stops sit on the chapters, the fill is
+   interpolated between chapter tops, the day counter sums the days written on each journey
+   chapter by how far you have read it. One render() drives the line, the counter, the stops,
+   the peak plate and data-sc-verify-state, so they cannot disagree. */
+(function () {
+  "use strict";
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
+  var clamp = function (x) { return x < 0 ? 0 : x > 1 ? 1 : x; };
+
+  var route = $("#route"), lineEl = $("#routeLine"), fillEl = $("#routeFill"), pinEl = $("#routePin");
+  var stops = $$(".route__stop"), daysEl = $("#routeDays");
+  var chs = $$("[data-ch]"), plan = $("#plan");
+  var year = $("#year"), yList = $("#yearList"), yRows = $$(".yr", yList), ySum = $("#yearSum");
+  var grounds = $$("[data-ground]");
+  var N = chs.length;
+  var AT = chs.map(function (_, k) { return 0.04 + k * (0.88 / (N - 1)); });
+  stops.forEach(function (s, k) { s.style.setProperty("--at", AT[k].toFixed(4)); });
+
+  var vh = innerHeight, lineH = 1, ys = [], fs = [], reads = [], gr = [], yTop = 0, yH = 1, rowAt = [];
+  var last = { sig: "", k: -2, dark: null, flash: null };
+  var flashT = 0;
+
+  function absTop(el) { return el.getBoundingClientRect().top + scrollY; }
+
+  function measure() {
+    vh = innerHeight;
+    var maxY = Math.max(document.documentElement.scrollHeight - vh, 1);
+    lineH = lineEl.offsetHeight;
+    ys = [0]; fs = [0];
+    chs.forEach(function (c, k) {
+      var y = Math.max(absTop(c) - 0.55 * vh, ys[ys.length - 1] + 1);
+      ys.push(y); fs.push(AT[k]);
+    });
+    ys.push(Math.max(maxY, ys[ys.length - 1] + 1)); fs.push(1);
+    reads = chs.map(function (c) {
+      var d = parseFloat(c.getAttribute("data-days")) || 0;
+      var sp = $(".spread", c) || c;
+      var a = absTop(c) - 0.6 * vh, b = absTop(sp) + sp.offsetHeight - 0.6 * vh;
+      return { d: d, a: a, b: Math.max(b, a + 40) };
+    });
+    gr = grounds.map(function (g) {
+      var t = absTop(g);
+      return { t: t, b: t + g.offsetHeight, dark: g.getAttribute("data-ground") === "dark" };
+    });
+    yTop = absTop(yList); yH = yList.offsetHeight || 1;
+    rowAt = yRows.map(function (r) { return (absTop(r) + 0.95 * 16 - yTop) / yH; });
+    last.sig = "";
+    render();
+  }
+
+  function fillAt(y) {
+    for (var i = 0; i < ys.length - 1; i++) {
+      if (y < ys[i + 1]) { return fs[i] + (fs[i + 1] - fs[i]) * clamp((y - ys[i]) / (ys[i + 1] - ys[i])); }
+    }
+    return 1;
+  }
+
+  function render() {
+    var y = scrollY;
+    var f = fillAt(y);
+    var k = -1;
+    for (var i = 1; i < ys.length - 1; i++) { if (y >= ys[i]) k = i - 1; }
+    var days = 0;
+    for (var j = 0; j < reads.length; j++) {
+      if (reads[j].d) days += reads[j].d * clamp((y - reads[j].a) / (reads[j].b - reads[j].a));
+    }
+    days = Math.round(days);
+    var mid = y + vh * 0.5, dark = false;
+    for (var g = 0; g < gr.length; g++) { if (mid >= gr[g].t && mid < gr[g].b) { dark = gr[g].dark; break; } }
+
+    var t = reduce ? 1 : clamp((y + 0.78 * vh - yTop) / yH);
+    var sig = k + ":" + Math.round(f * 500) + ":" + days + ":" + (dark ? 1 : 0) + ":" + Math.round(t * 200);
+    if (sig === last.sig) return;
+    last.sig = sig;
+
+    route.style.setProperty("--f", f.toFixed(4));
+    route.style.setProperty("--fy", (f * lineH).toFixed(1) + "px");
+    if (dark !== last.dark) { last.dark = dark; route.classList.toggle("is-dark", dark); }
+    daysEl.textContent = days;
+    stops.forEach(function (s, i) { s.classList.toggle("is-seen", AT[i] <= f + 0.002); });
+    if (k !== last.k) {
+      last.k = k;
+      stops.forEach(function (s, i) {
+        if (i === k) s.setAttribute("aria-current", "location"); else s.removeAttribute("aria-current");
+        s.classList.remove("flash");
+      });
+      if (k >= 0) {
+        stops[k].classList.add("flash");
+        clearTimeout(flashT);
+        flashT = setTimeout(function () { stops[k] && stops[k].classList.remove("flash"); }, 1800);
+      }
+    }
+    yList.style.setProperty("--t", t.toFixed(4));
+    yRows.forEach(function (r, i) { r.classList.toggle("is-on", reduce || t >= rowAt[i] - 0.02); });
+    ySum.classList.toggle("is-on", reduce || t >= 0.97);
+    route.setAttribute("data-sc-verify-state", k + ":" + Math.round(f * 100) + ":" + days + ":" + Math.round(t * 100));
+  }
+
+  var queued = false;
+  addEventListener("scroll", function () {
+    if (queued) return; queued = true;
+    requestAnimationFrame(function () { queued = false; render(); });
+  }, { passive: true });
+  addEventListener("resize", function () { requestAnimationFrame(measure); }, { passive: true });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+  addEventListener("load", measure);
+  if ("ResizeObserver" in window) {
+    var rt = 0;
+    new ResizeObserver(function () { cancelAnimationFrame(rt); rt = requestAnimationFrame(measure); }).observe(document.body);
+  }
+  measure();
+
+  /* anchors scroll smoothly by script, so automated scrollTo and reduced motion stay instant */
+  $$('a[href^="#"]').forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      var t = document.getElementById(a.getAttribute("href").slice(1));
+      if (!t) return;
+      e.preventDefault();
+      t.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+      history.replaceState(null, "", "#" + t.id);
+    });
+  });
+
+  /* the sentence is the form: it validates, sends nothing, shows the success string */
+  var form = $("#form");
+  if (form) {
+    var ok = $("#ok"), err = $("#err");
+    var email = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    var nameEl = $("#f-name"), mailEl = $("#f-email");
+    var bad = function (el, b) { el.setAttribute("aria-invalid", b ? "true" : "false"); };
+    [nameEl, mailEl].forEach(function (el) {
+      el.addEventListener("input", function () {
+        if (el.getAttribute("aria-invalid") === "true") {
+          bad(el, el === nameEl ? !el.value.trim() : !email.test(el.value.trim()));
+          if (nameEl.getAttribute("aria-invalid") !== "true" && mailEl.getAttribute("aria-invalid") !== "true") err.textContent = "";
+        }
+      });
+    });
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var nb = !nameEl.value.trim(), mb = !email.test(mailEl.value.trim());
+      bad(nameEl, nb); bad(mailEl, mb);
+      if (nb || mb) { err.textContent = form.getAttribute("data-err"); (nb ? nameEl : mailEl).focus(); return; }
+      err.textContent = "";
+      form.hidden = true; ok.hidden = false; ok.focus();
+    });
+  }
+})();
+
+</script>
+</body>
+</html>

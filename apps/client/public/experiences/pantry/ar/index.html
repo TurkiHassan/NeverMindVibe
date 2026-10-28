@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مؤونة · افسح مكانًا لوجبات أفضل (علامة تجريبية)</title>
+<meta name="description" content="مؤن يومية و148 وصفة بلا خطوات معقّدة، فيمكن أن يصير عشاء الثلاثاء في اثنتي عشرة دقيقة. علامة تجريبية من Landscape Lab.">
+<link rel="alternate" hreflang="en" href="../index.html">
+<link rel="alternate" hreflang="ar" href="index.html">
+<link rel="alternate" hreflang="x-default" href="../index.html">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23f05d3b'/><circle cx='16' cy='16' r='7' fill='%23fff4e8'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;800&family=Gabarito:wght@600;800&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_engine/scrollcraft.css">
+<style>
+:root {
+  --paper: #fff4e8; --ink: #342119; --tom: #f05d3b; --soft: #ffe0d6; --line: #f0d4c1;
+  --sc-canvas: #fff4e8; --sc-surface: #ffe0d6; --sc-ink: #342119; --sc-ink-soft: #6b5448;
+  --sc-accent: #f05d3b; --sc-accent-ink: #342119;
+  --f-d: "Gabarito", system-ui, sans-serif;
+  --f-t: "Nunito Sans", system-ui, sans-serif;
+  --sc-font-display: var(--f-d); --sc-font-text: var(--f-t);
+  --pad: clamp(1.25rem, 4vw, 3.5rem);
+  --bar: 64px; --tm: 56px; --chrome: calc(var(--bar) + var(--tm));
+  --ds: 1; --lh: 1.55; --body: 1.125rem; --small: 1rem;
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+}
+:root[lang="ar"] {
+  --f-d: "Baloo Bhaijaan 2", system-ui, sans-serif;
+  --f-t: "Baloo Bhaijaan 2", system-ui, sans-serif;
+  --ds: 1.04; --lh: 1.8; --body: 1.1875rem; --small: 1.0625rem;
+}
+@media (max-width: 859px) { :root { --bar: 56px; --tm: 52px; } }
+html { background: var(--paper); scroll-behavior: auto; -webkit-text-size-adjust: 100%; }
+body { margin: 0; font-family: var(--f-t); font-size: var(--body); line-height: var(--lh); color: var(--ink); background: var(--paper); overflow-x: clip; }
+p, h1, h2, figure, blockquote, dl, dd, ul, ol, fieldset { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+::selection { background: var(--ink); color: var(--paper); }
+:focus-visible { outline: 3px solid var(--ring, #342119); outline-offset: 3px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+bdi { unicode-bidi: isolate; }
+
+.g-paper { background: var(--paper); color: var(--ink); --mut: #6b5448; --ring: #342119; --num: #342119; }
+.g-soft  { background: var(--soft);  color: var(--ink); --mut: #5e4538; --ring: #342119; --num: #342119; }
+.g-ink   { background: var(--ink);   color: var(--paper); --mut: #e6d2c3; --ring: #fff4e8; --num: #f05d3b; }
+.g-tom   { background: var(--tom);   color: var(--ink); --mut: #342119; --ring: #342119; --num: #342119; }
+
+/* ------------------------------------------------------------ chrome: loud bar + kitchen timer */
+.chrome { position: fixed; inset: 0 0 auto 0; z-index: 60; color: var(--paper); --ring: #fff4e8; }
+.bar {
+  background: var(--ink); height: var(--bar); display: grid; align-items: center;
+  grid-template-columns: auto minmax(0, 1fr) auto auto auto; grid-template-areas: "mark . basket cta lang";
+  column-gap: clamp(0.6rem, 2vw, 1.5rem);
+  padding-inline: max(var(--pad), env(safe-area-inset-left)) max(var(--pad), env(safe-area-inset-right));
+}
+.mark, .cta {
+  font: 800 calc(1.7rem * var(--ds))/1 var(--f-d); letter-spacing: -0.01em; text-decoration: none;
+  display: inline-flex; align-items: center; min-height: 44px; color: inherit;
+}
+.mark { grid-area: mark; }
+.cta {
+  grid-area: cta; padding-inline: 1.15rem; background: var(--tom); color: var(--ink); white-space: nowrap; border-radius: 12px;
+  font-size: calc(1.15rem * var(--ds)); font-weight: 800;
+  transition: background-color 140ms var(--ease), color 140ms var(--ease), transform 120ms var(--ease);
+}
+.cta:active { transform: translateY(1px); }
+.lang {
+  grid-area: lang; min-width: 44px; min-height: 44px; padding-inline: 0.9rem; display: inline-flex; align-items: center; justify-content: center;
+  border: 2px solid #9a8478; border-radius: 12px; color: var(--paper); text-decoration: none; font: 600 0.9375rem/1 var(--f-t);
+  transition: background-color 140ms var(--ease), color 140ms var(--ease), transform 120ms var(--ease);
+}
+.lang:active { transform: translateY(1px); }
+@media (hover: hover) and (pointer: fine) {
+  .cta:hover { background: var(--paper); }
+  .lang:hover { background: var(--paper); color: var(--ink); }
+}
+.basket { grid-area: basket; display: inline-flex; align-items: center; gap: 0.55rem; min-height: 44px; font: 700 1rem/1 var(--f-t); color: var(--paper); }
+.basket svg { width: 26px; height: 26px; flex: none; }
+.cnt {
+  min-width: 30px; height: 30px; padding-inline: 0.3rem; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center;
+  background: var(--tom); color: var(--ink); border-radius: 999px; font: 800 1.05rem/1 var(--f-d); font-variant-numeric: tabular-nums;
+}
+.cnt.bump { animation: bump 260ms var(--ease); }
+@keyframes bump { 0% { transform: scale(1.5); } 100% { transform: none; } }
+
+.timer {
+  height: var(--tm); box-sizing: border-box; display: flex; align-items: center; gap: 0.85rem; background: var(--paper); color: var(--ink);
+  border-bottom: 2px solid var(--ink); padding-inline: max(var(--pad), env(safe-area-inset-left)) max(var(--pad), env(safe-area-inset-right));
+  --ring: #342119; transition: background-color 200ms var(--ease);
+}
+.timer.total { background: var(--tom); }
+.dial { width: 40px; height: 40px; flex: none; }
+.dial circle.face { fill: var(--soft); stroke: var(--ink); stroke-width: 2; }
+.timer.total .dial circle.face { fill: var(--paper); }
+.dial path { stroke: var(--ink); stroke-width: 2; stroke-linecap: round; fill: none; }
+.dial line { stroke: var(--ink); stroke-width: 3; stroke-linecap: round; transform-origin: 20px 20px; transition: transform 420ms var(--ease); }
+.dial circle.pin { fill: var(--ink); }
+.lcd { display: inline-flex; align-items: baseline; gap: 0.35rem; background: var(--ink); color: var(--paper); border-radius: 10px; padding: 0.2rem 0.7rem; flex: none; }
+.lcd b { font: 800 1.7rem/1.1 var(--f-d); min-width: 2.6ch; text-align: center; font-variant-numeric: tabular-nums; display: inline-block; }
+.lcd span { font: 700 0.875rem/1 var(--f-t); }
+:root[lang="ar"] .lcd span { font-size: 1rem; }
+.lcd b.flip { animation: flip 260ms var(--ease); }
+@keyframes flip { 0% { transform: translateY(-45%); opacity: 0; } 100% { transform: none; opacity: 1; } }
+.lbl { flex: 1; min-width: 0; font: 800 1.0625rem/1.2 var(--f-d); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+:root[lang="ar"] .lbl { font-size: 1.1875rem; }
+.rcpt { display: flex; align-items: center; gap: 0.6rem; flex: none; font: 700 0.9375rem/1 var(--f-t); }
+:root[lang="ar"] .rcpt { font-size: 1.0625rem; }
+.rk { font-weight: 600; }
+.slips { display: flex; align-items: center; gap: 0.3rem; }
+.slips li { border: 2px solid var(--ink); border-radius: 8px; padding: 0.15rem 0.45rem; font: 800 0.9375rem/1.1 var(--f-d); font-variant-numeric: tabular-nums; background: var(--paper); }
+.slips li + li::before { content: "+"; margin-inline-end: 0.35rem; font-weight: 700; }
+.slips li.new { animation: bump 260ms var(--ease); }
+.tot { font: 800 1.125rem/1 var(--f-d); white-space: nowrap; }
+@media (max-width: 1099px) { .rk { display: none; } }
+@media (max-width: 859px) {
+  .bar { column-gap: 0.5rem; }
+  .mark { font-size: calc(1.3rem * var(--ds)); }
+  .cta { font-size: calc(0.9rem * var(--ds)); padding-inline: 0.7rem; }
+  .lang { padding-inline: 0.6rem; font-size: 0.875rem; }
+  .basket .bl { display: none; }
+  .timer { gap: 0.6rem; }
+  .dial { width: 34px; height: 34px; }
+  .lcd b { font-size: 1.45rem; }
+  .lbl { font-size: 0.9375rem; }
+  .slips, .rk { display: none; }
+}
+
+/* ------------------------------------------------------------ cuts */
+.act {
+  --h: 0.9; position: relative; box-sizing: border-box; display: grid;
+  min-height: calc(var(--h) * 100vh); min-height: calc(var(--h) * 100svh);
+  padding: calc(var(--chrome) + clamp(1.25rem, 3.5vh, 2.5rem)) var(--pad) clamp(1.5rem, 4vh, 3rem);
+  grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--pad); align-items: center; align-content: center; overflow: clip;
+}
+.disp { font-family: var(--f-d); font-weight: 800; letter-spacing: -0.02em; line-height: 1.02; text-wrap: balance; }
+:root[lang="ar"] .disp { letter-spacing: 0; line-height: 1.3; }
+.mut { color: var(--mut); }
+.big { font: 800 clamp(7rem, 21vw, 20rem)/0.82 var(--f-d); letter-spacing: -0.04em; color: var(--num); font-variant-numeric: tabular-nums; white-space: nowrap; }
+:root[lang="ar"] .big { line-height: 1; }
+.big small { font: 800 0.2em/1 var(--f-d); letter-spacing: 0; margin-inline-start: 0.15em; }
+.card {
+  background: var(--paper); color: var(--ink); --mut: #6b5448; --ring: #342119; border: 2px solid var(--ink); border-radius: 22px; overflow: clip;
+  display: grid; min-width: 0;
+}
+.card .shot { position: relative; margin: 0; background: var(--soft); min-height: 0; }
+.card .shot img, .card .shot video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; object-position: var(--op, 50% 50%); }
+.card--v { grid-template-rows: auto auto; }
+.card--v .shot { aspect-ratio: 16 / 9; }
+.card--h { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.card--h .shot { min-height: 280px; }
+.card .body { padding: clamp(1.1rem, 2vw, 1.75rem); display: grid; gap: 0.85rem; align-content: start; }
+.card h2 { font-size: calc(clamp(1.7rem, 2.7vw, 2.5rem) * var(--ds)); }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.9rem; }
+.time { display: inline-flex; align-items: baseline; gap: 0.3rem; background: var(--tom); color: var(--ink); border-radius: 12px; padding: 0.3rem 0.8rem; font: 800 calc(1.35rem * var(--ds))/1.15 var(--f-d); }
+.time b { font-weight: 800; }
+.srv { font: 700 var(--small)/1.3 var(--f-t); color: var(--mut); }
+.note { text-wrap: pretty; max-width: 46ch; }
+.tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.tags li { border: 2px solid var(--ink); border-radius: 999px; padding: 0.1rem 0.8rem; font: 700 0.875rem/1.5 var(--f-t); }
+:root[lang="ar"] .tags li { font-size: 1rem; }
+
+/* hero */
+.hero { --h: 1; }
+.hero .copy { grid-column: 1 / span 7; display: grid; gap: 1.5rem; align-content: center; }
+.hero h1 { font-size: calc(clamp(3.25rem, 8vw, 8.25rem) * var(--ds)); line-height: 0.95; }
+:root[lang="ar"] .hero h1 { line-height: 1.2; }
+.hero .lede { max-width: 38ch; font-size: calc(var(--body) * 1.12); text-wrap: pretty; }
+.hero .proof { font: 800 calc(1.15rem * var(--ds))/1.3 var(--f-d); }
+.hero .fine { font-size: 0.9375rem; line-height: 1.5; color: var(--mut); max-width: 52ch; }
+:root[lang="ar"] .hero .fine { font-size: 1.0625rem; }
+.hero .card { grid-column: 8 / span 5; }
+.hero .metric { display: flex; align-items: baseline; gap: 0.7rem; flex-wrap: wrap; }
+.hero .metric b { font: 800 calc(3rem * var(--ds))/1 var(--f-d); }
+.hero .metric span { font: 700 var(--small)/1.3 var(--f-t); color: var(--mut); }
+
+/* recipe cuts: card + the cut's cooking time as a number */
+.p-a .card { grid-column: 1 / span 5; } .p-a .big { grid-column: 7 / span 6; justify-self: end; }
+.p-b .big { grid-column: 1 / span 5; } .p-b .card { grid-column: 6 / span 7; }
+.p-c .big { grid-column: 1 / -1; grid-row: 1; justify-self: start; font-size: clamp(6rem, 17vw, 15rem); } .p-c .card { grid-column: 3 / span 10; grid-row: 2; margin-top: 1.25rem; }
+.p-d .big { grid-column: 1 / span 6; align-self: end; } .p-d .card { grid-column: 7 / span 5; }
+.p-e .card { grid-column: 1 / span 8; } .p-e .big { grid-column: 9 / span 4; align-self: start; justify-self: end; font-size: clamp(6rem, 15vw, 14rem); }
+.p-f .card { grid-column: 1 / span 5; align-self: start; }
+.p-f .receipt { grid-column: 6 / span 7; }
+.p-b .card .shot, .p-e .card .shot, .p-c .card .shot { order: 0; }
+.p-b .card--h { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); }
+.p-c .card--h { grid-template-columns: minmax(0, 4fr) minmax(0, 6fr); }
+.p-e .card--h { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); }
+
+/* peak: the receipt */
+.cut-peak { --h: 1.2; }
+.receipt { background: var(--paper); color: var(--ink); --mut: #6b5448; --ring: #342119; border: 2px solid var(--ink); border-radius: 22px; padding: clamp(1.25rem, 2.4vw, 2.25rem); display: grid; gap: 1rem; }
+.receipt h2 { font-size: calc(clamp(1.7rem, 2.9vw, 2.7rem) * var(--ds)); max-width: 22ch; }
+.receipt .rlede { max-width: 54ch; text-wrap: pretty; }
+.rlines { display: grid; border-top: 2px dashed var(--ink); }
+.rlines li { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.55rem 0; border-bottom: 2px dashed var(--ink); font: 700 1.0625rem/1.3 var(--f-t); }
+:root[lang="ar"] .rlines li { font-size: 1.125rem; }
+.rlines li b { font: 800 1.1rem/1.1 var(--f-d); white-space: nowrap; border: 2px solid var(--ink); border-radius: 10px; padding: 0.15rem 0.6rem; background: var(--paper); transition: background-color 160ms var(--ease); }
+.rlines li.on b { background: var(--tom); }
+.rtot { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; border: 2px dashed var(--ink); border-radius: 16px; padding: 0.6rem 1.1rem; }
+.rtot.on { background: var(--tom); border-style: solid; animation: press 240ms var(--ease); }
+@keyframes press { from { transform: scale(1.04) rotate(-1.2deg); } to { transform: none; } }
+.rtot .tl { font: 800 calc(1.3rem * var(--ds))/1.2 var(--f-d); }
+.rtot .tn { font: 800 calc(clamp(3.5rem, 8vw, 7rem) * 1)/0.95 var(--f-d); font-variant-numeric: tabular-nums; }
+.rtot .tn small { font: 800 0.28em/1 var(--f-d); margin-inline-start: 0.2em; }
+.rtot .th { font: 700 var(--small)/1.3 var(--f-t); width: 100%; }
+
+/* stories */
+.story { --h: 0.8; }
+.story .card { align-self: center; }
+.story blockquote { font: 800 calc(clamp(1.45rem, 2.4vw, 2.2rem) * var(--ds))/1.2 var(--f-d); text-wrap: balance; }
+:root[lang="ar"] .story blockquote { line-height: 1.5; }
+.story .who { font: 800 calc(1.15rem * var(--ds))/1.2 var(--f-d); }
+.story .role { color: var(--mut); font-size: var(--small); }
+.story .head { font-size: calc(clamp(2.5rem, 5.4vw, 5.25rem) * var(--ds)); }
+.s-a .head { grid-column: 1 / span 5; } .s-a .card { grid-column: 6 / span 7; }
+.s-b .card { grid-column: 2 / span 9; }
+.s-c .card { grid-column: 4 / span 6; }
+.s-b .card--h { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); }
+.s-a .card--h { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); }
+
+/* proof */
+.proof-cut { --h: 0.95; }
+.proof-cut .q { grid-column: 1 / span 7; display: grid; gap: 1.5rem; }
+.proof-cut .q h2 { font: 800 calc(1.3rem * var(--ds))/1.2 var(--f-d); }
+.proof-cut blockquote { font: 800 calc(clamp(1.9rem, 3.7vw, 3.5rem) * var(--ds))/1.12 var(--f-d); text-wrap: balance; }
+:root[lang="ar"] .proof-cut blockquote { line-height: 1.4; }
+.proof-cut .who { color: var(--mut); font-size: var(--small); }
+.proof-cut dl { grid-column: 8 / span 5; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 1.5rem; }
+.proof-cut .fact { display: flex; flex-direction: column; gap: 0.4rem; border-top: 2px solid var(--paper); padding-top: 0.9rem; }
+.proof-cut dt { order: 2; color: var(--mut); font: 700 var(--small)/1.3 var(--f-t); }
+.proof-cut dd { font: 800 calc(clamp(2.3rem, 4.2vw, 4rem) * var(--ds))/1 var(--f-d); }
+
+/* close */
+.close { --h: 0.95; }
+.close .ch { grid-column: 1 / span 7; display: grid; gap: 1.25rem; align-self: center; }
+.close h2 { font-size: calc(clamp(3.5rem, 8.6vw, 9rem) * var(--ds)); line-height: 0.95; }
+:root[lang="ar"] .close h2 { line-height: 1.2; }
+.close .lede { max-width: 40ch; font-size: calc(var(--body) * 1.05); text-wrap: pretty; }
+.close form { grid-column: 8 / span 5; display: grid; gap: 1.25rem; align-self: center; }
+.close fieldset { border: 0; padding: 0; min-width: 0; display: grid; gap: 0.7rem; }
+.close legend { padding: 0; font: 800 calc(1.15rem * var(--ds))/1.3 var(--f-d); margin-bottom: 0.7rem; }
+.chips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; }
+.chips label { position: relative; display: block; }
+.chips input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; width: 100%; height: 100%; }
+.chips span {
+  display: flex; align-items: center; justify-content: center; text-align: center; min-height: 56px; padding: 0.4rem 0.8rem; box-sizing: border-box;
+  border: 2px solid var(--ink); border-radius: 14px; font: 800 calc(1.1rem * var(--ds))/1.2 var(--f-d); background: transparent; color: var(--ink);
+  transition: background-color 140ms var(--ease), color 140ms var(--ease);
+}
+.chips input:checked + span { background: var(--ink); color: var(--paper); }
+.chips input:focus-visible + span { outline: 3px solid var(--ink); outline-offset: 3px; }
+.close label.fl { display: flex; align-items: center; min-height: 44px; font: 700 1.0625rem/1.3 var(--f-t); }
+.close input[type="email"] {
+  width: 100%; box-sizing: border-box; min-height: 56px; background: var(--paper); color: var(--ink); border: 2px solid var(--ink); border-radius: 14px;
+  font: 700 1.25rem/1.2 var(--f-t); padding: 0.5rem 1rem; direction: ltr; text-align: start;
+}
+:root[dir="rtl"] .close input[type="email"] { text-align: right; }
+.close input[type="email"]:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.close button {
+  min-height: 60px; padding-inline: 1.75rem; background: var(--ink); color: var(--paper); border: 0; border-radius: 14px; cursor: pointer;
+  font: 800 calc(1.4rem * var(--ds))/1 var(--f-d);
+  transition: background-color 140ms var(--ease), color 140ms var(--ease), transform 120ms var(--ease);
+}
+.close button:active { transform: translateY(1px); }
+.close button:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+@media (hover: hover) and (pointer: fine) { .close button:hover { background: var(--paper); color: var(--ink); } }
+.reply { min-height: 1.6em; font: 700 1.0625rem/1.5 var(--f-t); }
+
+@media (max-width: 859px) {
+  .act { grid-template-columns: minmax(0, 1fr); row-gap: 1.25rem; align-content: start; }
+  .act > * { grid-column: 1 / -1 !important; grid-row: auto !important; justify-self: stretch; align-self: auto !important; }
+  .hero h1 { font-size: calc(clamp(2.9rem, 13vw, 3.6rem) * var(--ds)); }
+  .hero .copy { gap: 1rem; }
+  .big, .p-c .big, .p-e .big { font-size: clamp(5.5rem, 30vw, 9rem); justify-self: start !important; margin-bottom: -0.5rem; }
+  .card--h { grid-template-columns: minmax(0, 1fr); }
+  .card--h .shot, .p-b .card--h .shot, .p-c .card--h .shot, .p-e .card--h .shot { min-height: 0; aspect-ratio: 16 / 9; }
+  .p-b .card--h, .p-c .card--h, .p-e .card--h, .s-a .card--h, .s-b .card--h { grid-template-columns: minmax(0, 1fr); }
+  .story .head { font-size: calc(clamp(2.4rem, 11vw, 3.2rem) * var(--ds)); }
+  .proof-cut dl { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 1rem; }
+  .close h2 { font-size: calc(clamp(3rem, 14vw, 4rem) * var(--ds)); }
+  .rtot .tn { font-size: clamp(3.5rem, 20vw, 5rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cnt.bump, .lcd b.flip, .slips li.new, .rtot.on { animation: none; }
+  .dial line, .timer, .rlines li b, .chips span { transition: none; }
+  .cta, .lang, .close button { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="chrome" id="chrome">
+  <div class="bar">
+    <a class="mark" href="#top">مؤونة</a>
+    <div class="basket" id="basket" aria-hidden="true">
+      <svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h20l-2.2 11H5.2zM8 10l4-6M18 10l-4-6"/></svg>
+      <span class="bl">السلة</span><span class="cnt" id="cnt">0</span>
+    </div>
+    <a class="cta" href="#join">خزّن الأفضل</a>
+    <a class="lang" href="../index.html" hreflang="en" lang="en">English</a>
+  </div>
+  <div class="timer" id="timer" aria-hidden="true" data-sc-verify-state="">
+    <svg class="dial" viewBox="0 0 40 40"><circle class="face" cx="20" cy="20" r="17"/><path d="M20 5v3M35 20h-3M20 35v-3M5 20h3"/><line id="hand" x1="20" y1="20" x2="20" y2="10"/><circle class="pin" cx="20" cy="20" r="2.6"/></svg>
+    <div class="lcd"><b id="dig">0</b><span>دقيقة</span></div>
+    <p class="lbl" id="lbl">المؤقّت</p>
+    <div class="rcpt"><span class="rk">الإيصال</span><ol class="slips" id="slips"></ol><span class="tot" id="tot"></span></div>
+  </div>
+</header>
+
+<main id="top">
+
+  <section id="hero" class="act hero g-paper" data-sc-act="flow" aria-labelledby="h1">
+    <div class="copy">
+      <h1 id="h1" class="disp">افسح مكانًا لوجبات أفضل.</h1>
+      <p class="lede">مؤن يومية و148 وصفة بلا خطوات معقّدة، فيمكن أن يصير عشاء الثلاثاء في اثنتي عشرة دقيقة.</p>
+      <p class="proof">148 وصفة · بلا خطوات معقّدة</p>
+      <p class="fine">«مؤونة» علامة تجريبية من <bdi dir="ltr">Landscape Lab</bdi>. كل وصفة ورقم واقتباس في هذه الصفحة محتوى تجريبي.</p>
+    </div>
+    <figure class="card card--v">
+      <div class="shot"><video id="film" muted loop playsinline preload="metadata" poster="../../../assets/domain-stills/pantry-1.webp" aria-label="أشكال بلون الطين والكريم تطفو فوق طاولة كريمية. لقطات تجريبية."><source src="../../../assets/domain-heroes/pantry-hero.mp4" type="video/mp4"></video></div>
+      <div class="body"><p class="metric"><b><bdi dir="ltr">12</bdi> دقيقة</b><span>دقيقة لعشاء أفضل</span></p></div>
+    </figure>
+  </section>
+
+  <section id="r1" class="act p-a g-tom" data-sc-act="flow" data-recipe="1" style="--h:0.85"><article class="card card--v"><figure class="shot"><img src="../../../assets/domain-stills/pantry-1.webp" alt="أشكال بلون الطين والكريم على طاولة كريمية. صورة تجريبية." width="960" height="540" loading="lazy" style="--op:50% 60%"></figure><div class="body"><h2 class="disp">يخنة الطماطم المشوية والفاصولياء البيضاء</h2><p class="row"><span class="time"><b><bdi dir="ltr">20</bdi></b> دقيقة</span><span class="srv">تكفي 4 أشخاص</span></p><p class="note">طماطم محمّرة وعلبة فاصولياء وملعقة هريسة، وتُقدَّم مع خبز ممزّق يتشرب المرق.</p><ul class="tags"><li>نباتي</li><li>مقلاة واحدة</li></ul></div></article><p class="big" aria-hidden="true"><bdi dir="ltr">20</bdi><small>دقيقة</small></p></section>
+
+  <section id="r2" class="act p-b g-ink" data-sc-act="flow" data-recipe="2" style="--h:0.85"><p class="big" aria-hidden="true"><bdi dir="ltr">25</bdi><small>دقيقة</small></p><article class="card card--h"><figure class="shot"><img src="../../../assets/domain-stills/pantry-2.webp" alt="أشكال بلون الطين والكريم على طاولة كريمية. صورة تجريبية." width="960" height="540" loading="lazy" style="--op:40% 50%"></figure><div class="body"><h2 class="disp">أرز الحمص بالليمون</h2><p class="row"><span class="time"><b><bdi dir="ltr">25</bdi></b> دقيقة</span><span class="srv">تكفي 4 أشخاص</span></p><p class="note">أرز محمّص بزيت الزيتون مع الحمص والليمون المخلل وحفنة بقدونس.</p><ul class="tags"><li>نباتي صرف</li><li>من المؤونة فقط</li></ul></div></article></section>
+
+  <section id="r3" class="act p-c g-soft" data-sc-act="flow" data-recipe="3" style="--h:0.85"><p class="big" aria-hidden="true"><bdi dir="ltr">12</bdi><small>دقيقة</small></p><article class="card card--h"><figure class="shot"><img src="../../../assets/domain-stills/pantry-3.webp" alt="أشكال بلون الطين والكريم على طاولة كريمية. صورة تجريبية." width="960" height="540" loading="lazy" style="--op:30% 50%"></figure><div class="body"><h2 class="disp">توست السردين بالشمر</h2><p class="row"><span class="time"><b><bdi dir="ltr">12</bdi></b> دقيقة</span><span class="srv">تكفي شخصين</span></p><p class="note">سردين معلّب على خبز العجين المخمّر المدهون بالزبدة، مع شمر مشرّح وعصرة ليمون.</p><ul class="tags"><li>بلا طهي</li><li>سمك</li></ul></div></article></section>
+
+  <section id="r4" class="act p-d g-tom" data-sc-act="flow" data-recipe="4" style="--h:0.85"><p class="big" aria-hidden="true"><bdi dir="ltr">15</bdi><small>دقيقة</small></p><article class="card card--v"><figure class="shot"><img src="../../../assets/domain-stills/pantry-4.webp" alt="أشكال بلون الطين والكريم على طاولة كريمية. صورة تجريبية." width="960" height="540" loading="lazy" style="--op:55% 55%"></figure><div class="body"><h2 class="disp">سباغيتي بالثوم والفلفل الحار</h2><p class="row"><span class="time"><b><bdi dir="ltr">15</bdi></b> دقيقة</span><span class="srv">تكفي 4 أشخاص</span></p><p class="note">ثوم مقلي ببطء وفلفل حار مجروش، وماء المعكرونة يُخفق معه ليصير صلصة لامعة.</p><ul class="tags"><li>نباتي</li><li>15 دقيقة أو أقل</li></ul></div></article></section>
+
+  <section id="r5" class="act p-e g-paper" data-sc-act="flow" data-recipe="5" style="--h:0.85"><article class="card card--h"><figure class="shot"><img src="../../../assets/domain-stills/pantry-1.webp" alt="أشكال بلون الطين والكريم على طاولة كريمية. صورة تجريبية." width="960" height="540" loading="lazy" style="--op:20% 40%"></figure><div class="body"><h2 class="disp">دجاج بالهريسة في صينية واحدة</h2><p class="row"><span class="time"><b><bdi dir="ltr">35</bdi></b> دقيقة</span><span class="srv">تكفي 4 أشخاص</span></p><p class="note">أفخاذ دجاج وبصل أحمر وجزر تُشوى معًا، ويُضاف فوقها الزبادي والنعناع.</p><ul class="tags"><li>صينية واحدة</li><li>عائلي</li></ul></div></article><p class="big" aria-hidden="true"><bdi dir="ltr">35</bdi><small>دقيقة</small></p></section>
+
+  <section id="receipt" class="act cut-peak p-f g-ink" data-sc-act="flow" aria-labelledby="h-rc">
+    <article data-recipe="6" class="card card--v"><figure class="shot"><img src="../../../assets/domain-stills/pantry-2.webp" alt="أشكال بلون الطين والكريم على طاولة كريمية. صورة تجريبية." width="960" height="540" loading="lazy" style="--op:70% 50%"></figure><div class="body"><h2 class="disp">شوربة العدس بالتوابل</h2><p class="row"><span class="time"><b><bdi dir="ltr">30</bdi></b> دقيقة</span><span class="srv">تكفي 6 أشخاص</span></p><p class="note">عدس أحمر وكمّون وقليل من معجون الطماطم، يُهرس حتى النعومة ويُنهى بزبدة محمّرة.</p><ul class="tags"><li>نباتي</li><li>يُجمَّد جيدًا</li></ul></div></article>
+    <div class="receipt" id="rbox">
+      <h2 id="h-rc" class="disp">عشاء في 35 دقيقة أو أقل، بمقلاة واحدة على الأكثر</h2>
+      <p class="rlede">كل وصفة تعتمد على ما في مؤونة عامرة، مع مكوّن طازج واحد من المتجر في طريق العودة. وهذا مجموع الوصفات الست أعلاه.</p>
+      <ul class="rlines" id="rlines"><li><span>يخنة الطماطم المشوية والفاصولياء البيضاء</span><b><bdi dir="ltr">20</bdi> دقيقة</b></li><li><span>أرز الحمص بالليمون</span><b><bdi dir="ltr">25</bdi> دقيقة</b></li><li><span>توست السردين بالشمر</span><b><bdi dir="ltr">12</bdi> دقيقة</b></li><li><span>سباغيتي بالثوم والفلفل الحار</span><b><bdi dir="ltr">15</bdi> دقيقة</b></li><li><span>دجاج بالهريسة في صينية واحدة</span><b><bdi dir="ltr">35</bdi> دقيقة</b></li><li><span>شوربة العدس بالتوابل</span><b><bdi dir="ltr">30</bdi> دقيقة</b></li></ul>
+      <div class="rtot" id="rtot"><span class="tl">المجموع</span><span class="tn" id="rn"><bdi dir="ltr">137</bdi><small>دقيقة</small></span><span class="th" id="rh"></span></div>
+    </div>
+  </section>
+
+  <section id="s1" class="act story s-a g-soft" data-sc-act="flow" aria-labelledby="h-st"><h2 id="h-st" class="disp head">من زرعه ومن عصره ومن عبّأه</h2><figure class="card card--h"><figure class="shot"><img src="../../../assets/domain-stills/pantry-1.webp" alt="أشكال بلون الطين والكريم على طاولة كريمية. صورة تجريبية." width="960" height="540" loading="lazy" style="--op:30% 50%"></figure><div class="body"><blockquote>نعصر الزيتون خلال ست ساعات من قطافه. بعدها يبدأ الزيت يفقد حدّته الخضراء، وهذه الحدّة هي الغاية كلها.</blockquote><p class="who">إيليني ماركو</p><p class="role">مزارعة زيتون، ميسينيا، اليونان</p></div></figure></section>
+
+  <section id="s2" class="act story s-b g-tom" data-sc-act="flow" aria-label="سالفاتوري غريكو"><figure class="card card--h"><figure class="shot"><img src="../../../assets/domain-stills/pantry-2.webp" alt="أشكال بلون الطين والكريم على طاولة كريمية. صورة تجريبية." width="960" height="540" loading="lazy" style="--op:75% 50%"></figure><div class="body"><blockquote>كانت جدتي تجفف الطماطم على هذا السطح كل أغسطس. ما زلنا نستخدمه، والطماطم نفسها، لكن بغطاء أفضل.</blockquote><p class="who">سالفاتوري غريكو</p><p class="role">منتج طماطم مجففة، باتشينو، صقلية</p></div></figure></section>
+
+  <section id="s3" class="act story s-c g-paper" data-sc-act="flow" aria-label="آنا ريبيرو"><figure class="card card--v"><figure class="shot"><img src="../../../assets/domain-stills/pantry-3.webp" alt="أشكال بلون الطين والكريم على طاولة كريمية. صورة تجريبية." width="960" height="540" loading="lazy" style="--op:50% 60%"></figure><div class="body"><blockquote>السمك المعلّب الجيد هو سمك مطبوخ. نعبّئه يدويًا في اليوم نفسه، والزيت داخل العلبة جزء من الوصفة.</blockquote><p class="who">آنا ريبيرو</p><p class="role">صاحبة مصنع تعليب، سيتوبال، البرتغال</p></div></figure></section>
+
+  <section id="proof" class="act proof-cut g-ink" data-sc-act="flow" aria-labelledby="h-pr">
+    <div class="q"><h2 id="h-pr">ما يقوله من يطبخون في بيوتهم</h2><blockquote>كان الثلاثاء يعني حبوب الإفطار على العشاء. اليوم هو علبة ومقلاة واثنتا عشرة دقيقة، والأولاد يطلبون المزيد.</blockquote><p class="who">بريا ناير، أم لثلاثة أطفال، ليدز</p></div>
+    <dl><div class="fact"><dt>وصفات</dt><dd><bdi dir="ltr">148</bdi></dd></div><div class="fact"><dt>خطوات معقّدة</dt><dd><bdi dir="ltr">0</bdi></dd></div><div class="fact"><dt>أسرع عشاء</dt><dd><bdi dir="ltr">12</bdi> دقيقة</dd></div><div class="fact"><dt>منتجون نشتري منهم</dt><dd><bdi dir="ltr">63</bdi></dd></div></dl>
+  </section>
+
+  <section id="join" class="act close g-tom" data-sc-act="flow" aria-labelledby="h-join">
+    <div class="ch"><h2 id="h-join" class="disp">خزّن الأفضل.</h2><p class="lede">أخبرنا لكم شخصًا تطبخ وما الذي تتجنّبه. سنرسل لك أول صندوق من الأساسيات مع خمس وصفات تستخدمها.</p></div>
+    <form id="joinForm" novalidate>
+      <fieldset><legend>لكم شخصًا تطبخ؟</legend>
+        <div class="chips"><label><input type="radio" name="household" value="0" required><span>لي وحدي</span></label><label><input type="radio" name="household" value="1"><span>لشخصين</span></label><label><input type="radio" name="household" value="2"><span>من 3 إلى 4</span></label><label><input type="radio" name="household" value="3"><span>5 أشخاص أو أكثر</span></label></div>
+      </fieldset>
+      <div><label class="fl" for="email">البريد الإلكتروني</label><input id="email" name="email" type="email" inputmode="email" autocomplete="email" required dir="ltr"></div>
+      <button type="submit">خزّن الأفضل</button>
+      <p id="reply" class="reply" role="status"></p>
+    </form>
+  </section>
+
+</main>
+
+<script src="../../_engine/scrollcraft.js"></script>
+<script>ScrollCraft.mount(document.body);</script>
+<script>
+/* pantry: a rhythmic cutlist. The cuts only cut. The one moving thing is the kitchen timer in the
+   fixed chrome: it jumps to each recipe's cooking time, read from the cut's own time chip, keeps a
+   running receipt, and after the last recipe totals them. The basket counts recipes as they pass. */
+(function () {
+  "use strict";
+  var T = {"min":"دقيقة","idle":"المؤقّت","total":"المجموع، ست وجبات","err":"أضف بريدًا إلكترونيًا صالحًا من فضلك.","errSize":"اختر لكم شخصًا تطبخ من فضلك.","ok":"شكرًا لك. نجهّز صندوقك الأول، وخمس وصفات في طريقها إلى بريدك. هذه علامة تجريبية: لم يُرسل شيء.","human":function(t){var h=Math.floor(t/60),m=t%60;var hs=h===2?"ساعتان":(h===1?"ساعة":h+" ساعات");return hs+" و"+m+" دقيقة، لو طبخت الوصفات الست كلها متتابعة.";}};
+  var doc = document.documentElement;
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var $ = function (id) { return document.getElementById(id); };
+  var chrome = $("chrome"), timer = $("timer"), dig = $("dig"), lbl = $("lbl"), hand = $("hand");
+  var slips = $("slips"), tot = $("tot"), cnt = $("cnt"), peak = $("receipt");
+  var rows = Array.prototype.slice.call(document.querySelectorAll("[data-recipe]")).map(function (el) {
+    return { el: el, min: parseInt(el.querySelector(".time b").textContent, 10), name: el.querySelector("h2").textContent.trim() };
+  });
+  var lines = Array.prototype.slice.call(document.querySelectorAll("#rlines li"));
+  var sum = rows.reduce(function (a, r) { return a + r.min; }, 0);
+  $("rn").firstChild.textContent = String(sum);
+  $("rh").textContent = T.human(sum);
+  var ys = [], yTal = 0, n = -1, tallied = null;
+
+  function measure() {
+    var ch = chrome.offsetHeight, sy = window.scrollY || 0, vh = innerHeight;
+    var cut = ch + 0.42 * (vh - ch);
+    rows.forEach(function (r, i) { ys[i] = Math.round(r.el.getBoundingClientRect().top + sy - cut); });
+    var pr = peak.getBoundingClientRect();
+    yTal = Math.round(pr.top + sy - ch + Math.min(pr.height * 0.28, vh * 0.35));
+    update();
+  }
+  function set(el, txt) { if (el.textContent !== txt) { el.textContent = txt; return true; } return false; }
+
+  var queued = false;
+  function update() {
+    queued = false;
+    var y = window.scrollY || 0, c = 0, i;
+    for (i = 0; i < ys.length; i++) if (y >= ys[i]) c = i + 1;
+    var t = c === rows.length && y >= yTal;
+    var q = (reduce ? "r" : "s") + c + (t ? "t" : "") + "-" + Math.round(y / 24);
+    if (c === n && t === tallied) { timer.setAttribute("data-sc-verify-state", q); return; }
+    var grew = c > n && n >= 0;
+    var value = c === 0 ? 0 : (t ? sum : rows[c - 1].min);
+    var changed = set(dig, String(value));
+    if (changed && !reduce) { dig.classList.remove("flip"); void dig.offsetWidth; dig.classList.add("flip"); }
+    hand.style.transform = "rotate(" + ((value % 60) * 6) + "deg)";
+    set(lbl, c === 0 ? T.idle : (t ? T.total : rows[c - 1].name));
+    timer.classList.toggle("total", t);
+    var run = 0;
+    slips.textContent = "";
+    for (i = 0; i < c; i++) {
+      run += rows[i].min;
+      var li = document.createElement("li");
+      li.textContent = String(rows[i].min);
+      if (i === c - 1 && grew && !reduce) li.className = "new";
+      slips.appendChild(li);
+    }
+    tot.textContent = c === 0 ? "" : "= " + (t ? sum : run) + " " + T.min;
+    if (set(cnt, String(c)) && grew && !reduce) { cnt.classList.remove("bump"); void cnt.offsetWidth; cnt.classList.add("bump"); }
+    lines.forEach(function (l, k) { l.classList.toggle("on", k < c); });
+    $("rtot").classList.toggle("on", t);
+    n = c; tallied = t;
+    timer.setAttribute("data-sc-verify-state", q);
+  }
+  function onScroll() { if (!queued) { queued = true; requestAnimationFrame(update); } }
+  addEventListener("scroll", onScroll, { passive: true });
+  addEventListener("resize", measure);
+  addEventListener("load", measure);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+  measure();
+
+  var film = $("film");
+  if (film && !reduce) { var p = film.play(); if (p && p.catch) p.catch(function () {}); }
+
+  var cta = document.querySelector(".cta"), email = $("email");
+  var first = document.querySelector("#joinForm input[type=radio]");
+  cta.addEventListener("click", function () { setTimeout(function () { if (first) first.focus({ preventScroll: true }); }, 0); });
+
+  /* local only: nothing is sent anywhere */
+  var form = $("joinForm"), reply = $("reply");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var size = form.querySelector("input[name=household]:checked");
+    if (!size) { reply.textContent = T.errSize; if (first) first.focus(); return; }
+    if (!email.value || !email.checkValidity()) { reply.textContent = T.err; email.setAttribute("aria-invalid", "true"); email.focus(); return; }
+    email.removeAttribute("aria-invalid");
+    reply.textContent = T.ok;
+    form.reset();
+  });
+})();
+</script>
+</body>
+</html>

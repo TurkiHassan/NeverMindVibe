@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>نبض: خطة رعاية واحدة، وطريقتان لقراءتها (علامة تجريبية)</title>
+<meta name="description" content="موقع تجريبي لـ«نبض»، بنية الرعاية لفرق الصحة: خطة واحدة تُقرأ بطريقتين، وما تغيّر في 41 عيادة، والبحث الذي يسنده. أدخل «نبض» إلى عيادتك.">
+<link rel="alternate" hreflang="en" href="../">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%2310223d'/><path d='M3 17h7l3-8 4 15 3-7h9' fill='none' stroke='%23ff8a65' stroke-width='2.4' stroke-linejoin='round' stroke-linecap='round'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_engine/scrollcraft.css">
+<style>
+  :root {
+    --paper: #eff6ff; --navy: #10223d; --apricot: #ff8a65; --apricot-soft: #ffe6da; --rule: #cbdcf5;
+    --soft-l: #475c7c;   /* secondary text on paper */
+    --soft-d: #b9c9e4;   /* secondary text on navy */
+    --sc-canvas: #10223d; --sc-surface: #183258; --sc-ink: #eff6ff; --sc-ink-soft: #b9c9e4;
+    --sc-accent: #ff8a65; --sc-accent-ink: #10223d;
+    --sc-font-display: "Cairo", system-ui, sans-serif;
+    --sc-font-text: "Cairo", system-ui, sans-serif;
+    --ps-pad: clamp(1.5rem, 4vw, 4.5rem);
+    --ps-mid: 3rem;
+    --ps-st: 6.75rem;
+    --fs-h1: clamp(2.4rem, 0.8rem + 3.9vw, 5.25rem);
+    --hero-top: clamp(5.5rem, 16svh, 9rem);
+    --sub-top: clamp(4.75rem, 9svh, 6.25rem);
+    --body-top: clamp(11rem, 25svh, 14.5rem);
+    --lbl-top: 58svh;
+  }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  body { background: var(--navy); }
+  button { cursor: pointer; }
+
+  .ps { overflow: hidden; background: var(--navy); color: var(--paper); --d: 50%; }
+  .ps-ground { position: absolute; inset: 0; }
+  .ps-ground--navy { z-index: 1; }
+  .ps-ground--paper { z-index: 2; background: var(--paper); color: var(--navy); clip-path: inset(0 calc(100% - var(--d)) 0 0); }
+  [dir="rtl"] .ps-ground--paper { clip-path: inset(0 0 0 calc(100% - var(--d))); }
+  .ps-over { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+  .ps-over > * { pointer-events: auto; }
+
+  /* focus: themed to the ground under it */
+  .ps :focus-visible { outline: 2px solid var(--apricot); outline-offset: 3px; border-radius: 4px; }
+  .ps-ground--paper :focus-visible, .ps-hl:focus-visible { outline-color: var(--navy); }
+
+  .ps-brand { position: absolute; inset-block-start: 1.25rem; inset-inline-start: var(--ps-pad); margin: 0; font: 800 1.35rem/1 var(--sc-font-display); letter-spacing: -0.02em; }
+  [dir="rtl"] .ps-brand { letter-spacing: 0; }
+
+  /* ---- divider as chrome ---- */
+  .ps-line { position: absolute; z-index: 3; inset-block: 0; inset-inline-start: max(var(--d), 1.4rem); width: 2px; margin-inline-start: -1px; background: color-mix(in oklab, var(--apricot) 40%, transparent); pointer-events: none; }
+  .ps-prog { position: absolute; inset: 0; background: var(--apricot); transform-origin: 50% 0; transform: scaleY(var(--prog, 0)); }
+  .ps-head { position: absolute; z-index: 5; inset-block: 0; inset-inline-start: max(var(--d), 1.4rem); width: 0; pointer-events: none; }
+  .ps-head > * { pointer-events: auto; }
+  .ps-hl, .ps-hr {
+    position: absolute; inset-block-start: 0.85rem; min-height: 2.75rem; padding: 0 0.25rem; background: none; border: 0;
+    font: 700 var(--sc-t-sm)/1 var(--sc-font-text); white-space: nowrap; display: inline-flex; align-items: center;
+    transition: opacity var(--sc-d-fast) var(--sc-ease-out), transform var(--sc-d-fast) var(--sc-ease-out);
+  }
+  .ps-hl { inset-inline-end: 0.9rem; color: var(--navy); }
+  .ps-hr { inset-inline-start: 0.9rem; color: var(--paper); }
+  .ps-hl:active, .ps-hr:active, .ps-st:active { transform: translateY(1px); }
+  @media (hover: hover) and (pointer: fine) { .ps-hl:hover, .ps-hr:hover { text-decoration: underline; text-underline-offset: 0.3em; } .ps-st:hover span { text-decoration: underline; } }
+  .ps-st { position: absolute; inset-block-start: var(--st); inset-inline-start: 0; margin-block-start: -1.375rem; min-height: 2.75rem; padding: 0; background: none; border: 0; display: flex; align-items: center; gap: 0.7rem; color: var(--paper); font: 500 var(--sc-t-xs)/1 var(--sc-font-text); white-space: nowrap; }
+  .ps-st i { flex: none; width: 0.8rem; height: 0.8rem; margin-inline-start: -0.4rem; border-radius: 50%; background: var(--navy); border: 2px solid var(--paper); transition: background var(--sc-d-base) var(--sc-ease-out), border-color var(--sc-d-base) var(--sc-ease-out); }
+  .ps-st.is-on i { background: var(--apricot); border-color: var(--paper); }
+  .ps-st span { color: var(--soft-d); }
+  .ps-st.is-on span { color: var(--paper); }
+  .ps-head.is-beat .ps-line { animation: psTick 520ms var(--sc-ease-out); }
+  @keyframes psTick { 0% { width: 2px; } 30% { width: 8px; margin-inline-start: -4px; } 100% { width: 2px; } }
+
+  /* ---- titles set across the seam: first half on paper, second on navy ---- */
+  .ps-ttl { position: absolute; inset: 0; margin: 0; pointer-events: none; font: 800 var(--fs-t, var(--fs-h1))/1.02 var(--sc-font-display); letter-spacing: -0.035em; opacity: 0; visibility: hidden; }
+  [dir="rtl"] .ps-ttl { letter-spacing: 0; line-height: 1.25; }
+  .ps-ttl span { position: absolute; display: block; text-wrap: balance; }
+  .ps-ttl .a { inset-inline-start: var(--ps-pad); width: calc(50% - var(--ps-pad) - var(--ps-mid)); color: var(--navy); }
+  .ps-ttl .b { inset-inline-start: calc(50% + var(--ps-st)); width: calc(50% - var(--ps-st) - var(--ps-pad)); color: var(--paper); }
+  .ps-ttl--hero .a, .ps-ttl--hero .b { top: var(--hero-top); }
+  .ps-ttl--sub { --fs-t: clamp(1.9rem, 0.9rem + 2.4vw, 3.3rem); font-weight: 700; }
+  .ps-ttl--sub .a, .ps-ttl--sub .b { top: var(--sub-top); }
+
+  /* ---- panels ---- */
+  .ps-pn { position: absolute; top: var(--body-top); margin: 0; opacity: 0; visibility: hidden; }
+  .ps-pn--l { inset-inline-start: var(--ps-pad); width: calc(50% - var(--ps-pad) - var(--ps-mid)); }
+  .ps-pn--r { inset-inline-start: calc(50% + var(--ps-st)); width: calc(50% - var(--ps-st) - var(--ps-pad)); }
+  .ps-pn--hero { top: calc(var(--hero-top) + var(--fs-h1) * 2.2 + 1.5rem); }
+  [dir="rtl"] .ps-pn--hero { top: calc(var(--hero-top) + var(--fs-h1) * 2.7 + 1.5rem); }
+  .ps-pn--pts { top: var(--sub-top); }
+  .ps-pn p { margin: 0; }
+  .ps-lead { font: 500 var(--sc-t-lg)/1.5 var(--sc-font-text); max-width: 34ch; text-wrap: pretty; }
+  .ps-h2 { margin: 0 0 var(--sc-5); font: 800 var(--sc-t-xl)/1.1 var(--sc-font-display); letter-spacing: -0.025em; text-wrap: balance; max-width: 18ch; }
+  [dir="rtl"] .ps-h2 { letter-spacing: 0; line-height: 1.3; }
+  .ps-pts { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sc-4); }
+  .ps-pts li { position: relative; padding-inline-start: 1.7rem; font: 500 var(--sc-t-base)/1.45 var(--sc-font-text); max-width: 34ch; }
+  .ps-pts li::before { content: ""; position: absolute; inset-inline-start: 0; top: 0.42em; width: 0.8rem; height: 0.8rem; border-radius: 50%; border: 2px solid var(--navy); background: transparent; }
+  .ps-pn--r .ps-pts li::before { border-color: var(--apricot); }
+  .ps-pts li.is-beat::before { animation: psBeat 560ms var(--sc-ease-out); background: var(--apricot); }
+  @keyframes psBeat { 0% { transform: scale(1); } 35% { transform: scale(1.7); } 100% { transform: scale(1); } }
+
+  /* outcomes */
+  .ps-bar { margin: 0 0 var(--sc-6); max-width: 34rem; }
+  .ps-bar-l { font: 600 var(--sc-t-sm)/1.3 var(--sc-font-text); }
+  .ps-bar-v { font: 800 var(--sc-t-3xl)/1 var(--sc-font-display); letter-spacing: -0.04em; margin-block: var(--sc-2); font-variant-numeric: tabular-nums; }
+  [dir="rtl"] .ps-bar-v { letter-spacing: 0; }
+  .ps-bar-v bdi { display: inline-block; }
+  .ps-track { height: 0.4rem; background: var(--rule); border-radius: 2px; overflow: hidden; }
+  .ps-ground--navy .ps-track { background: color-mix(in oklab, var(--paper) 16%, transparent); }
+  .ps-track i { display: block; height: 100%; background: var(--navy); transform-origin: 0 50%; transform: scaleX(var(--w, 1)); }
+  [dir="rtl"] .ps-track i { transform-origin: 100% 50%; }
+  .ps-ground--navy .ps-track i { background: var(--apricot); }
+  .ps-note { margin-block-start: var(--sc-2) !important; font: 400 var(--sc-t-sm)/1.45 var(--sc-font-text); color: var(--soft-l); max-width: 36ch; }
+  .ps-ground--navy .ps-note { color: var(--soft-d); }
+  .ps-lede { position: absolute; margin: 0; top: calc(var(--sub-top) + 4.5rem); font: 400 var(--sc-t-sm)/1.5 var(--sc-font-text); color: var(--soft-d); inset-inline-start: calc(50% + var(--ps-st)); width: calc(50% - var(--ps-st) - var(--ps-pad)); max-width: 40ch; opacity: 0; visibility: hidden; }
+
+  /* research */
+  .ps-quote { margin: 0; }
+  .ps-quote p { font: 600 var(--sc-t-lg)/1.45 var(--sc-font-text); max-width: 32ch; text-wrap: pretty; }
+  .ps-quote footer { margin-top: var(--sc-5); color: var(--soft-l); font: 400 var(--sc-t-sm)/1.45 var(--sc-font-text); max-width: 34ch; }
+  .ps-facts { margin: 0; display: grid; gap: 0; max-width: 30rem; }
+  .ps-fact { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sc-5); padding-block: var(--sc-4); border-block-end: 1px solid color-mix(in oklab, var(--paper) 20%, transparent); }
+  .ps-fact:first-child { border-block-start: 1px solid color-mix(in oklab, var(--paper) 20%, transparent); }
+  .ps-fact dt { color: var(--soft-d); font: 400 var(--sc-t-sm)/1.3 var(--sc-font-text); }
+  .ps-fact dd { margin: 0; font: 800 var(--sc-t-xl)/1 var(--sc-font-display); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  /* ---- the heartbeat ---- */
+  .ps-trace { position: absolute; inset: 0; pointer-events: none; }
+  .ps-trace svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .ps-trace path { fill: none; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .ps-trace .base { stroke-width: 2; }
+  .ps-trace .head { stroke-width: 4; }
+  .ps-ground--paper .base { stroke: color-mix(in oklab, var(--navy) 62%, transparent); }
+  .ps-ground--paper .head { stroke: var(--navy); }
+  .ps-ground--navy .base { stroke: color-mix(in oklab, var(--paper) 56%, transparent); }
+  .ps-ground--navy .head { stroke: var(--apricot); }
+
+  /* peak: the seven items ride the one line */
+  .ps-lbls { position: absolute; inset-inline: 0; top: var(--lbl-top); margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); color: var(--paper); }
+  .ps-lbls .li { position: relative; padding: 1.1rem 0.7rem 0; text-align: center; font: 500 var(--sc-t-sm)/1.4 var(--sc-font-text); opacity: 0; visibility: hidden; }
+  .ps-lbls .li::before { content: ""; position: absolute; top: -0.45rem; inset-inline-start: 50%; margin-inline-start: -0.45rem; width: 0.9rem; height: 0.9rem; border-radius: 50%; background: var(--apricot); border: 2px solid var(--navy); }
+  .ps-lbls .li.is-p::before { background: var(--navy); border-color: var(--apricot); }
+  .ps-lbls .li::after { content: ""; position: absolute; inset-inline-start: 50%; bottom: calc(100% - 0.4rem); width: 1px; height: var(--stem, 20svh); background: color-mix(in oklab, var(--paper) 30%, transparent); }
+  .ps-lbls .li.is-beat::before { animation: psBeat 560ms var(--sc-ease-out); }
+  .ps-lbls .cap { display: none; }
+  .ps-grp { grid-row: 2; margin: 1.4rem 0.7rem 0; padding-top: 0.7rem; border-top: 2px solid var(--apricot); font: 700 var(--sc-t-sm)/1 var(--sc-font-text); color: var(--paper); opacity: 0; visibility: hidden; }
+  .ps-grp--p { grid-column: 1 / span 4; }
+  .ps-grp--c { grid-column: 5 / span 3; }
+
+  /* ---- close: the clinician column takes the whole width ---- */
+  .ps-close { position: absolute; inset: 0; padding-block: clamp(4.5rem, 10svh, 6rem) clamp(10rem, 24svh, 14rem); padding-inline: var(--ps-st) var(--ps-pad); display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2rem, 5vw, 5rem); align-content: start; opacity: 0; visibility: hidden; }
+  .ps-close h2 { margin: 0; font: 800 var(--sc-t-3xl)/1 var(--sc-font-display); letter-spacing: -0.04em; text-wrap: balance; max-width: 10ch; }
+  [dir="rtl"] .ps-close h2 { letter-spacing: 0; line-height: 1.25; }
+  .ps-close .lede { margin: var(--sc-5) 0 0; color: var(--soft-d); max-width: 38ch; text-wrap: pretty; }
+  .ps-film { position: relative; margin: var(--sc-6) 0 0; aspect-ratio: 16 / 9; max-height: 22svh; width: auto; border-radius: var(--sc-r-sm); overflow: hidden; background: var(--sc-surface); }
+  .ps-film img, .ps-film video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .ps-form { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sc-4) var(--sc-5); align-content: start; }
+  .ps-f { margin: 0; display: grid; gap: 0.35rem; }
+  .ps-f--wide { grid-column: 1 / -1; }
+  .ps-f label { font: 600 var(--sc-t-sm)/1.2 var(--sc-font-text); color: var(--soft-d); }
+  .ps-f input, .ps-f select, .ps-f textarea { width: 100%; min-height: 2.75rem; padding: 0.55rem 0.15rem; background: transparent; color: var(--paper); border: 0; border-bottom: 1.5px solid color-mix(in oklab, var(--paper) 55%, transparent); border-radius: 0; font: 400 var(--sc-t-base)/1.4 var(--sc-font-text); }
+  .ps-f select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--paper) 50%), linear-gradient(135deg, var(--paper) 50%, transparent 50%); background-size: 6px 6px, 6px 6px; background-position: calc(100% - 12px) 55%, calc(100% - 6px) 55%; background-repeat: no-repeat; padding-inline-end: 1.6rem; }
+  [dir="rtl"] .ps-f select { background-position: 6px 55%, 12px 55%; }
+  .ps-f select option { color: var(--navy); background: var(--paper); }
+  .ps-f textarea { min-height: 5rem; resize: vertical; border: 1.5px solid color-mix(in oklab, var(--paper) 55%, transparent); padding: 0.6rem; border-radius: var(--sc-r-sm); }
+  .ps-f input:focus-visible, .ps-f select:focus-visible, .ps-f textarea:focus-visible { outline: 0; border-color: var(--apricot); box-shadow: 0 1.5px 0 var(--apricot); }
+  .ps-form button { grid-column: 1 / -1; justify-self: start; min-height: 2.75rem; padding-inline: var(--sc-6); border: 0; border-radius: var(--sc-r-sm); background: var(--apricot); color: var(--navy); font: 700 var(--sc-t-base)/1 var(--sc-font-text); transition: transform var(--sc-d-fast) var(--sc-ease-out); }
+  .ps-form button:active { transform: scale(0.97); }
+  .ps-form button:disabled { opacity: 0.5; cursor: not-allowed; }
+  @media (hover: hover) and (pointer: fine) { .ps-form button:hover { transform: translateY(-1px); } }
+  .ps-reply { grid-column: 1 / -1; margin: 0; min-height: 1.5em; font: 500 var(--sc-t-sm)/1.5 var(--sc-font-text); color: var(--paper); }
+  .ps-back { color: var(--soft-d); }
+
+  .ps-foot { position: absolute; z-index: 4; inset-block-end: 0; inset-inline-end: 0; width: 50%; padding: 0 var(--ps-pad) 0 var(--ps-st); min-height: 2.75rem; display: flex; align-items: center; justify-content: space-between; gap: var(--sc-4); font: 400 var(--sc-t-xs)/1.35 var(--sc-font-text); color: var(--soft-d); }
+  [dir="rtl"] .ps-foot { padding: 0 var(--ps-st) 0 var(--ps-pad); }
+  .ps-foot p { margin: 0; }
+  .ps-foot a { color: var(--paper); display: inline-flex; align-items: center; min-height: 2.75rem; padding-inline: 0.5rem; font-weight: 700; }
+  .ps-foot .back { color: var(--soft-d); font-weight: 400; }
+  .ps-foot a:focus-visible { outline: 2px solid var(--apricot); }
+
+  /* ---- phones: composed separately. Top and bottom halves, seam horizontal, heartbeat runs down the end edge ---- */
+  @media (max-width: 860px) {
+    :root { --ps-pad: 1.25rem; --ps-mid: 3.4rem; --ps-st: 1.25rem; --fs-h1: 2.5rem; }
+    .ps-ground--paper, [dir="rtl"] .ps-ground--paper { clip-path: inset(0 0 calc(100% - var(--d)) 0); }
+    .ps-brand { inset-block-start: 0.9rem; }
+    .ps-line { inset-block: auto; inset-block-start: max(var(--d), 3.3rem); inset-inline-start: 0; inset-inline-end: 0; width: auto; height: 2px; margin: -1px 0 0; }
+    .ps-prog { transform-origin: 0 50%; transform: scaleX(var(--prog, 0)); }
+    [dir="rtl"] .ps-prog { transform-origin: 100% 50%; }
+    .ps-head { inset-block: auto; inset-block-start: max(var(--d), 3.3rem); inset-inline: 0; width: auto; height: 0; }
+    .ps-hl, .ps-hr { inset-block-start: auto; }
+    .ps-hl { inset-inline-end: auto; inset-inline-start: var(--ps-pad); inset-block-end: 0.1rem; }
+    .ps-hr { inset-inline-start: var(--ps-pad); inset-block-start: 0.1rem; }
+    .ps-st { inset-block-start: 0.1rem; inset-inline-start: var(--sx); margin-block-start: 0; margin-inline-start: -1.6rem; width: 3.2rem; flex-direction: column; justify-content: flex-start; gap: 0.4rem; padding-top: 0.5rem; }
+    .ps-st i { margin: 0; }
+    .ps-st span { font-size: 0.72rem; }
+    .ps-ttl { font-size: var(--fs-t, 2.5rem); }
+    .ps-ttl .a { width: calc(100% - var(--ps-pad) - var(--ps-mid)); inset-inline-start: var(--ps-pad); }
+    .ps-ttl .b { width: calc(100% - var(--ps-pad) - var(--ps-mid)); inset-inline-start: var(--ps-pad); }
+    .ps-ttl--hero .a { top: 3.2rem; }
+    .ps-ttl--hero .b { top: calc(50% + 4.3rem); }
+    .ps-ttl--sub { --fs-t: 1.55rem; }
+    .ps-ttl--sub .a { top: 3rem; }
+    .ps-ttl--sub .b { top: calc(50% + 4.3rem); }
+    .ps-pn { width: calc(100% - var(--ps-pad) - var(--ps-mid)) !important; inset-inline-start: var(--ps-pad) !important; }
+    .ps-pn--l.ps-pn--hero { top: 7rem; }
+    .ps-pn--r.ps-pn--hero { top: calc(50% + 10.6rem); }
+    .ps-pn--hero .ps-lead { font-size: 0.95rem; line-height: 1.45; }
+    [dir="rtl"] .ps-pn--r.ps-pn--hero { top: calc(50% + 12rem); }
+    [dir="rtl"] .ps-pn--l.ps-pn--hero { top: 8rem; }
+    .ps-pn--l.ps-pn--pts { top: 2.6rem; }
+    .ps-pn--r.ps-pn--pts { top: calc(50% + 4.2rem); }
+    .ps-pn--l.ps-pn--bar { top: 7.6rem; }
+    .ps-pn--r.ps-pn--bar { top: calc(50% + 7.8rem); }
+    .ps-pn--l.ps-pn--res { top: 6rem; }
+    .ps-pn--r.ps-pn--res { top: calc(50% + 7.2rem); }
+    .ps-h2 { font-size: 1.2rem; margin-bottom: 0.6rem; max-width: none; }
+    .ps-pts { gap: 0.45rem; }
+    .ps-pts li { font-size: 0.88rem; line-height: 1.35; padding-inline-start: 1.4rem; }
+    .ps-bar { margin-bottom: 0.7rem; }
+    .ps-bar-l { font-size: 0.8rem; }
+    .ps-bar-v { font-size: 1.9rem; margin-block: 0.15rem; }
+    .ps-note { font-size: 0.74rem; line-height: 1.3; margin-top: 0.25rem !important; }
+    .ps-lede { display: none; }
+    .ps-quote p { font-size: 1rem; line-height: 1.4; }
+    .ps-quote footer { margin-top: 0.6rem; font-size: 0.76rem; }
+    .ps-fact { padding-block: 0.55rem; }
+    .ps-fact dd { font-size: 1.15rem; }
+    .ps-fact dt { font-size: 0.82rem; }
+    .ps-lbls { inset-inline: var(--ps-pad) 3.4rem; inset-block: 0.5rem 2.5rem; top: 0.5rem; grid-template-columns: 1fr; grid-template-rows: repeat(7, minmax(0, 1fr)); align-content: stretch; }
+    .ps-lbls .li { padding: 0 0 0 0; padding-inline-start: 1.6rem; text-align: start; align-self: center; font-size: 0.86rem; line-height: 1.35; }
+    .ps-lbls .li::before { top: 0.3em; inset-inline-start: 0; margin: 0; }
+    .ps-lbls .li::after { display: none; }
+    .ps-lbls .cap { display: block; font: 700 0.76rem/1.2 var(--sc-font-text); color: var(--apricot); margin-bottom: 0.2rem; }
+    .ps-grp { display: none; }
+    .ps-close { grid-template-columns: 1fr; gap: 0.5rem; padding-block: 6.6rem 3rem; padding-inline: var(--ps-pad); align-content: start; }
+    .ps-close h2 { font-size: 1.8rem; max-width: none; }
+    .ps-close .lede { margin-top: 0.5rem; font-size: 0.86rem; line-height: 1.45; }
+    .ps-film { display: none; }
+    .ps-form { grid-template-columns: 1fr; gap: 0.5rem; margin-top: 0.5rem; padding-inline-end: 2.4rem; }
+    .ps-f { gap: 0.1rem; }
+    .ps-f label { font-size: 0.78rem; }
+    .ps-f input, .ps-f select { min-height: 2.75rem; padding-block: 0.4rem; }
+    .ps-f textarea { min-height: 3.6rem; }
+    .ps-form button { width: 100%; justify-self: stretch; }
+    .ps-reply { font-size: 0.82rem; min-height: 0; }
+    .ps-foot { inset-inline-start: 0; inset-inline-end: 0; width: auto; padding-inline: var(--ps-pad); }
+    [dir="rtl"] .ps-foot { padding-inline: var(--ps-pad); }
+    .ps-foot p { max-width: 15rem; font-size: 0.68rem; line-height: 1.3; }
+    .ps-foot .back { display: none; }
+  }
+  @media (max-height: 760px) and (min-width: 861px) { .ps-film { display: none; } .ps-lead { font-size: var(--sc-t-base); } }
+  @media (prefers-reduced-motion: reduce) {
+    .ps-pts li.is-beat::before, .ps-lbls .li.is-beat::before, .ps-head.is-beat .ps-line { animation: none; }
+    .ps-st i { transition: none; }
+  }
+
+</style>
+</head>
+<body>
+<main>
+<section id="act" data-sc-act="pin" data-sc-span="9" aria-label="نبض: خطة رعاية واحدة، وطريقتان لقراءتها (علامة تجريبية)">
+<div data-sc-stage class="ps" id="stage" data-sc-verify-state="">
+
+  <nav class="ps-head" aria-label="مسار الصفحة">
+    <button type="button" class="ps-hl" data-go="0">للأفراد</button>
+    <button type="button" class="ps-hr" data-go="0.17">للممارسين الصحيين</button>
+    <button type="button" class="ps-st" data-go="0.26" data-p0="0.235" style="--st:40%;--sx:46%"><i></i><span>النتائج</span></button>
+    <button type="button" class="ps-st" data-go="0.4" data-p0="0.375" style="--st:52%;--sx:63%"><i></i><span>البحث</span></button>
+    <button type="button" class="ps-st" data-go="0.93" data-p0="0.84" style="--st:64%;--sx:80%" aria-label="أدخل «نبض»"><i></i><span>أدخل «نبض»</span></button>
+  </nav>
+
+  <div class="ps-ground ps-ground--navy">
+    <p class="ps-brand" aria-hidden="true">نبض</p>
+    <div class="ps-trace" aria-hidden="true"><svg></svg></div>
+    <div class="ps-pn ps-pn--r ps-pn--hero" data-w="0 0 0.08 0.11" aria-hidden="true"><p class="ps-lead">تُلخَّص قراءات كل مريض والجرعات الفائتة والرسائل في ثلاثة أسطر، مرتبة بحسب من يحتاجك أولًا.</p></div>
+    <div class="ps-pn ps-pn--r ps-pn--pts" data-w="0.1 0.13 0.215 0.235" data-step="0.02" aria-hidden="true"><h3 class="ps-h2">التغيّرات قبل الاستشارة</h3><ul class="ps-pts"><li data-i data-beat="4">قائمة صباحية مرتبة بحسب الخطر السريري</li><li data-i data-beat="5">الملاحظات والطلبات تُكتب في ملف المريض</li><li data-i data-beat="6">خطط رعاية مبنية على بروتوكولاتك</li></ul></div>
+    <div class="ps-pn ps-pn--r ps-pn--bar" data-w="0.235 0.26 0.355 0.375" aria-hidden="true"><div class="ps-bar" data-i data-v="76" data-dec="0"><p class="ps-bar-l">مرضى بلغوا هدف ضغط الدم</p><p class="ps-bar-v"><bdi dir="ltr"><span class="n">76</span>%</bdi></p><div class="ps-track" aria-hidden="true"><i></i></div><p class="ps-note">خلال ستة أشهر من التسجيل، ارتفاعًا من <bdi dir="ltr">58%</bdi>.</p></div><div class="ps-bar" data-i data-v="92" data-dec="0"><p class="ps-bar-l">رسائل أُجيب عنها في اليوم نفسه</p><p class="ps-bar-v"><bdi dir="ltr"><span class="n">92</span>%</bdi></p><div class="ps-track" aria-hidden="true"><i></i></div><p class="ps-note">على يد ممرضة أو صيدلي، لا بردّ آلي.</p></div></div>
+    <p class="ps-lede" data-w="0.235 0.26 0.355 0.375" aria-hidden="true">قيس الأثر مقارنةً بالأشهر الاثني عشر السابقة لكل عيادة قبل نبض، على <bdi dir="ltr">86,000</bdi> مريض بحالة مزمنة.</p>
+    <div class="ps-pn ps-pn--r ps-pn--res" data-w="0.375 0.4 0.475 0.495" aria-hidden="true"><dl class="ps-facts"><div class="ps-fact" data-i><dt>المرضى في الدراسة</dt><dd><bdi dir="ltr">86,000</bdi></dd></div><div class="ps-fact" data-i><dt>العيادات الشريكة</dt><dd><bdi dir="ltr">41</bdi></dd></div><div class="ps-fact" data-i><dt>مدة الدراسة</dt><dd>12 شهرًا</dd></div><div class="ps-fact" data-i><dt>أوراق بحثية محكّمة</dt><dd><bdi dir="ltr">6</bdi></dd></div></dl></div>
+    <div class="ps-close" data-w="0.84 0.9 9 9">
+      <div>
+        <h2>أدخل «نبض» إلى عيادتك.</h2>
+        <p class="lede">أخبرنا بمن ترعاهم وأين تضيع الزيارات. سيتصل بك قائد سريري خلال ثلاثة أيام عمل.</p>
+        <figure class="ps-film" aria-hidden="true"><img src="/assets/domain-stills/pulse-4.webp" alt="" width="960" height="540" loading="lazy"><video muted loop playsinline preload="none" tabindex="-1" data-src="/assets/domain-heroes/pulse-hero.mp4"></video></figure>
+      </div>
+      <form class="ps-form" novalidate data-err="أضف اسمك وبريد العمل لنتمكن من الاتصال بك." data-ok="شكرًا لك. سيتصل بك قائد سريري خلال ثلاثة أيام عمل. علامة تجريبية: لم يُرسل شيء.">
+        <p class="ps-f"><label for="f-name">اسمك</label><input id="f-name" name="name" type="text" autocomplete="name"></p>
+        <p class="ps-f"><label for="f-email">بريد العمل</label><input id="f-email" name="email" type="email" autocomplete="email"></p>
+        <p class="ps-f"><label for="f-role">دورك</label><select id="f-role" name="role"><option value="">اختر واحدًا</option><option>مدير عيادة</option><option>ممارس صحي</option><option>جهة تأمين</option><option>ممثل حقوق المرضى</option></select></p>
+        <p class="ps-f"><label for="f-organisation">العيادة أو الجهة</label><input id="f-organisation" name="organisation" type="text" autocomplete="organization"></p>
+        <p class="ps-f ps-f--wide"><label for="f-care">بأي مرضى تودّ أن تبدأ؟</label><textarea id="f-care" name="care" rows="3"></textarea></p>
+        <button type="submit">أدخل «نبض»</button>
+        <p class="ps-reply" role="status"></p>
+      </form>
+    </div>
+  </div>
+
+  <div class="ps-ground ps-ground--paper">
+    <p class="ps-brand" aria-hidden="true">نبض</p>
+    <div class="ps-trace" aria-hidden="true"><svg></svg></div>
+    <div class="ps-pn ps-pn--l ps-pn--hero" data-w="0 0 0.08 0.11" aria-hidden="true"><p class="ps-lead">يصلك الدواء والتمارين والمواعيد في قائمة قصيرة كل صباح، بلغتك، وفي الأوقات التي تناسبك فعلًا.</p></div>
+    <div class="ps-pn ps-pn--l ps-pn--pts" data-w="0.1 0.13 0.215 0.235" data-step="0.02" aria-hidden="true"><h3 class="ps-h2">خطة تتكيّف مع يومك</h3><ul class="ps-pts"><li data-i data-beat="0">تذكيرات تتحرك حين تغيّر موعدك</li><li data-i data-beat="1">احجز موعدًا أو انقله أو ألغِه بنقرتين</li><li data-i data-beat="2">شارك قراءاتك مع أفراد من العائلة تختارهم</li><li data-i data-beat="3">اسأل ممرضة سؤالًا واحصل على ردّ في اليوم نفسه</li></ul></div>
+    <div class="ps-pn ps-pn--l ps-pn--bar" data-w="0.235 0.26 0.355 0.375" aria-hidden="true"><div class="ps-bar" data-i data-v="98.4" data-dec="1"><p class="ps-bar-l">الالتزام بخطة الرعاية</p><p class="ps-bar-v"><bdi dir="ltr"><span class="n">98.4</span>%</bdi></p><div class="ps-track" aria-hidden="true"><i></i></div><p class="ps-note">المرضى الذين أتمّوا خطتهم أسبوعيًا، ارتفاعًا من <bdi dir="ltr">71.2%</bdi>.</p></div><div class="ps-bar" data-i data-v="43" data-dec="0"><p class="ps-bar-l">انخفاض المواعيد الفائتة</p><p class="ps-bar-v"><bdi dir="ltr"><span class="n">43</span>%</bdi></p><div class="ps-track" aria-hidden="true"><i></i></div><p class="ps-note">التذكيرات التي تتحرك مع جدول المريض أنجزت معظم العمل.</p></div></div>
+    <div class="ps-pn ps-pn--l ps-pn--res" data-w="0.375 0.4 0.475 0.495" aria-hidden="true"><figure class="ps-quote"><blockquote style="margin:0"><p>ارتفع الالتزام، وارتفع معه عدد المرضى الذين قالوا إنهم يشعرون بأن أحدًا يعتني بهم. لم نتوقع أن تكون النتيجة الثانية بهذا الحجم.</p></blockquote><footer>أ.د. لوسيا ماركيتي، الباحثة الرئيسية، دراسة الرعاية المزمنة الشمالية</footer></figure></div>
+  </div>
+
+  <div class="ps-line" aria-hidden="true"><i class="ps-prog"></i></div>
+  <div class="ps-over">
+    <h1 class="ps-ttl ps-ttl--hero" id="h1" data-w="0 0 0.08 0.11"><span class="a">خطة رعاية واحدة،</span> <span class="b">وطريقتان لقراءتها</span></h1>
+    <h2 class="ps-ttl ps-ttl--sub" id="t-out" data-w="0.235 0.26 0.355 0.375"><span class="a">ما تغيّر في 41 عيادة</span> <span class="b">خلال عام</span></h2>
+    <h2 class="ps-ttl ps-ttl--sub" id="t-res" data-w="0.375 0.4 0.475 0.495"><span class="a">ما وجدته الأبحاث</span> <span class="b">المنشورة</span></h2>
+    <div class="ps-lbls" aria-hidden="true"><div class="li is-p" data-beat="0"><span class="cap">للأفراد</span>تذكيرات تتحرك حين تغيّر موعدك</div><div class="li is-p" data-beat="1">احجز موعدًا أو انقله أو ألغِه بنقرتين</div><div class="li is-p" data-beat="2">شارك قراءاتك مع أفراد من العائلة تختارهم</div><div class="li is-p" data-beat="3">اسأل ممرضة سؤالًا واحصل على ردّ في اليوم نفسه</div><div class="li " data-beat="4"><span class="cap">للممارسين الصحيين</span>قائمة صباحية مرتبة بحسب الخطر السريري</div><div class="li " data-beat="5">الملاحظات والطلبات تُكتب في ملف المريض</div><div class="li " data-beat="6">خطط رعاية مبنية على بروتوكولاتك</div><div class="ps-grp ps-grp--p">للأفراد</div><div class="ps-grp ps-grp--c">للممارسين الصحيين</div></div>
+  </div>
+
+  <footer class="ps-foot">
+    <p>«نبض» علامة تجريبية من <bdi dir="ltr">Landscape Lab</bdi>، وكل الأرقام هنا محتوى تجريبي.</p>
+    <a class="back" href="/pulse">العودة إلى صفحة «نبض»</a>
+    <a href="../" hreflang="en" lang="en">English</a>
+  </footer>
+
+  <section class="sr-only" aria-label="«نبض» بالنص العادي (محتوى تجريبي)">
+    <h2>«نبض» بالنص العادي (محتوى تجريبي)</h2>
+    <p>يصلك الدواء والتمارين والمواعيد في قائمة قصيرة كل صباح، بلغتك، وفي الأوقات التي تناسبك فعلًا.</p><p>تُلخَّص قراءات كل مريض والجرعات الفائتة والرسائل في ثلاثة أسطر، مرتبة بحسب من يحتاجك أولًا.</p>
+    <h3>خطة تتكيّف مع يومك</h3><ul><li>تذكيرات تتحرك حين تغيّر موعدك</li><li>احجز موعدًا أو انقله أو ألغِه بنقرتين</li><li>شارك قراءاتك مع أفراد من العائلة تختارهم</li><li>اسأل ممرضة سؤالًا واحصل على ردّ في اليوم نفسه</li></ul>
+    <h3>التغيّرات قبل الاستشارة</h3><ul><li>قائمة صباحية مرتبة بحسب الخطر السريري</li><li>الملاحظات والطلبات تُكتب في ملف المريض</li><li>خطط رعاية مبنية على بروتوكولاتك</li></ul>
+    <h3>ما تغيّر في 41 عيادة خلال عام</h3><p>قيس الأثر مقارنةً بالأشهر الاثني عشر السابقة لكل عيادة قبل نبض، على <bdi dir="ltr">86,000</bdi> مريض بحالة مزمنة.</p>
+    <ul><li>الالتزام بخطة الرعاية: <bdi dir="ltr">98.4%</bdi>. المرضى الذين أتمّوا خطتهم أسبوعيًا، ارتفاعًا من <bdi dir="ltr">71.2%</bdi>.</li><li>انخفاض المواعيد الفائتة: <bdi dir="ltr">43%</bdi>. التذكيرات التي تتحرك مع جدول المريض أنجزت معظم العمل.</li><li>مرضى بلغوا هدف ضغط الدم: <bdi dir="ltr">76%</bdi>. خلال ستة أشهر من التسجيل، ارتفاعًا من <bdi dir="ltr">58%</bdi>.</li><li>رسائل أُجيب عنها في اليوم نفسه: <bdi dir="ltr">92%</bdi>. على يد ممرضة أو صيدلي، لا بردّ آلي.</li></ul>
+    <h3>ما وجدته الأبحاث المنشورة</h3><blockquote><p>ارتفع الالتزام، وارتفع معه عدد المرضى الذين قالوا إنهم يشعرون بأن أحدًا يعتني بهم. لم نتوقع أن تكون النتيجة الثانية بهذا الحجم.</p><footer>أ.د. لوسيا ماركيتي، الباحثة الرئيسية، دراسة الرعاية المزمنة الشمالية</footer></blockquote><ul><li>المرضى في الدراسة: <bdi dir="ltr">86,000</bdi></li><li>العيادات الشريكة: <bdi dir="ltr">41</bdi></li><li>مدة الدراسة: 12 شهرًا</li><li>أوراق بحثية محكّمة: <bdi dir="ltr">6</bdi></li></ul>
+  </section>
+</div>
+</section>
+</main>
+<script src="../../_engine/scrollcraft.js"></script>
+<script>ScrollCraft.mount(document.body);</script>
+<script>
+(function () {
+  "use strict";
+  /* Pulse, split stage. One pinned stage; the divider position, panels, bars and the
+     heartbeat are all derived from the act's scroll progress p. Every figure shown is
+     a number from the sample content (value x reveal) and nothing else. */
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var phoneMQ = matchMedia("(max-width: 860px)");
+  var RTL = document.documentElement.dir === "rtl", DIR = RTL ? -1 : 1;
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var clamp = function (x, a, b) { return Math.min(b, Math.max(a, x)); };
+  var ramp = function (p, a, b) { return b <= a ? (p >= a ? 1 : 0) : clamp((p - a) / (b - a), 0, 1); };
+  var sm = function (t) { return t * t * (3 - 2 * t); };
+  var ease = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+  var lerp = function (a, b, t) { return a + (b - a) * t; };
+  var pw = function (p, ks, vs) { for (var i = 1; i < ks.length; i++) if (p <= ks[i]) return lerp(vs[i - 1], vs[i], (p - ks[i - 1]) / (ks[i] - ks[i - 1])); return vs[vs.length - 1]; };
+
+  var act = $("#act"), stage = $("#stage"), head = $(".ps-head"), paper = $(".ps-ground--paper");
+  var win = function (p, w, off) { off = off || 0; return sm(ramp(p, w[0] + off, w[1] + off)) * (1 - sm(ramp(p, w[2], w[3]))); };
+
+  // ---- everything that fades by window ----
+  var items = $$("[data-w]").map(function (el) {
+    var w = el.getAttribute("data-w").split(/\s+/).map(parseFloat);
+    return { el: el, w: w, kids: $$("[data-i]", el), step: parseFloat(el.getAttribute("data-step") || "0.012"), bars: $$(".ps-bar", el), o: 0 };
+  });
+  var bars = $$(".ps-bar").map(function (b) {
+    var v = parseFloat(b.getAttribute("data-v")), dec = parseInt(b.getAttribute("data-dec"), 10) || 0;
+    return { el: b, v: v, dec: dec, n: $(".n", b), fill: $(".ps-track i", b) };
+  });
+  var lbls = $$(".ps-lbls .li"), grps = $$(".ps-grp");
+  var stations = $$(".ps-st");
+  var beatEls = []; $$("[data-beat]").forEach(function (e) { var k = +e.getAttribute("data-beat"); (beatEls[k] = beatEls[k] || []).push(e); });
+  var beatUntil = [0, 0, 0, 0, 0, 0, 0];
+
+  // ---- the trace ----
+  var NS = "http://www.w3.org/2000/svg";
+  var traces = $$(".ps-trace svg").map(function (svg) {
+    var g = document.createElementNS(NS, "g"), b = document.createElementNS(NS, "path"), h = document.createElementNS(NS, "path");
+    b.setAttribute("class", "base"); h.setAttribute("class", "head");
+    b.setAttribute("pathLength", "1000"); h.setAttribute("pathLength", "1000");
+    g.appendChild(b); g.appendChild(h); svg.appendChild(g);
+    return { svg: svg, g: g, b: b, h: h };
+  });
+  var G = { W: 0, H: 0, phone: false, fr: [], Amax: 100, bx: 0 };
+  function build() {
+    var W = stage.clientWidth, H = stage.clientHeight, ph = phoneMQ.matches;
+    G.W = W; G.H = H; G.phone = ph;
+    var L = ph ? H : W, cell = L / 7, w = Math.min(cell * 0.66, ph ? 64 : 150);
+    G.Amax = ph ? 40 : H * 0.26; G.bx = DIR > 0 ? W - 22 : 22;
+    var pts = [], r = [];
+    var P = function (u, v) { pts.push([u, v]); };
+    P(0, 0);
+    for (var k = 0; k < 7; k++) {
+      var c = (k + 0.5) * cell;
+      P(c - w * 0.55, 0); P(c - w * 0.42, 0.14); P(c - w * 0.3, 0); P(c - w * 0.12, 0); P(c - w * 0.07, -0.16);
+      r.push(pts.length); P(c, 1); P(c + w * 0.07, -0.3); P(c + w * 0.13, 0); P(c + w * 0.28, 0); P(c + w * 0.42, 0.2); P(c + w * 0.56, 0);
+    }
+    P(L, 0);
+    var xy = pts.map(function (q) {
+      return ph ? [-DIR * q[1] * G.Amax, q[0]] : [DIR > 0 ? q[0] : W - q[0], -q[1] * G.Amax];
+    });
+    var d = "", acc = [0];
+    xy.forEach(function (q, i) {
+      d += (i ? "L" : "M") + q[0].toFixed(1) + " " + q[1].toFixed(1);
+      if (i) acc.push(acc[i - 1] + Math.hypot(q[0] - xy[i - 1][0], q[1] - xy[i - 1][1]));
+    });
+    G.fr = r.map(function (i) { return acc[i] / acc[acc.length - 1]; });
+    traces.forEach(function (t) { t.svg.setAttribute("viewBox", "0 0 " + W + " " + H); t.b.setAttribute("d", d); t.h.setAttribute("d", d); t.h.setAttribute("stroke-dasharray", "46 1000"); });
+    var lt = $(".ps-lbls"); if (lt) lt.style.setProperty("--stem", ph ? "0px" : "");
+  }
+  var cur = { by: 0, a: 0.36 };
+  function placeTrace() {
+    var t = G.phone ? "translate(" + G.bx + " 0) scale(" + cur.a.toFixed(3) + " 1)" : "translate(0 " + cur.by.toFixed(1) + ") scale(1 " + cur.a.toFixed(3) + ")";
+    traces.forEach(function (x) { x.g.setAttribute("transform", t); });
+  }
+
+  // ---- render one frame from p ----
+  var cache = {};
+  function setText(n, k, v) { if (cache[k] !== v) { cache[k] = v; n.textContent = v; } }
+  function render(p) {
+    // divider
+    var d;
+    if (reduce) d = p < 0.62 ? 50 : 0;
+    else d = 50 * (1 - ease(ramp(p, 0.53, 0.8)));
+    stage.style.setProperty("--d", d.toFixed(2) + "%");
+    paper.style.opacity = reduce ? (1 - sm(ramp(p, 0.52, 0.62))).toFixed(3) : "1";
+    paper.style.visibility = reduce && p > 0.63 ? "hidden" : "visible";
+    var dF = d / 100;
+    var hlOn = sm(clamp((d - 6) / 8, 0, 1));
+    [$(".ps-hl"), $(".ps-hr")].forEach(function (e) { e.style.opacity = hlOn.toFixed(2); e.style.visibility = hlOn < 0.02 ? "hidden" : "visible"; });
+    var stOn = 1 - sm(ramp(p, 0.56, 0.62)) * (1 - sm(ramp(p, 0.82, 0.86)));
+    stations.forEach(function (s) { s.style.opacity = stOn.toFixed(2); s.style.visibility = stOn < 0.02 ? "hidden" : "visible"; });
+    stage.style.setProperty("--prog", (G.phone ? pw(p, [0, 0.235, 0.375, 0.84, 1], [0.2, 0.46, 0.63, 0.8, 0.93]) : pw(p, [0, 0.235, 0.375, 0.84, 1], [0.1, 0.4, 0.52, 0.64, 0.78])).toFixed(4));
+    stations.forEach(function (s) { s.classList.toggle("is-on", p >= parseFloat(s.getAttribute("data-p0"))); });
+
+    // panels, titles, lists
+    var sig = [];
+    items.forEach(function (it) {
+      var o = win(p, it.w); it.o = o;
+      it.el.style.opacity = o.toFixed(3); it.el.style.visibility = o < 0.01 ? "hidden" : "visible";
+      if (it.kids.length) it.kids.forEach(function (k, i) { var ko = win(p, it.w, i * it.step); k.style.opacity = ko.toFixed(3); sig.push(Math.round(ko * 20)); });
+      sig.push(Math.round(o * 20));
+    });
+    // outcomes count up from the real values
+    var bi = items.filter(function (i) { return i.bars.length; });
+    bars.forEach(function (b, i) {
+      var parent = bi.filter(function (x) { return x.el.contains(b.el); })[0];
+      var t = parent ? ease(ramp(p, parent.w[0] + 0.012 + (i % 2) * 0.01, parent.w[0] + 0.105 + (i % 2) * 0.01)) : 1;
+      b.fill.style.setProperty("--w", (b.v / 100 * t).toFixed(4));
+      setText(b.n, "b" + i, (b.v * t).toFixed(b.dec));
+      sig.push(Math.round(t * 20));
+    });
+
+    // the heartbeat: baseline rises to the middle for the peak, amplitude swells
+    var up = sm(ramp(p, 0.5, 0.6)) * (1 - sm(ramp(p, 0.8, 0.88)));
+    var calm = sm(ramp(p, 0.4, 0.45)) * (1 - sm(ramp(p, 0.49, 0.5)));
+    cur.a = 0.36 + 0.64 * up - 0.08 * calm;
+    traces.forEach(function (t) { t.b.style.opacity = (0.62 + 0.38 * up).toFixed(2); });
+    cur.by = G.H * lerp(0.8, 0.38, up);
+    placeTrace();
+
+    // peak labels: each one appears when the divider has passed it
+    var shown = 0, out = 1 - sm(ramp(p, 0.8, 0.84));
+    lbls.forEach(function (li, k) {
+      var xk = (k + 0.5) / 7, s;
+      if (reduce) s = sm(ramp(p, 0.55 + (k < 4 ? (3 - k) : (k - 4)) * 0.05, 0.6 + (k < 4 ? (3 - k) : (k - 4)) * 0.05));
+      else if (k < 4) s = sm(clamp((xk - 0.02 - dF) / 0.05, 0, 1)) * sm(ramp(p, 0.52, 0.55));
+      else s = sm(ramp(p, 0.52 + (k - 4) * 0.02, 0.56 + (k - 4) * 0.02));
+      s *= out; li.style.opacity = s.toFixed(3); li.style.visibility = s < 0.01 ? "hidden" : "visible"; if (s > 0.5) shown++; sig.push(Math.round(s * 20));
+    });
+    var gs = sm(ramp(p, reduce ? 0.72 : 0.62, reduce ? 0.77 : 0.7)) * out;
+    grps.forEach(function (g) { sig.push(Math.round(gs * 20)); g.style.opacity = gs.toFixed(3); g.style.visibility = gs < 0.01 ? "hidden" : "visible"; });
+
+    // verify state: only values that paint
+    var beat = p < 0.235 ? 0 : p < 0.5 ? 1 : p < 0.84 ? 2 : 3;
+    stage.setAttribute("data-sc-verify-state", [beat, Math.round(d), Math.round(cur.a * 20), shown, sig.join("")].join("|"));
+    var hold = p <= 0.08 || (p >= 0.44 && p <= 0.5) || p >= 0.9;
+    if (hold) stage.setAttribute("data-sc-verify-hold", "true"); else stage.removeAttribute("data-sc-verify-hold");
+
+    // film in the close: fetched only when it will play
+    var film = $(".ps-film video");
+    if (film && !reduce && !phoneMQ.matches && p > 0.7 && !film.getAttribute("src")) {
+      film.addEventListener("playing", function () { film.style.opacity = 1; });
+      film.style.opacity = 0; film.src = film.getAttribute("data-src");
+      var pr = film.play(); if (pr && pr.catch) pr.catch(function () {});
+    }
+  }
+
+  // ---- drive: scroll progress, smoothed; heartbeat speed follows scroll speed ----
+  function readP() { var r = act.getBoundingClientRect(), tr = act.offsetHeight - innerHeight; return tr > 0 ? clamp(-r.top / tr, 0, 1) : 0; }
+  var shownP = -1, hpos = 0, last = performance.now(), lastY = scrollY, vv = 0;
+  function pulse(k, now) {
+    beatUntil[k] = now + 560;
+    (beatEls[k] || []).forEach(function (e) { e.classList.remove("is-beat"); void e.offsetWidth; e.classList.add("is-beat"); });
+    if (k === 3) { head.classList.remove("is-beat"); void head.offsetWidth; head.classList.add("is-beat"); }
+  }
+  function tick(now) {
+    var dt = Math.min(0.1, (now - last) / 1000); last = now;
+    var tp = readP();
+    shownP = shownP < 0 || reduce ? tp : shownP + (tp - shownP) * (1 - Math.exp(-dt / 0.07));
+    if (Math.abs(tp - shownP) < 1e-4) shownP = tp;
+    var sy = scrollY, v = Math.abs(sy - lastY) / Math.max(dt, 0.001) / innerHeight; lastY = sy;
+    vv += (Math.min(v, 5) - vv) * Math.min(1, dt * 8);
+    render(shownP);
+    for (var q = 0; q < 7; q++) if (beatUntil[q] && now > beatUntil[q]) { beatUntil[q] = 0; (beatEls[q] || []).forEach(function (e) { e.classList.remove("is-beat"); }); }
+    var prev = hpos;
+    if (reduce) hpos = (shownP * 3) % 1; else hpos = (hpos + (0.055 + 0.32 * vv) * dt) % 1;
+    traces.forEach(function (t) { t.h.setAttribute("stroke-dashoffset", (-(hpos * 1000 - 23)).toFixed(1)); });
+    if (!reduce) G.fr.forEach(function (f, k) { if ((prev <= f && hpos > f) || (hpos < prev && (f > prev || f <= hpos))) pulse(k, now); });
+    requestAnimationFrame(tick);
+  }
+  build(); window.addEventListener("resize", function () { build(); });
+  render(readP()); requestAnimationFrame(tick);
+
+  // ---- navigation on the divider ----
+  function goTo(p) {
+    var top = act.getBoundingClientRect().top + scrollY, tr = act.offsetHeight - innerHeight;
+    scrollTo({ top: top + p * tr, behavior: reduce ? "auto" : "smooth" });
+  }
+  $$("[data-go]").forEach(function (b) { b.addEventListener("click", function () { goTo(parseFloat(b.getAttribute("data-go"))); }); });
+
+  // ---- the form: a real form, local only ----
+  var form = $(".ps-form");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var r = $(".ps-reply"), name = form.elements.name.value.trim(), mail = form.elements.email.value.trim();
+    if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) { r.textContent = form.getAttribute("data-err"); (name ? form.elements.email : form.elements.name).focus(); return; }
+    r.textContent = form.getAttribute("data-ok");
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Field agriculture: a farming year (sample)</title>
+<meta name="description" content="A grounded system for growers and makers who care about the whole field, not just the harvest.">
+<link rel="alternate" hreflang="en" href="index.html">
+<link rel="alternate" hreflang="ar" href="ar/index.html">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23f3f3e5'/><path d='M16 27V9M16 9c-4 0-6 3-6 6M16 14c4 0 6 3 6 6' fill='none' stroke='%2324351f' stroke-width='3' stroke-linecap='round'/><circle cx='16' cy='6' r='3' fill='%23a5c957'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@600;800&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_engine/scrollcraft.css">
+<style>
+/* Field: season sweep. Tokens are the domain palette (tokens in field content): paper, ink, one flat accent. */
+:root{
+  --sc-canvas:#f3f3e5; --sc-surface:#eaf2cd; --sc-ink:#24351f; --sc-ink-soft:#46573d;
+  --sc-accent:#a5c957; --sc-accent-ink:#24351f;
+  --paper:#f3f3e5; --ink:#24351f; --soft:#46573d; --line:#d9dfbe; --acc:#a5c957; --accs:#eaf2cd;
+  --fd:"Bitter",Georgia,serif; --fb:"Source Sans 3",system-ui,sans-serif;
+  --hA:56px; --hB:64px; --hdr:calc(var(--hA) + var(--hB));
+  --gut:clamp(1rem,3vw,2rem);
+  --mw:150px; --pad:100px; --tw:2000px;
+  --cw:min(46rem,calc(100vw - 2rem));
+}
+html[lang=ar]{--fd:"Noto Naskh Arabic",serif; --fb:"Noto Naskh Arabic",serif}
+html{background:var(--paper);scroll-padding-top:calc(var(--hdr) + 1rem)}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 1.0625rem/1.55 var(--fb);overflow-x:clip}
+html[lang=ar] body{line-height:1.8}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px;border-radius:3px}
+.skip{position:fixed;inset-block-start:.5rem;inset-inline-start:.5rem;z-index:100;background:var(--ink);color:var(--paper);padding:.75rem 1rem;border-radius:4px;transform:translateY(-200%)}
+.skip:focus{transform:none}
+h2{text-wrap:balance}
+h1,h2,h3,p,ol,ul,dl,dd,figure,blockquote{margin:0}
+ol,ul{padding:0;list-style:none}
+
+/* header: wordmark, language, one CTA, then the 12-month bar */
+.top{position:fixed;inset:0 0 auto 0;z-index:50;background:var(--paper);border-block-end:1px solid var(--line)}
+.bar-a{height:var(--hA);display:flex;align-items:center;gap:.75rem;padding-inline:var(--gut)}
+.mark{font:800 1.5rem/1 var(--fd);display:flex;align-items:baseline;gap:.75rem;margin-inline-end:auto;white-space:nowrap}
+html[lang=ar] .mark{font-weight:700;font-size:1.75rem}
+.mark small{font:400 .9375rem/1 var(--fb);color:var(--soft)}
+.lang{min-height:44px;min-width:44px;display:inline-flex;align-items:center;justify-content:center;padding-inline:.5rem;color:var(--ink);text-decoration:underline;text-underline-offset:4px;font-weight:600}
+.btn{min-height:44px;padding-inline:1.25rem;background:var(--acc);color:var(--ink);font:600 1rem/1.2 var(--fb);border:2px solid var(--ink);border-radius:4px;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;cursor:pointer}
+.btn:hover{background:var(--ink);color:var(--paper)}
+.months{position:relative;height:var(--hB);border-block-start:1px solid var(--line)}
+.months ol{display:flex;height:100%}
+.months li{flex:1 1 0;min-width:0}
+.months a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;height:100%;color:var(--ink);text-decoration:none;font:600 .8125rem/1.2 var(--fb);border-inline-start:1px solid var(--line)}
+.months li:first-child a{border-inline-start:0}
+.months a:hover{background:var(--accs)}
+.months a[aria-current]{background:var(--accs);box-shadow:inset 0 -3px 0 var(--ink)}
+.months a:focus-visible{outline-offset:-3px}
+.tk{display:flex;gap:3px}
+.tk i{width:8px;height:8px;border-radius:50%;border:1.5px solid var(--line)}
+.tk i.on{background:var(--soft);border-color:var(--soft)}
+.tk i.on.sel{background:var(--acc);border-color:var(--ink)}
+
+/* act 1: the year */
+.stage{height:100svh;overflow:clip;display:flex;flex-direction:column;padding-top:var(--hdr);box-sizing:border-box;background:var(--paper)}
+.head{flex:none;padding:.9rem var(--gut) .6rem;display:flex;flex-wrap:wrap;align-items:baseline;gap:.15rem 2rem}
+.lede{font:600 1.1875rem/1.35 var(--fd);max-width:40rem}
+html[lang=ar] .lede{font-weight:700;line-height:1.7}
+.smp{font-size:.8125rem;color:var(--soft)}
+.win{position:relative;flex:1 1 0;min-height:0;overflow:clip}
+.track{position:absolute;inset-block:0;inset-inline-start:0;width:var(--tw);will-change:transform}
+.cols{position:absolute;inset:0;display:flex;padding-inline-start:var(--pad)}
+.cols li{flex:none;width:var(--mw);border-inline-start:1px solid var(--line);height:100%}
+.cols li:last-child{border-inline-end:1px solid var(--line)}
+.cols span{display:block;height:30px;padding:5px .5rem 0;font:600 .8125rem/1.5 var(--fb);color:var(--soft)}
+.cols li.on span{color:var(--ink)}
+.lanes{position:absolute;inset:30px 0 0 0;display:grid;grid-template-rows:1.3fr repeat(4,1fr)}
+.lane{position:relative}
+.sweep{position:absolute;inset-block:0;inset-inline-start:0;width:2px;margin-inline-start:-1px;background:var(--ink);z-index:5;will-change:transform;pointer-events:none}
+.flag{position:absolute;top:3px;inset-inline-start:8px;background:var(--ink);color:var(--paper);padding:2px .6rem;border-radius:3px;font:600 .875rem/1.5 var(--fb);white-space:nowrap}
+.sweep.flip .flag{inset-inline-start:auto;inset-inline-end:8px}
+
+.crop{--cbg:var(--paper);--cfg:var(--ink);--cfg2:var(--soft);position:absolute;inset-block:5px;inset-inline-start:calc(var(--pad) + var(--f)*var(--mw));width:calc(var(--n)*var(--mw));box-sizing:border-box;border:2px dashed var(--ink);border-radius:6px;background:var(--cbg);color:var(--cfg);overflow:hidden;transition:background-color .35s}
+.crop[data-stage=sow]{--cbg:var(--accs);border-style:solid}
+.crop[data-stage=grow]{--cbg:var(--acc);--cfg2:var(--ink);border-style:solid}
+.crop[data-stage=harvest]{--cbg:var(--ink);--cfg:var(--paper);--cfg2:#dfe6cf;border-style:solid}
+.crop[data-stage=done]{--cbg:var(--line);--cfg:var(--soft);border-color:var(--soft);border-style:solid}
+.crop[data-stage=stand]{--cbg:var(--acc);--cfg2:var(--ink);border-style:solid;border-width:4px}
+.crop[data-stage=static]{--cbg:var(--accs);border-style:solid}
+.in{position:relative;height:100%;box-sizing:border-box;inline-size:min(var(--cw),var(--aw,100%),100%);padding:.4rem .6rem .4rem .4rem;display:flex;align-items:center;gap:1rem;will-change:transform}
+html[dir=rtl] .in{padding:.4rem .4rem .4rem .6rem}
+.ph{position:relative;flex:none;height:100%;aspect-ratio:4/3;border-radius:3px;overflow:hidden;background:var(--line);filter:grayscale(.85) brightness(1.05);transition:filter .5s}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .5s}
+.crop[data-stage=wait] .ph img:nth-child(1),.crop[data-stage=sow] .ph img:nth-child(2),
+.crop[data-stage=grow] .ph img:nth-child(3),.crop[data-stage=harvest] .ph img:nth-child(3),.crop[data-stage=done] .ph img:nth-child(3),.crop[data-stage=stand] .ph img:nth-child(3),.crop[data-stage=static] .ph img:nth-child(3){opacity:1}
+.crop[data-stage=sow] .ph{filter:saturate(.6) sepia(.2) brightness(1.08)}
+.crop[data-stage=grow] .ph,.crop[data-stage=static] .ph{filter:saturate(1.2)}
+.crop[data-stage=harvest] .ph{filter:sepia(.7) saturate(1.5) hue-rotate(-20deg) brightness(1.05)}
+.crop[data-stage=done] .ph{filter:grayscale(1) contrast(.85) brightness(1.1)}
+.crop[data-stage=stand] .ph{filter:saturate(1.1) contrast(1.08)}
+.tx{display:flex;flex-direction:column;gap:.3rem;min-width:10.5rem;flex:none}
+.tx h2{font:800 1.3rem/1.1 var(--fd)}
+html[lang=ar] .tx h2{font-weight:700;line-height:1.4}
+.when{font-size:.9375rem;color:var(--cfg2)}
+.st{display:flex}
+.chip{display:inline-block;font:600 .8125rem/1.3 var(--fb);padding:.2rem .6rem;border:1.5px solid currentColor;border-radius:99px;color:var(--cfg)}
+.nt{font-size:.9375rem;line-height:1.4;color:var(--cfg2);flex:1 1 12rem;min-width:0}
+html[lang=ar] .nt{line-height:1.65}
+.in.tight .nt,.in.tight .st,.in.tiny .when,.in.tiny .nt,.in.tiny .st{display:none}
+.mini-c{display:none}
+
+/* act 2: rotation board */
+.board{padding-inline:var(--gut)}
+.bwrap{flex:1 1 0;min-height:0;display:grid;grid-template-columns:minmax(16rem,22rem) 1fr;gap:clamp(1.5rem,4vw,4rem);align-items:center;padding-block:1rem 1.5rem;max-width:80rem;width:100%;margin-inline:auto;box-sizing:border-box}
+.bl h2{font:800 clamp(1.6rem,3vw,2.4rem)/1.12 var(--fd);margin-bottom:.75rem}
+html[lang=ar] .bl h2{font-weight:700;line-height:1.4}
+.bl p{color:var(--soft);max-width:30rem}
+.step{margin-top:1.5rem;display:flex;flex-direction:column;gap:.5rem}
+.step li{position:relative;padding:.6rem .9rem;border-inline-start:4px solid var(--line);color:var(--soft);transition:background-color .3s,border-color .3s}
+.step li b{display:block;font-weight:600;color:var(--ink)}
+.step li span{font-size:.875rem}
+.step li.on{background:var(--accs);border-inline-start-color:var(--ink)}
+.step li.on span{color:var(--ink)}
+.step li i{position:absolute;inset-inline:0;inset-block-end:0;height:3px;background:var(--ink);transform:scaleX(0);transform-origin:0 50%}
+html[dir=rtl] .step li i{transform-origin:100% 50%}
+.panel{display:grid}
+.card{grid-area:1/1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1.5rem;align-items:center;opacity:0;transition:opacity .45s;pointer-events:none}
+.card.on{opacity:1;pointer-events:auto}
+.card .shot{position:relative;aspect-ratio:4/3;border-radius:6px;overflow:hidden;border:2px solid var(--ink);background:var(--line)}
+.card .shot img{width:100%;height:100%;object-fit:cover;filter:saturate(1.15);transition:transform .6s}
+.card blockquote p{font:600 clamp(1.15rem,1.9vw,1.5rem)/1.4 var(--fd)}
+html[lang=ar] .card blockquote p{font-weight:700;line-height:1.75}
+.card cite{display:block;margin-top:1rem;font-style:normal}
+.card cite b{display:block;font-weight:600}
+.card cite span{color:var(--soft);font-size:.9375rem}
+
+/* act 3: proof + close */
+.plan{background:var(--paper)}
+.pin{max-width:80rem;margin-inline:auto;padding:clamp(4rem,9vw,7rem) var(--gut) clamp(3rem,6vw,5rem)}
+.pin h2{font:800 clamp(1.75rem,3.4vw,2.6rem)/1.12 var(--fd);margin-bottom:1.5rem}
+html[lang=ar] .pin h2{font-weight:700;line-height:1.4}
+.pq{font:600 clamp(1.3rem,2.4vw,1.9rem)/1.35 var(--fd);max-width:44rem}
+html[lang=ar] .pq{font-weight:700;line-height:1.7}
+.pq-w{margin-bottom:2.5rem}
+.pq-w cite{display:block;margin-top:.75rem;font-style:normal;color:var(--soft)}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-block:2px solid var(--ink)}
+.facts div{padding:1.25rem 1rem;border-inline-start:1px solid var(--line)}
+.facts div:first-child{border-inline-start:0;padding-inline-start:0}
+html[dir=rtl] .facts div:first-child{padding-inline-start:1rem}
+.facts dt{order:2;color:var(--soft);font-size:.9375rem}
+.facts dd{font:800 clamp(1.8rem,3.6vw,3rem)/1.1 var(--fd)}
+html[lang=ar] .facts dd{font-weight:700}
+.facts div{display:flex;flex-direction:column}
+.close{background:var(--accs);border-block:2px solid var(--ink)}
+.cin{max-width:80rem;margin-inline:auto;padding:clamp(3rem,7vw,5.5rem) var(--gut);display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(2rem,5vw,5rem)}
+.close h2{font:800 clamp(2.2rem,5vw,4rem)/1.05 var(--fd);margin-bottom:1rem}
+html[lang=ar] .close h2{font-weight:700;line-height:1.35}
+.close .lead{font-size:1.1875rem;max-width:28rem}
+form{display:grid;grid-template-columns:1fr 1fr;gap:1rem 1.25rem}
+.row{display:flex;flex-direction:column;gap:.35rem}
+.row.wide{grid-column:1/-1}
+label{font-weight:600}
+input,select,textarea{box-sizing:border-box;width:100%;min-height:48px;padding:.6rem .75rem;border:2px solid var(--ink);border-radius:4px;background:var(--paper);color:var(--ink);font:400 1.0625rem/1.4 var(--fb)}
+textarea{min-height:6.5rem;resize:vertical}
+input[type=email]{direction:ltr;text-align:start}
+html[dir=rtl] input[type=email]{text-align:right}
+.mini{grid-column:1/-1;border:2px solid var(--ink);border-radius:4px;padding:.75rem .9rem;background:var(--paper);display:flex;flex-direction:column;gap:.75rem}
+.mrow{display:grid;grid-template-columns:1fr auto;gap:.3rem .75rem}
+.mrow b{font-weight:600}
+.mrow span.rg{color:var(--soft);font-size:.9375rem}
+.mb{grid-column:1/-1;display:flex;gap:2px}
+.mb i{flex:1;height:16px;border-radius:2px;background:var(--line);border:1.5px solid transparent}
+.mb i.on{background:var(--acc);border-color:var(--ink)}
+.none{color:var(--soft)}
+.mhint{font-size:.875rem;color:var(--soft)}
+.sub{grid-column:1/-1;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.reply{min-height:1.5em;font-weight:600;max-width:34rem}
+.err{outline:3px solid #8a1c1c}
+.colo{max-width:80rem;margin-inline:auto;padding:1.5rem var(--gut) 3rem;display:flex;flex-wrap:wrap;gap:.5rem 2rem;justify-content:space-between;color:var(--soft);font-size:.9375rem}
+.colo a{color:var(--ink);font-weight:600;min-height:44px;display:inline-flex;align-items:center}
+
+/* tablet and narrow desktop */
+@media (max-width:1100px){
+  .nt{font-size:.875rem;line-height:1.35}
+  .tx{min-width:9rem}
+  .facts{grid-template-columns:1fr 1fr}
+  .facts div:nth-child(3){border-inline-start:0;padding-inline-start:0}
+  html[dir=rtl] .facts div:nth-child(3){padding-inline-start:1rem}
+  .facts div:nth-child(n+3){border-block-start:1px solid var(--line)}
+  .cin{grid-template-columns:1fr}
+}
+@media (max-width:899px){
+  .bwrap{grid-template-columns:1fr;grid-template-rows:auto auto auto 1fr;gap:1rem;align-items:start;align-content:start}
+  .bwrap .bl{display:contents}
+  .bl h2{order:0}
+  .step{flex-direction:row;margin:0;grid-row:3;gap:.4rem}
+  .step li{flex:1 1 0;min-width:0;padding:.5rem .6rem}
+  .step li span{display:none}
+  .card{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:1rem}
+}
+@media (max-width:760px){
+  :root{--hA:52px;--hB:56px}
+  .mark small{display:none}
+  .months{overflow-x:auto;scrollbar-width:none}
+  .months::-webkit-scrollbar{display:none}
+  .months ol{min-width:max-content}
+  .months li{flex:0 0 56px}
+  .prog{display:none}
+  .card{grid-template-columns:1fr;gap:.9rem;align-content:start}
+  .card .shot{aspect-ratio:16/8}
+  .form-grid,form{grid-template-columns:1fr}
+  .head{padding-block:.6rem .4rem}
+  .lede{font-size:1rem}
+  .smp{font-size:.75rem}
+}
+@media (max-width:700px){
+  .in{display:grid;grid-template-columns:2.75rem minmax(0,1fr);column-gap:.65rem;row-gap:.2rem;align-content:center;align-items:start;padding:.35rem .5rem}
+  .ph{grid-row:1/span 2;width:2.75rem;height:2.75rem;aspect-ratio:auto}
+  .tx{display:contents}
+  .tx h2{grid-column:2;font-size:1.0625rem}
+  .tx .when{grid-column:2;grid-row:2}
+  .st{position:absolute;inset-block-start:.35rem;inset-inline-end:.5rem}
+  .nt{grid-column:1/-1;font-size:.875rem;line-height:1.3}
+  html[lang=ar] .nt{line-height:1.5}
+  .facts{grid-template-columns:1fr 1fr}
+  .colo{flex-direction:column}
+}
+
+/* reduced motion: the year is a plain list, nothing pinned, every crop reachable by the month bar */
+@media (prefers-reduced-motion:reduce){
+  #year,#board{height:auto!important}
+  .stage{position:static!important;height:auto!important;overflow:visible}
+  #year .stage{padding-top:calc(var(--hdr) + .5rem)}
+  .win{overflow:visible;flex:none}
+  .track{position:static;width:auto!important;transform:none!important}
+  .cols,.sweep{display:none}
+  .lanes{position:static;display:flex;flex-direction:column;gap:1rem;padding:1rem var(--gut) 2rem;max-width:60rem}
+  .lane{position:static}
+  .crop{position:relative;inset:auto;width:auto;height:auto}
+  .in{height:auto;inline-size:100%;flex-wrap:wrap;transform:none!important;align-items:flex-start;padding:.6rem}
+  .ph{height:auto;width:9rem}
+  .chip{display:none}
+  .mini-c{display:block;flex:1 1 100%}
+  .mini-c .mb{margin-top:.25rem}
+  .crop.ing{--cbg:var(--acc);border-width:4px}
+  .stage.board{padding-top:2rem}
+  .bwrap{display:block;flex:none;padding-block:1rem 3rem}
+  .step{display:none}
+  .panel{display:flex;flex-direction:column;gap:2.5rem}
+  .card{opacity:1;pointer-events:auto}
+  .tx{display:flex}
+  .months a[aria-current]{box-shadow:inset 0 -3px 0 var(--ink)}
+}
+@media (prefers-reduced-motion:reduce) and (max-width:700px){
+  .in{display:flex}
+  .tx{display:flex}
+  .st{position:static}
+}
+
+/* short phones (real Safari viewport is about 660px tall): trade lines for fit, nothing is deleted from the DOM */
+@media (max-height:720px) and (max-width:700px){
+  .head{padding-block:.45rem .3rem}
+  .lede{font-size:.9375rem;line-height:1.3}
+  .smp{font-size:.6875rem}
+  .crop{inset-block:3px}
+  .in{padding-block:.25rem;row-gap:.1rem}
+  .tx h2{font-size:1rem}
+  .tx .when{font-size:.8125rem}
+  .nt{font-size:.8125rem;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:1;line-clamp:1;overflow:hidden}
+  .ph{width:2.25rem;height:2.25rem}
+  .in{grid-template-columns:2.25rem minmax(0,1fr)}
+}
+@media (max-height:720px) and (max-width:899px){
+  .bl p{display:none}
+  .bl h2{font-size:1.4rem}
+  .card .shot{aspect-ratio:16/5.5}
+  .card blockquote p{font-size:1rem;line-height:1.35}
+  .card cite{margin-top:.5rem}
+  .bwrap{gap:.6rem;padding-block:.6rem}
+}
+@media (prefers-reduced-motion:reduce){
+  .nt{display:block!important;-webkit-line-clamp:unset!important;overflow:visible!important}
+  .bl p{display:block!important}
+}
+@media (max-height:760px) and (min-width:701px){
+  .tx{gap:.15rem}
+  .tx h2{font-size:1.15rem;line-height:1.2!important}
+  .when{line-height:1.3!important}
+  .chip{padding:.1rem .5rem;line-height:1.25!important}
+}
+
+</style>
+</head>
+<body>
+<a class="skip" href="#year">Skip to content</a>
+
+<header class="top">
+  <div class="bar-a">
+    <h1 class="mark"><span>Field</span><small>Grow what the future needs.</small></h1>
+    <a class="lang" href="../index.html" hreflang="en" lang="ar">العربية</a>
+    <a class="btn" href="#plan" data-to-plan>Grow with us</a>
+  </div>
+  <nav class="months" aria-label="Months"><ol><li><a href="#year" aria-label="Jan: nothing in the ground"><span>Jan</span><span class="tk" aria-hidden="true"><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></span></a></li><li><a href="#year" aria-label="Feb: Faba beans"><span>Feb</span><span class="tk" aria-hidden="true"><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></span></a></li><li><a href="#year" aria-label="Mar: Faba beans, Spring oats"><span>Mar</span><span class="tk" aria-hidden="true"><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i></span></a></li><li><a href="#year" aria-label="Apr: Faba beans, Spring oats, Clover ley, Sunflowers"><span>Apr</span><span class="tk" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></span></a></li><li><a href="#year" aria-label="May: Faba beans, Spring oats, Clover ley, Sunflowers"><span>May</span><span class="tk" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></span></a></li><li><a href="#year" aria-label="Jun: Faba beans, Spring oats, Clover ley, Sunflowers"><span>Jun</span><span class="tk" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></span></a></li><li><a href="#year" aria-label="Jul: Faba beans, Spring oats, Clover ley, Sunflowers"><span>Jul</span><span class="tk" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></span></a></li><li><a href="#year" aria-label="Aug: Faba beans, Spring oats, Clover ley, Sunflowers, Cover rye"><span>Aug</span><span class="tk" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></a></li><li><a href="#year" aria-label="Sep: Clover ley, Sunflowers, Cover rye"><span>Sep</span><span class="tk" aria-hidden="true"><i class=""></i><i class=""></i><i class="on"></i><i class="on"></i><i class="on"></i></span></a></li><li><a href="#year" aria-label="Oct: Clover ley, Cover rye"><span>Oct</span><span class="tk" aria-hidden="true"><i class=""></i><i class=""></i><i class="on"></i><i class=""></i><i class="on"></i></span></a></li><li><a href="#year" aria-label="Nov: Cover rye"><span>Nov</span><span class="tk" aria-hidden="true"><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="on"></i></span></a></li><li><a href="#year" aria-label="Dec: Cover rye"><span>Dec</span><span class="tk" aria-hidden="true"><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="on"></i></span></a></li></ol><span class="prog" id="prog" aria-hidden="true"></span></nav>
+</header>
+
+<main id="main">
+  <!-- ACT 1: the year. Pinned; scroll is Jan to Dec and one line sweeps the calendar. -->
+  <section id="year" data-sc-act="pan" data-sc-span="5.5" aria-label="A farming year">
+    <div class="stage" id="stage" data-sc-stage data-sc-verify-state="">
+      <div class="head"><p class="lede">Four hundred and ten farms growing for the whole field, not only the harvest.</p><p class="smp">Sample content. Farms, crops and figures are illustrative.</p></div>
+      <div class="win" id="win">
+        <div class="track" id="track">
+          <ol class="cols" aria-hidden="true"><li><span>Jan</span></li><li><span>Feb</span></li><li><span>Mar</span></li><li><span>Apr</span></li><li><span>May</span></li><li><span>Jun</span></li><li><span>Jul</span></li><li><span>Aug</span></li><li><span>Sep</span></li><li><span>Oct</span></li><li><span>Nov</span></li><li><span>Dec</span></li></ol>
+          <ol class="lanes">
+<li class="lane"><article class="crop" id="crop-0" data-stage="wait" style="--f:1;--n:7" aria-labelledby="c0">
+<div class="in"><div class="ph"><img src="/assets/domain-stills/field-1.webp" width="960" height="540" alt=""><img src="/assets/domain-stills/field-2.webp" width="960" height="540" alt=""><img src="/assets/domain-stills/field-4.webp" width="960" height="540" alt=""></div>
+<div class="tx"><h2 id="c0">Faba beans</h2><p class="when">Sow Feb, harvest Aug</p><p class="st"><span class="chip">Not yet sown</span></p></div>
+<p class="nt">Sown into cold soil; leave the headlands uncut for ground-nesting bees.</p>
+<div class="mini-c" aria-hidden="true"><span class="mb"><i class=""></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></span></div></div></article></li>
+<li class="lane"><article class="crop" id="crop-1" data-stage="wait" style="--f:2;--n:6" aria-labelledby="c1">
+<div class="in"><div class="ph"><img src="/assets/domain-stills/field-1.webp" width="960" height="540" alt="" loading="lazy"><img src="/assets/domain-stills/field-2.webp" width="960" height="540" alt="" loading="lazy"><img src="/assets/domain-stills/field-4.webp" width="960" height="540" alt="" loading="lazy"></div>
+<div class="tx"><h2 id="c1">Spring oats</h2><p class="when">Sow Mar, harvest Aug</p><p class="st"><span class="chip">Not yet sown</span></p></div>
+<p class="nt">Undersown with clover so the next crop starts before this one ends.</p>
+<div class="mini-c" aria-hidden="true"><span class="mb"><i class=""></i><i class=""></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></span></div></div></article></li>
+<li class="lane"><article class="crop" id="crop-2" data-stage="wait" style="--f:3;--n:7" aria-labelledby="c2">
+<div class="in"><div class="ph"><img src="/assets/domain-stills/field-1.webp" width="960" height="540" alt="" loading="lazy"><img src="/assets/domain-stills/field-2.webp" width="960" height="540" alt="" loading="lazy"><img src="/assets/domain-stills/field-4.webp" width="960" height="540" alt="" loading="lazy"></div>
+<div class="tx"><h2 id="c2">Clover ley</h2><p class="when">Sow Apr, harvest Oct</p><p class="st"><span class="chip">Not yet sown</span></p></div>
+<p class="nt">Cut once in July, never at night when the hares are out.</p>
+<div class="mini-c" aria-hidden="true"><span class="mb"><i class=""></i><i class=""></i><i class=""></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span></div></div></article></li>
+<li class="lane"><article class="crop" id="crop-3" data-stage="wait" style="--f:3;--n:6" aria-labelledby="c3">
+<div class="in"><div class="ph"><img src="/assets/domain-stills/field-1.webp" width="960" height="540" alt="" loading="lazy"><img src="/assets/domain-stills/field-2.webp" width="960" height="540" alt="" loading="lazy"><img src="/assets/domain-stills/field-4.webp" width="960" height="540" alt="" loading="lazy"></div>
+<div class="tx"><h2 id="c3">Sunflowers</h2><p class="when">Sow Apr, harvest Sep</p><p class="st"><span class="chip">Not yet sown</span></p></div>
+<p class="nt">Wide rows and a flowering strip along every edge.</p>
+<div class="mini-c" aria-hidden="true"><span class="mb"><i class=""></i><i class=""></i><i class=""></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i></span></div></div></article></li>
+<li class="lane"><article class="crop" id="crop-4" data-stage="wait" style="--f:7;--n:5" aria-labelledby="c4">
+<div class="in"><div class="ph"><img src="/assets/domain-stills/field-1.webp" width="960" height="540" alt="" loading="lazy"><img src="/assets/domain-stills/field-2.webp" width="960" height="540" alt="" loading="lazy"><img src="/assets/domain-stills/field-4.webp" width="960" height="540" alt="" loading="lazy"></div>
+<div class="tx"><h2 id="c4">Cover rye</h2><p class="when">Sow Aug, standing to Dec</p><p class="st"><span class="chip">Not yet sown</span></p></div>
+<p class="nt">Drilled straight after harvest and left standing through winter to hold the slope.</p>
+<div class="mini-c" aria-hidden="true"><span class="mb"><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div></div></article></li>
+          </ol>
+        </div>
+        <div class="sweep" id="sweep" aria-hidden="true"><span class="flag" id="flag">Jan</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACT 2: the rotation board. Pinned; scroll rotates which grower's field is in the ground. -->
+  <section id="board" data-sc-act="pin" data-sc-span="2" aria-label="Crop stories">
+    <div class="stage board" id="bstage" data-sc-stage data-sc-verify-state="">
+      <div class="bwrap">
+        <div class="bl"><h2>Growers on what the field gave back</h2><p>Three farms in their own words, after two or more crop cycles on our rotation plan.</p><ol class="step" aria-hidden="true"><li class="on"><b>Hana Petrov</b><span>Oat and clover grower, 140 acres</span><i></i></li><li class=""><b>Mateus Okonkwo</b><span>Sunflower and bean grower, 85 acres</span><i></i></li><li class=""><b>Elif Danielsson</b><span>Barley and potato grower, 220 acres</span><i></i></li></ol></div>
+        <div class="panel">
+<article class="card on" aria-label="Hana Petrov">
+<div class="shot"><img src="/assets/domain-stills/field-1.webp" width="960" height="540" alt=""></div>
+<blockquote><p>We undersowed our oats with clover and stopped buying nitrogen by year three. The hedgerows filled with partridge, which I had not seen since I was a boy.</p><cite><b>Hana Petrov</b><span>Oat and clover grower, 140 acres</span></cite></blockquote></article>
+<article class="card" aria-label="Mateus Okonkwo">
+<div class="shot"><img src="/assets/domain-stills/field-2.webp" width="960" height="540" alt="" loading="lazy"></div>
+<blockquote><p>The margins around my sunflowers hum all July. My yield did not drop, and the honey from my neighbour's hives is now on my label.</p><cite><b>Mateus Okonkwo</b><span>Sunflower and bean grower, 85 acres</span></cite></blockquote></article>
+<article class="card" aria-label="Elif Danielsson">
+<div class="shot"><img src="/assets/domain-stills/field-3.webp" width="960" height="540" alt="" loading="lazy"></div>
+<blockquote><p>A cover rye after harvest kept the topsoil on the slope through a wet winter. I had lost a trailer load of it every year before.</p><cite><b>Elif Danielsson</b><span>Barley and potato grower, 220 acres</span></cite></blockquote></article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACT 3: one flow row. The system in four lines, then the sowing plan. -->
+  <section id="plan" class="plan" data-sc-act="flow" aria-label="Grow with us">
+    <div class="pin" data-sc-in>
+      <h2>What the rotation adds up to</h2>
+      <figure class="pq-w"><blockquote class="pq"><p>Field never told me to farm less. It told me to look at the whole farm, and the numbers followed.</p></blockquote><figcaption><cite>Jonas Whitcombe, farm manager, Ashby Mill</cite></figcaption></figure>
+      <dl class="facts"><div><dt>Farms in the network</dt><dd>410</dd></div><div><dt>Crop cycles recorded</dt><dd>18</dd></div><div><dt>Habitat per acre</dt><dd>4.7× more</dd></div><div><dt>Bought nitrogen, average</dt><dd>down 38%</dd></div></dl>
+    </div>
+    <div class="close"><div class="cin">
+      <div data-sc-in><h2>Walk the field with us.</h2><p class="lead">Tell us about your land. An agronomist will visit in the next growing season, at no charge, and draw up a first rotation.</p></div>
+      <form id="sow" novalidate data-sc-in>
+<div class="row"><label for="f-name">Your name</label><input id="f-name" name="name" type="text" autocomplete="name"></div>
+<div class="row"><label for="f-email">Email</label><input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" dir="ltr"></div>
+<div class="row"><label for="f-size">Farm size</label><select id="f-size" name="size"><option>Under 50 acres</option><option>50 to 199 acres</option><option>200 to 999 acres</option><option>1,000 acres or more</option></select></div>
+<div class="row"><label for="f-crop">Main crop</label><select id="f-crop" name="crop"><option>Cereals</option><option>Pulses and beans</option><option>Oilseeds</option><option>Vegetables and potatoes</option><option>Mixed</option></select></div>
+<div class="mini" id="mini" role="status" aria-label="Your crop in the ground"></div>
+<div class="row wide"><label for="f-land">What is the hardest part of your land right now?</label><textarea id="f-land" name="land" rows="3"></textarea></div>
+        <div class="sub"><button class="btn" type="submit">Grow with us</button><p class="reply" id="reply" role="status"></p></div>
+      </form>
+    </div></div>
+    <div class="colo"><span>Sample site. Names, farms and figures are sample content.</span><a href="/field">Back to the Field page</a></div>
+  </section>
+</main>
+
+<script>window.FIELD={"crops":[{"name":"Faba beans","f":2,"t":8,"n":7,"range":"Feb to Aug","note":"Sown into cold soil; leave the headlands uncut for ground-nesting bees."},{"name":"Spring oats","f":3,"t":8,"n":6,"range":"Mar to Aug","note":"Undersown with clover so the next crop starts before this one ends."},{"name":"Clover ley","f":4,"t":10,"n":7,"range":"Apr to Oct","note":"Cut once in July, never at night when the hares are out."},{"name":"Sunflowers","f":4,"t":9,"n":6,"range":"Apr to Sep","note":"Wide rows and a flowering strip along every edge."},{"name":"Cover rye","f":8,"t":12,"n":5,"range":"Aug to Dec","note":"Drilled straight after harvest and left standing through winter to hold the slope."}],"mon":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"stage":{"wait":"Not yet sown","sow":"Sow","grow":"Grow","harvest":"Harvest","done":"Harvested","stand":"Standing"},"map":[[1,4],[0],[3],[],[0,1,2,3,4]],"none":"Not in the sample calendar. It covers five crops.","err":"Add your name and a valid email.","ok":"Thank you. An agronomist will call to book a visit before the next sowing.","sample":"Sample site: nothing was sent."};</script>
+<script src="../_engine/scrollcraft.js"></script>
+<script>ScrollCraft.mount(document.body);</script>
+<script>
+/* Field: the season sweep. One vertical line travels the calendar (Jan to Dec is the scroll axis);
+   each crop card changes stage (sow, grow, harvest) as the line crosses it and its still is graded to match.
+   All page-local; the engine only supplies the pinned stages. Data comes from window.FIELD (the content file). */
+(function () {
+  "use strict";
+  var D = window.FIELD, doc = document, root = doc.documentElement;
+  var rtl = root.getAttribute("dir") === "rtl";
+  var reduceMQ = matchMedia("(prefers-reduced-motion: reduce)");
+  var $ = function (id) { return doc.getElementById(id); };
+  var all = function (s, r) { return Array.prototype.slice.call((r || doc).querySelectorAll(s)); };
+  function clamp(x, a, b) { return Math.min(b, Math.max(a, x)); }
+  var act = $("year"), stage = $("stage"), track = $("track"), sweep = $("sweep"), flag = $("flag"), win = $("win");
+  var cards = all(".crop"), cols = all(".cols li"), mlinks = all(".months a"), mnav = doc.querySelector(".months"), prog = $("prog");
+  var board = $("board"), bstage = $("bstage"), bcards = all(".card"), bsteps = all(".step li");
+  var reduce = reduceMQ.matches;
+  root.classList.add("js");
+
+  function stageOf(c, u) {
+    var s = c.f - 1, e = c.t, len = e - s;
+    if (u < s) return "wait";
+    if (u < s + Math.max(0.5, 0.25 * len)) return "sow";
+    if (c.t === 12) return u >= 11 ? "stand" : "grow";
+    if (u < e - Math.max(0.5, 0.18 * len)) return "grow";
+    if (u < e) return "harvest";
+    return "done";
+  }
+
+  /* ---------------- reduced motion: static list, month bar highlights the crops in the ground ---------------- */
+  if (reduce) {
+    cards.forEach(function (c) { c.setAttribute("data-stage", "static"); });
+    mlinks.forEach(function (a, m) {
+      a.addEventListener("click", function (e) {
+        e.preventDefault();
+        mlinks.forEach(function (x) { x.removeAttribute("aria-current"); });
+        a.setAttribute("aria-current", "true");
+        var first = null;
+        cards.forEach(function (c, i) {
+          var inG = D.crops[i].f - 1 <= m && m <= D.crops[i].t - 1;
+          c.classList.toggle("ing", inG);
+          if (inG && !first) first = c;
+        });
+        if (first) first.scrollIntoView({ block: "center" });
+      });
+    });
+    stage.setAttribute("data-sc-verify-state", "static");
+    bstage.setAttribute("data-sc-verify-state", "static");
+  } else {
+    /* ---------------- geometry ---------------- */
+    var vw = 0, mw = 150, pad = 0, TW = 0, C = 0, top0 = 0, travel = 1, btop = 0, btravel = 1;
+    var gut = 16, cwPx = 736;
+    function measure() {
+      vw = win.clientWidth;
+      mw = clamp(vw * 0.11, 150, 190);
+      pad = vw * 0.08; C = 12 * mw; TW = 2 * pad + C;
+      stage.style.setProperty("--mw", mw + "px");
+      stage.style.setProperty("--pad", pad + "px");
+      stage.style.setProperty("--tw", TW + "px");
+      cwPx = Math.min(736, innerWidth - 32);
+      gut = parseFloat(getComputedStyle(doc.querySelector(".head")).paddingInlineStart) || 16;
+      var y = window.scrollY || window.pageYOffset;
+      top0 = act.getBoundingClientRect().top + y; travel = Math.max(act.offsetHeight - innerHeight, 1);
+      btop = board.getBoundingClientRect().top + y; btravel = Math.max(board.offsetHeight - innerHeight, 1);
+      last = null; lastB = -1;
+    }
+    var last = null, lastB = -1, lastM = -1, lastKey = "";
+    function monthStart(m) { return (m / 12) * 0.9; } // scroll share of the year act at the start of month m (p)
+
+    function frame() {
+      var y = window.scrollY || window.pageYOffset;
+      /* act 1 */
+      var p = clamp((y - top0) / travel, 0, 1);
+      var q = clamp(p / 0.9, 0, 1), u = 12 * q;
+      var X = pad + u * mw, L = vw * (0.12 + 0.76 * q);
+      var off = clamp(X - L, 0, TW - vw);
+      var sx = X - off;
+      track.style.transform = "translate3d(" + (rtl ? off : -off).toFixed(1) + "px,0,0)";
+      sweep.style.transform = "translate3d(" + (rtl ? -sx : sx).toFixed(1) + "px,0,0)";
+      sweep.classList.toggle("flip", sx > vw * 0.5);
+      var m = Math.min(11, Math.floor(u));
+      if (m !== lastM) {
+        lastM = m;
+        flag.textContent = D.mon[m];
+        cols.forEach(function (c, i) { c.classList.toggle("on", i === m); });
+        mlinks.forEach(function (a, i) { if (i === m) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current"); });
+        if (mnav.scrollWidth > mnav.clientWidth + 2) {
+          var ar = mlinks[m].getBoundingClientRect(), nr = mnav.getBoundingClientRect();
+          mnav.scrollLeft += (ar.left + ar.width / 2) - (nr.left + nr.width / 2);
+        }
+      }
+      prog.style.transform = "scaleX(" + q.toFixed(3) + ")";
+      var key = [];
+      cards.forEach(function (card, i) {
+        var c = D.crops[i], st = stageOf(c, u);
+        key.push(st.charAt(0));
+        if (card._st !== st) {
+          card._st = st;
+          card.setAttribute("data-stage", st);
+          card._chip.textContent = D.stage[st];
+        }
+        var cardStart = pad + (c.f - 1) * mw - off, bw = c.n * mw;
+        var inner = card._in;
+        var d0 = Math.max(0, gut - cardStart);
+        var aw = Math.max(120, Math.round(vw - (cardStart + d0) - gut - 8));
+        var iw = Math.min(cwPx, aw, bw);
+        var d = clamp(d0, 0, Math.max(0, bw - iw - 6));
+        if (card._aw === undefined || Math.abs(aw - card._aw) >= 2) {
+          card._aw = aw; inner.style.setProperty("--aw", aw + "px");
+          inner.classList.remove("tight"); inner.classList.toggle("tiny", aw < 200);
+          var nt = card._nt; // hide the note when its column would be too narrow to read
+          if ((innerWidth <= 700 ? aw < 330 : nt.offsetWidth < 150) && nt.offsetParent !== null) inner.classList.add("tight");
+        }
+        inner.style.transform = d > 0.5 ? "translate3d(" + (rtl ? -d : d).toFixed(1) + "px,0,0)" : "";
+      });
+      stage.setAttribute("data-sc-verify-state", m + ":" + key.join("") + ":" + Math.round(u * 10));
+
+      /* act 2: the rotation board */
+      var bp = clamp((y - btop) / btravel, 0, 1);
+      var bi = Math.min(bcards.length - 1, Math.floor(bp * bcards.length));
+      if (bi !== lastB) {
+        lastB = bi;
+        bcards.forEach(function (c, i) { c.classList.toggle("on", i === bi); });
+        bsteps.forEach(function (s, i) { s.classList.toggle("on", i === bi); });
+      }
+      var lp = clamp(bp * bcards.length - bi, 0, 1);
+      bsteps.forEach(function (s, i) { s._bar.style.transform = "scaleX(" + (i < bi ? 1 : i === bi ? lp.toFixed(3) : 0) + ")"; });
+      bcards[bi]._img.style.transform = "scale(" + (1 + 0.05 * lp).toFixed(4) + ")";
+      bstage.setAttribute("data-sc-verify-state", bi + ":" + Math.round(lp * 10));
+    }
+    cards.forEach(function (c) { c._in = c.querySelector(".in"); c._chip = c.querySelector(".chip"); c._nt = c.querySelector(".nt"); });
+    bsteps.forEach(function (s) { s._bar = s.querySelector("i"); });
+    bcards.forEach(function (c) { c._img = c.querySelector("img"); });
+
+    var ticking = false;
+    function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; frame(); }); } }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    var rz = 0;
+    window.addEventListener("resize", function () { clearTimeout(rz); rz = setTimeout(function () { measure(); frame(); }, 60); });
+    measure(); frame();
+    if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(function () { measure(); frame(); });
+    window.addEventListener("load", function () { measure(); frame(); });
+
+    mlinks.forEach(function (a, m) {
+      a.addEventListener("click", function (e) {
+        e.preventDefault();
+        var p = ((m + 0.5) / 12) * 0.9;
+        window.scrollTo({ top: top0 + p * travel, behavior: "smooth" });
+      });
+    });
+  }
+
+  /* ---------------- close: choosing a crop rewrites its calendar bar live ---------------- */
+  var form = $("sow"), sel = $("f-crop"), mini = $("mini"), touched = false;
+  var MAP = D.map; // crop option index -> calendar rows
+  function renderMini() {
+    var rows = MAP[sel.selectedIndex] || [];
+    var h = "";
+    if (!rows.length) h = '<p class="none">' + D.none + "</p>";
+    rows.forEach(function (ri) {
+      var c = D.crops[ri], cells = "";
+      for (var m = 1; m <= 12; m++) cells += '<i class="' + (m >= c.f && m <= c.t ? "on" : "") + '"></i>';
+      h += '<div class="mrow"><b>' + c.name + '</b><span class="rg">' + c.range + '</span><span class="mb" aria-hidden="true">' + cells + "</span></div>";
+    });
+    mini.innerHTML = h;
+    if (touched) {
+      all(".months a").forEach(function (a) {
+        all(".tk i", a).forEach(function (t, ri) { t.classList.toggle("sel", rows.indexOf(ri) > -1); });
+      });
+    }
+  }
+  if (sel) {
+    sel.addEventListener("change", function () { touched = true; renderMini(); });
+    renderMini();
+  }
+  if (form) form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var n = $("f-name"), em = $("f-email"), rep = $("reply");
+    var okN = n.value.trim().length > 0, okE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em.value.trim());
+    n.classList.toggle("err", !okN); em.classList.toggle("err", !okE);
+    if (!okN || !okE) { rep.textContent = D.err; (okN ? em : n).focus(); return; }
+    rep.textContent = D.ok + " " + D.sample;
+  });
+})();
+
+</script>
+</body>
+</html>

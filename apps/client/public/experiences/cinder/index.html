@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cinder · Enter the version that gets weird (sample brand)</title>
+<meta name="description" content="An independent studio building one strange world with fourteen playable factions. A sample brand from Landscape Lab.">
+<link rel="alternate" hreflang="en" href="index.html">
+<link rel="alternate" hreflang="ar" href="ar/index.html">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%2315150f'/><circle cx='16' cy='16' r='6' fill='%23e7f04f'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee:wght@400&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_engine/scrollcraft.css">
+<style>
+  :root {
+    --bg: #15150f;
+    --fg: #f6f6df;
+    --soft: #c9c9a8;
+    --acc: #e7f04f;
+    --line: #454613;
+    --pad: clamp(1.25rem, 4vw, 3.5rem);
+    --f-display: "Bungee", "Arial Black", system-ui, sans-serif;
+    --f-text: "Barlow", system-ui, sans-serif;
+    --f-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --t-s: 0.8125rem;
+    --t-b: 1rem;
+    --t-l: 1.125rem;
+    --sc-canvas: var(--bg);
+    --sc-ink: var(--fg);
+    --sc-ink-soft: var(--soft);
+    --sc-accent: var(--acc);
+    --sc-font-display: var(--f-display);
+    --sc-font-text: var(--f-text);
+  }
+  /* the flip: the whole ground inverts to the accent, hard cut, nothing eased */
+  :root[data-flip="1"] { --bg: #e7f04f; --fg: #15150f; --soft: #3d3c10; --acc: #15150f; --line: #15150f; }
+  :root[lang="ar"] {
+    --f-display: "Changa", "Segoe UI", system-ui, sans-serif;
+    --f-text: "Cairo", "Segoe UI", system-ui, sans-serif;
+    --f-mono: "Cairo", "Segoe UI", system-ui, sans-serif;
+    --t-s: 0.875rem;
+    --t-b: 1.0625rem;
+    --t-l: 1.1875rem;
+  }
+  html, body { background: var(--bg); color: var(--fg); }
+  body { font-family: var(--f-text); font-size: var(--t-b); line-height: 1.55; overflow-x: clip; }
+  :root[lang="ar"] body { line-height: 1.85; }
+  :focus-visible { outline: 3px solid var(--acc); outline-offset: 3px; border-radius: 3px; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  p, h1, h2, h3, figure, blockquote, ul, ol, dl, dd { margin: 0; }
+  ul, ol { padding: 0; list-style: none; }
+  section { background: transparent; }
+
+  .disp { font-family: var(--f-display); font-weight: 400; letter-spacing: -0.02em; text-transform: uppercase; font-kerning: normal; }
+  :root[lang="ar"] .disp { font-weight: 800; letter-spacing: 0; text-transform: none; }
+  .mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+
+  /* the only call to action on the page: a plain underlined link */
+  .uline {
+    display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 0.25rem; margin-inline-start: -0.25rem;
+    font: 600 var(--t-b)/1.2 var(--f-text); color: inherit; background: none; border: 0; cursor: pointer;
+    text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.28em;
+  }
+  .uline:active { transform: translateY(1px); }
+  @media (hover: hover) and (pointer: fine) { .uline:hover { background: var(--fg); color: var(--bg); text-decoration-color: transparent; } }
+
+  /* the top band: language and the clock, nothing else is chrome */
+  .langchip {
+    position: fixed; z-index: 50; top: 0.75rem; inset-inline-start: 0.75rem;
+    display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1rem;
+    background: var(--bg); color: var(--fg); border: 1px solid var(--fg); border-radius: 4px;
+    font: 600 var(--t-s)/1 var(--f-text); text-decoration: none;
+  }
+  @media (hover: hover) and (pointer: fine) { .langchip:hover { background: var(--fg); color: var(--bg); } }
+  .clock {
+    position: fixed; z-index: 40; top: 0.75rem; inset-inline-end: var(--pad);
+    display: flex; align-items: center; min-height: 2.75rem;
+    font: 500 clamp(1.125rem, 1.8vw, 1.75rem)/1 var(--f-mono); font-variant-numeric: tabular-nums; color: var(--acc);
+    pointer-events: none;
+  }
+  :root.in-peak .clock { visibility: hidden; }
+
+  /* ------------------------------------------------ 1. hero */
+  .hero { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); grid-template-rows: auto auto 1fr; gap: var(--sc-4) var(--sc-6); align-content: start; padding: 4.5rem var(--pad) 0; overflow: clip; }
+  .mark-wrap { transform-origin: 50% 100%; }
+  .mark { display: inline-block; width: max-content; white-space: nowrap; line-height: 0.86; padding-block: 0.05em; margin: 0; color: var(--fg); transform-origin: 0 100%; will-change: transform; }
+  :root[lang="ar"] .mark { line-height: 1.2; }
+  .hero-row { display: contents; }
+  .mark-wrap { grid-area: 1 / 1; align-self: end; }
+  .h1 { grid-area: 2 / 1; position: relative; z-index: 0; }
+  .h1 { font: 600 clamp(1.6rem, 3.6vw, 3.6rem)/1.02 var(--f-text); text-wrap: balance; max-width: 16ch; }
+  :root[lang="ar"] .h1 { font-weight: 700; line-height: 1.3; }
+  .hero-side { grid-area: 1 / 2; align-self: end; position: relative; z-index: 3; display: grid; gap: var(--sc-3); justify-items: start; }
+  .hero-side .lede { color: var(--soft); max-width: 34ch; text-wrap: pretty; }
+  .note { font-size: var(--t-s); line-height: 1.5; color: var(--soft); max-width: 46ch; }
+  .weird {
+    position: absolute; z-index: 1; inset-inline-start: -0.03em; bottom: -0.2em; margin: 0;
+    font-size: 45vw; line-height: 0.8; white-space: nowrap; color: var(--acc); pointer-events: none; will-change: transform;
+  }
+  :root[lang="ar"] .weird { font-size: 40vw; line-height: 1; bottom: -0.44em; }
+
+  /* ------------------------------------------------ 2 and 3. factions at poster scale */
+  .fbig { display: inline-block; width: max-content; white-space: nowrap; line-height: 0.95; padding-block: 0.05em; color: var(--acc); }
+  :root[lang="ar"] .fbig { line-height: 1.3; }
+  .fhead { display: grid; gap: var(--sc-1); max-width: 44ch; }
+  .fhead h2 { font: 600 var(--t-b)/1.35 var(--f-text); }
+  .fhead p { font-size: var(--t-s); color: var(--soft); }
+  .fa { display: grid; grid-template-rows: auto 1fr; padding: 4.5rem var(--pad) var(--pad); gap: var(--sc-4); }
+  .fstack { position: relative; }
+  .fac { position: absolute; inset: 0; display: grid; grid-template-rows: 1fr auto; align-items: center; }
+  .fac .fbig { align-self: center; justify-self: start; }
+  .fmeta { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--sc-5) var(--sc-7); align-items: end; padding-top: var(--sc-4); border-top: 1px solid var(--line); }
+  .fmeta h3 { font: 600 var(--t-l)/1.2 var(--f-text); }
+  .fmeta .note { margin-top: var(--sc-2); max-width: 44ch; }
+  .tags { display: flex; flex-wrap: wrap; gap: var(--sc-1) var(--sc-4); margin-top: var(--sc-2); font: 500 var(--t-s)/1.4 var(--f-mono); color: var(--acc); }
+  .facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sc-4); }
+  .facts div { display: grid; gap: 0.1rem; align-content: start; }
+  .facts dt { font: 500 var(--t-s)/1.3 var(--f-mono); color: var(--soft); }
+  .facts dd { font: 500 var(--t-b)/1.3 var(--f-text); }
+
+  .fb { padding: var(--sc-10) var(--pad); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sc-10); }
+  .sheet { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sc-4); min-height: 62svh; align-content: center; }
+  .sheet:nth-child(even) { justify-items: end; text-align: end; }
+  .sheet:nth-child(even) .fmeta { justify-self: stretch; text-align: start; }
+  .sheet .fmeta { width: 100%; }
+
+  /* ------------------------------------------------ 4. archive small print: the quiet */
+  .ar { display: grid; align-content: center; padding: 4.5rem var(--pad) var(--pad); }
+  .ar-in { display: grid; gap: var(--sc-6); max-width: 46ch; margin-inline-start: clamp(0rem, 24vw, 26rem); }
+  .ar-in h2 { font: 600 var(--t-b)/1.35 var(--f-text); color: var(--soft); }
+  .log { display: grid; gap: var(--sc-5); }
+  .log li { display: grid; gap: 0.15rem; padding-top: var(--sc-3); border-top: 1px solid var(--line); }
+  .log .when { font: 500 var(--t-s)/1.3 var(--f-mono); color: var(--acc); }
+  .log h3 { font: 600 var(--t-b)/1.35 var(--f-text); }
+  .log p { font-size: var(--t-s); line-height: 1.55; color: var(--soft); }
+
+  /* ------------------------------------------------ 5. the peak: the clock */
+  .pk { display: grid; grid-template-rows: auto 1fr auto; padding: 4.5rem var(--pad) var(--pad); gap: var(--sc-3); overflow: clip; }
+  .pk-top { display: grid; gap: var(--sc-1); max-width: 46ch; }
+  .pk-top .stack { display: grid; }
+  .pk-top .stack > * { grid-area: 1 / 1; }
+  .pk-top h2 { font: 600 var(--t-b)/1.35 var(--f-text); }
+  .pk-top p { font-size: var(--t-s); color: var(--soft); }
+  .pk-mid { align-self: center; display: grid; justify-items: start; gap: var(--sc-2); }
+  .pclock { display: inline-block; width: max-content; white-space: nowrap; line-height: 0.9; padding-block: 0.05em; color: var(--fg); font-family: var(--f-mono); font-weight: 500; font-variant-numeric: tabular-nums; }
+  :root[lang="ar"] .pclock { font-family: var(--f-display); font-weight: 800; line-height: 1.1; }
+  .pname-stack { display: grid; justify-items: start; }
+  .pname-stack > * { grid-area: 1 / 1; }
+  .pname { color: var(--acc); }
+  .pre, .post { visibility: visible; }
+  :root:not([data-flip="1"]) .post, :root[data-flip="1"] .pre { visibility: hidden; }
+  .pk-bot { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--sc-6); align-items: end; min-height: 4.5rem; }
+  .pk-next h3 { font: 600 var(--t-b)/1.35 var(--f-text); }
+  .pk-next p { font-size: var(--t-s); color: var(--soft); max-width: 44ch; }
+  .pk-next .when { display: block; font: 500 var(--t-s)/1.3 var(--f-mono); color: var(--acc); margin-bottom: 0.15rem; }
+  .pk-facts { justify-self: end; }
+
+  /* ------------------------------------------------ 6. the close: smallest type */
+  .close { min-height: 90svh; display: grid; align-content: end; padding: var(--sc-10) var(--pad) var(--sc-6); }
+  .close-in { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--sc-7) var(--sc-9); align-items: start; }
+  .close-head { display: grid; gap: var(--sc-3); align-content: start; }
+  .close-head h2 { font: 700 var(--t-b)/1.3 var(--f-text); }
+  .close-head p { font-size: var(--t-s); line-height: 1.55; max-width: 40ch; }
+  .proof { display: grid; gap: var(--sc-3); margin-top: var(--sc-5); padding-top: var(--sc-4); border-top: 1px solid var(--line); }
+  .proof h3 { font: 600 var(--t-s)/1.3 var(--f-mono); color: var(--soft); }
+  .proof blockquote { font-size: var(--t-s); line-height: 1.55; max-width: 44ch; }
+  .proof cite { font-style: normal; font-size: var(--t-s); color: var(--soft); }
+  .pfacts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sc-2) var(--sc-5); }
+  .pfacts div { display: grid; gap: 0.05rem; }
+  .pfacts dt { font: 500 0.75rem/1.3 var(--f-mono); color: var(--soft); order: 2; }
+  :root[lang="ar"] .pfacts dt { font-size: 0.8125rem; }
+  .pfacts dd { font: 500 var(--t-b)/1.2 var(--f-mono); font-variant-numeric: tabular-nums; }
+  .form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sc-4) var(--sc-5); }
+  .field { display: grid; gap: 0.15rem; font-size: var(--t-s); }
+  .field.wide { grid-column: 1 / -1; }
+  .field label { font-weight: 600; }
+  .field :is(input, select, textarea) {
+    width: 100%; min-height: 2.75rem; padding: 0.5rem 0; background: transparent; color: inherit;
+    border: 0; border-bottom: 2px solid var(--fg); border-radius: 0; font: 400 1rem/1.4 var(--f-text);
+  }
+  :root[lang="ar"] .field :is(input, select, textarea) { font-size: 1.0625rem; }
+  .field select { appearance: none; background-image: none; }
+  .field select option { background: #15150f; color: #f6f6df; }
+  .field textarea { min-height: 5.5rem; resize: vertical; }
+  :root[lang="ar"] .field input[type="email"] { text-align: right; }
+  .field :is(input, select, textarea):focus-visible { outline: 3px solid var(--fg); outline-offset: 2px; border-radius: 2px; }
+  .form-act { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--sc-3) var(--sc-6); }
+  .reply { min-height: 1.5em; font-size: var(--t-s); font-weight: 600; max-width: 52ch; }
+  .foot { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--sc-1) var(--sc-6); align-items: center; font-size: var(--t-s); padding-top: var(--sc-5); border-top: 1px solid var(--line); }
+  .foot a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+
+  /* ------------------------------------------------ phones: composed separately */
+  @media (max-width: 860px) {
+    .langchip { position: absolute; }
+    .hero { gap: var(--sc-3); }
+    .hero { grid-template-columns: 1fr; }
+    .mark-wrap, .h1, .hero-side { grid-area: auto; }
+    .hero-side { align-self: start; }
+    .h1 { max-width: 14ch; }
+    .weird { font-size: 45vw; }
+    .fmeta { grid-template-columns: 1fr; gap: var(--sc-3); }
+    .facts { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sc-3); }
+    .facts dd { font-size: var(--t-s); }
+    .fb { gap: var(--sc-9); padding-block: var(--sc-9); }
+    .sheet { min-height: 0; }
+    .ar-in { margin-inline-start: 0; }
+    .pk-bot { grid-template-columns: 1fr; gap: var(--sc-3); }
+    .pk-facts { justify-self: start; }
+    .close { min-height: 0; }
+    .close-in { grid-template-columns: 1fr; gap: var(--sc-6); }
+    .form { grid-template-columns: 1fr; }
+  }
+  @media (max-height: 640px) and (min-width: 861px) { .hero-side .lede, .fmeta .note { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .uline { transition: none; } }
+</style>
+</head>
+<body>
+
+<a class="langchip" href="ar/index.html" hreflang="ar" lang="ar" rel="alternate">العربية</a>
+<div class="clock" aria-hidden="true"><bdi dir="ltr" id="clk">00:00</bdi></div>
+
+<main id="top">
+
+  <!-- 1 · ENTER. The wordmark is the page's only head; it stretches with scroll speed. -->
+  <section id="hero" data-sc-act="pin" data-sc-span="1.3" aria-labelledby="h1">
+    <div data-sc-stage class="hero" data-fit-box data-sc-verify-state="">
+      <div class="mark-wrap"><p class="mark disp" id="mark">Cinder</p></div>
+      <div class="hero-row">
+        <h1 id="h1" class="h1">Enter the version that gets weird.</h1>
+        <div class="hero-side">
+          <p class="lede">An independent studio building one strange world with fourteen playable factions.</p>
+          <a class="uline" href="#wishlist">Wishlist the next build</a>
+          <p class="note">Cinder is a sample brand from Landscape Lab. Its factions, figures and quotes are sample content.</p>
+        </div>
+      </div>
+      <p class="weird disp" id="weird" aria-hidden="true">Weird</p>
+    </div>
+  </section>
+
+  <!-- 2 · FACTIONS I. Names at poster scale, wiped across the letterforms. -->
+  <section id="characters" data-sc-act="pin" data-sc-span="1.6" aria-labelledby="charH">
+    <div data-sc-stage class="fa" data-fit-box data-sc-verify-state="">
+      <div class="fhead">
+        <h2 id="charH">Pick a faction before the ash settles</h2>
+        <p>Fourteen factions live in the Cinder Basin. These are the ones players ask about first.</p>
+      </div>
+      <div class="fstack">
+        <article class="fac" data-i="0">
+          <span class="fbig disp" aria-hidden="true">Wardens</span>
+          <div class="fmeta">
+            <div><h3>The Lamplit Wardens</h3><p class="note">Tunnel guards who trade silence for safe passage.</p><ul class="tags"><li>Stealth</li><li>Support</li></ul></div>
+            <dl class="facts"><div><dt>Origin</dt><dd>Lower Vents</dd></div><div><dt>Weapon</dt><dd>Shuttered lantern</dd></div><div><dt>Weakness</dt><dd>Open flame</dd></div></dl>
+          </div>
+        </article>
+        <article class="fac" data-i="1">
+          <span class="fbig disp" aria-hidden="true">Salvage</span>
+          <div class="fmeta">
+            <div><h3>Ma Ketterick's Salvage Crew</h3><p class="note">Scrap haulers who rebuild anything, mostly in the wrong order.</p><ul class="tags"><li>Builder</li><li>Chaotic</li></ul></div>
+            <dl class="facts"><div><dt>Origin</dt><dd>The Slag Market</dd></div><div><dt>Weapon</dt><dd>Bolt-cannon</dd></div><div><dt>Weakness</dt><dd>Rust</dd></div></dl>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · FACTIONS II. Two more sheets scroll past at their own pace. -->
+  <section id="more" data-sc-act="flow" class="fb" aria-label="More factions">
+    <article class="sheet" data-fit-box data-sc-in>
+      <span class="fbig disp" aria-hidden="true">Choir</span>
+      <div class="fmeta">
+        <div><h3>The Quiet Choir</h3><p class="note">Singers whose voices open doors and wake things behind them.</p><ul class="tags"><li>Caster</li><li>Risky</li></ul></div>
+        <dl class="facts"><div><dt>Origin</dt><dd>Ember Cathedral</dd></div><div><dt>Weapon</dt><dd>Resonant bell</dd></div><div><dt>Weakness</dt><dd>Sudden noise</dd></div></dl>
+      </div>
+    </article>
+    <article class="sheet" data-fit-box data-sc-in>
+      <span class="fbig disp" aria-hidden="true">Tarn</span>
+      <div class="fmeta">
+        <div><h3>Tarn of the Hollow Road</h3><p class="note">A lone courier who knows which maps are lying.</p><ul class="tags"><li>Scout</li><li>Fast</li></ul></div>
+        <dl class="facts"><div><dt>Origin</dt><dd>Unknown</dd></div><div><dt>Weapon</dt><dd>Hooked chain</dd></div><div><dt>Weakness</dt><dd>Debts</dd></div></dl>
+      </div>
+    </article>
+  </section>
+
+  <!-- 4 · ARCHIVE. Small print, a lot of ground. The quiet in front of the peak. -->
+  <section id="archive" data-sc-act="pin" data-sc-span="1.2" aria-labelledby="archH">
+    <div data-sc-stage class="ar" data-sc-verify-state="">
+      <div class="ar-in">
+        <h2 id="archH" data-sc-cue="0 1 0.06 0">Dev log and lore, in the order we found it</h2>
+        <ol class="log">
+          <li data-sc-cue="0.10 1 0.08 0"><span class="when">Build 0.4</span><h3>The Basin gets a floor</h3><p>The first playable room: a collapsed foundry where every door opens onto a different decade.</p></li>
+          <li data-sc-cue="0.28 1 0.08 0"><span class="when">Build 0.6</span><h3>Ash starts remembering</h3><p>Footprints now stay for a day. Lore reason: the Basin never forgets who crossed it.</p></li>
+          <li data-sc-cue="0.46 1 0.08 0"><span class="when">Build 0.9</span><h3>Wardens meet the Choir</h3><p>Two factions with a shared secret and one locked door. Neither will say who has the key.</p></li>
+          <li data-sc-cue="0.64 1 0.08 0"><span class="when">Build 1.0</span><h3>Fourteen factions, one clock</h3><p>Every faction now reacts to the 03:17 event, though none of them agree on what it is.</p></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · 03:17. The peak. Scroll is the clock; at 03:17 the ground flips and a name changes. -->
+  <section id="peak" data-sc-act="pin" data-sc-span="2.6" aria-labelledby="pkH">
+    <div data-sc-stage class="pk" data-fit-box data-sc-verify-state="">
+      <div class="pk-top">
+        <div class="stack">
+          <h2 id="pkH" class="pre">The Lamplit Wardens</h2>
+          <h2 class="post" aria-hidden="true">The Glass Furnace Order</h2>
+        </div>
+        <div class="stack">
+          <p class="pre">Tunnel guards who trade silence for safe passage.</p>
+          <p class="post">Monks who melt the old world down and pour it into something sharper.</p>
+        </div>
+      </div>
+      <div class="pk-mid">
+        <p class="pclock" id="pclock" role="img" aria-label="03:17"><bdi dir="ltr" id="pc">02:00</bdi></p>
+        <div class="pname-stack" aria-hidden="true">
+          <span class="pname fbig disp pre">Wardens</span>
+          <span class="pname fbig disp post">Furnace</span>
+        </div>
+      </div>
+      <div class="pk-bot">
+        <div class="pk-next" data-sc-cue="0.66 1 0.08 0">
+          <span class="when">Next build</span>
+          <h3>What the Furnace Order found underneath</h3>
+          <p>We are not describing it. Wishlist the build and be the first down the stairs.</p>
+        </div>
+        <dl class="facts pk-facts" data-sc-cue="0.74 1 0.08 0">
+          <div><dt>Origin</dt><dd>The Kiln Ring</dd></div><div><dt>Weapon</dt><dd>Molten staff</dd></div><div><dt>Weakness</dt><dd>Cold water</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · WISHLIST. The ground stays inverted. Smallest type, one underlined link. -->
+  <section id="wishlist" data-sc-act="flow" class="close" aria-labelledby="joinH">
+    <div class="close-in" data-sc-in>
+      <div class="close-head">
+        <h2 id="joinH">Be there when the plot flips.</h2>
+        <p>Join the wishlist for the next build. We send one email on release day and one when the playtest keys go out.</p>
+        <div class="proof">
+          <h3>What players keep telling us</h3>
+          <figure><blockquote><p>I opened a door in the first hour, lost three hours to what was behind it, and was annoyed to find it was fair.</p></blockquote><figcaption><cite>Okoro_Vex, Basin Discord, level 61</cite></figcaption></figure>
+          <dl class="pfacts">
+            <div><dt>Playable factions</dt><dd><bdi dir="ltr">14</bdi></dd></div>
+            <div><dt>Wishlists</dt><dd><bdi dir="ltr">212,400</bdi></dd></div>
+            <div><dt>Discord members</dt><dd><bdi dir="ltr">38,900</bdi></dd></div>
+            <div><dt>Fan-found secrets</dt><dd><bdi dir="ltr">1,106</bdi></dd></div>
+          </dl>
+        </div>
+      </div>
+      <form id="joinForm" class="form" novalidate data-ok="You are on the list. Watch your inbox on release day, and keep your theory to yourself. This is a sample brand: nothing was sent." data-err-name="Please add your player name." data-err-email="Please add a valid email address.">
+        <div class="field"><label for="f-name">Player name</label><input id="f-name" name="name" type="text" autocomplete="nickname" required></div>
+        <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" dir="ltr" required></div>
+        <div class="field"><label for="f-platform">Platform</label><select id="f-platform" name="platform"><option>PC</option><option>Console</option><option>Both</option></select></div>
+        <div class="field"><label for="f-faction">Favourite faction</label><select id="f-faction" name="faction"><option>The Lamplit Wardens</option><option>Ma Ketterick's Salvage Crew</option><option>The Quiet Choir</option><option>Tarn of the Hollow Road</option><option>The Glass Furnace Order</option><option>Still deciding</option></select></div>
+        <div class="field wide"><label for="f-theory">What do you think happens at 03:17?</label><textarea id="f-theory" name="theory" rows="3"></textarea></div>
+        <div class="form-act">
+          <button class="uline" type="submit">Wishlist the next build</button>
+          <p id="reply" class="reply" role="status"></p>
+        </div>
+      </form>
+      <div class="foot">
+        <span>Cinder is a sample brand from Landscape Lab. Its factions, figures and quotes are sample content.</span>
+        <a class="uline" href="ar/index.html" hreflang="ar" lang="ar" rel="alternate">العربية</a>
+        <a class="uline" href="/cinder">Back to the Cinder page</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="../_engine/scrollcraft.js"></script>
+<script>ScrollCraft.mount(document.body);</script>
+<script>
+/* cinder: a typographic poster with one clock. Scroll position maps onto a clock
+   that ends at 03:17 (the only time in the sample content). The moment it gets
+   there the ground inverts and the faction name changes. All state is derived
+   from scroll, so scrolling back up flips it back. */
+(function () {
+  "use strict";
+  var doc = document.documentElement;
+  var rtl = doc.dir === "rtl";
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var phoneMQ = matchMedia("(max-width: 860px)");
+  var END = 3 * 60 + 17;          // 03:17, in minutes
+  var FLIP_P = 0.46;              // where in the peak act the clock reaches it
+  var $ = function (id) { return document.getElementById(id); };
+  function clamp(x, a, b) { return Math.min(b, Math.max(a, x)); }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function clockText(m) { return pad(Math.floor(m / 60)) + ":" + pad(m % 60); }
+
+  /* ---- fit a display word to the width of its box ------------------------ */
+  function boxWidth(el) {
+    var box = el.closest("[data-fit-box]") || el.parentElement;
+    var cs = getComputedStyle(box);
+    return box.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  }
+  function fitOne(el, frac, cap) {
+    el.style.fontSize = "200px";
+    var w = el.offsetWidth || 1;
+    var size = 200 * (boxWidth(el) * frac) / w;
+    if (cap) size = Math.min(size, cap);
+    el.style.fontSize = size.toFixed(2) + "px";
+  }
+  var mark = $("mark"), weird = $("weird"), pclock = $("pclock");
+  var hero = $("hero"), fa = $("characters"), ar = $("archive"), pk = $("peak");
+  var heroStage = hero.querySelector("[data-sc-stage]"), faStage = fa.querySelector("[data-sc-stage]");
+  var arStage = ar.querySelector("[data-sc-stage]"), pkStage = pk.querySelector("[data-sc-stage]");
+  var facs = fa.querySelectorAll(".fac");
+  var weirdExcess = 0;
+
+  function fitAll() {
+    var vw = innerWidth, vh = innerHeight;
+    fitOne(mark, phoneMQ.matches ? 0.985 : 0.58, 0.3 * vh);
+    var fbigs = document.querySelectorAll(".fbig");
+    for (var i = 0; i < fbigs.length; i++) {
+      var inPeak = pk.contains(fbigs[i]);
+      fitOne(fbigs[i], 0.985, inPeak ? Math.min(0.17 * vw, 0.24 * vh) : Math.min(0.30 * vw, 0.46 * vh));
+    }
+    if (pclock) fitOne(pclock, 0.985, Math.min(0.36 * vh, 0.3 * vw));
+    var sw = boxWidth(weird);
+    weirdExcess = Math.max(0, weird.offsetWidth - sw + 0.03 * parseFloat(getComputedStyle(weird).fontSize));
+  }
+
+  /* ---- progress of a pinned act, read from its own box ------------------- */
+  function progress(act) {
+    var r = act.getBoundingClientRect();
+    var travel = act.offsetHeight - innerHeight;
+    return travel > 0 ? clamp(-r.top / travel, 0, 1) : 0;
+  }
+  function ease(t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+
+  /* ---- a wipe across the letterforms: enter from the start edge, leave toward the end */
+  // The wipe uses the start edge as its datum: reveal grows from the start, exit eats from the start.
+  function wipeFix(el, enter, leave) {
+    var vis = enter > 0 && leave < 1;
+    el.style.visibility = vis ? "visible" : "hidden";
+    var hideEnd = (1 - enter) * 100, hideStart = leave * 100;
+    el.style.clipPath = rtl
+      ? "inset(0 " + hideStart + "% 0 " + hideEnd + "%)"
+      : "inset(0 " + hideEnd + "% 0 " + hideStart + "%)";
+  }
+
+  /* ---- state, one frame at a time, only touching the DOM on change -------- */
+  var cache = {};
+  function setAttr(el, k, v) { if (cache[k] !== v) { cache[k] = v; el.setAttribute("data-sc-verify-state", v); } }
+  var lastY = scrollY, lastT = performance.now(), vel = 0, shown = { skew: 0, st: 1 };
+  var clk = $("clk"), pc = $("pc");
+
+  function tick(now) {
+    var y = scrollY;
+    var vh = innerHeight;
+
+    /* the clock: scroll maps onto it and it stops at 03:17 */
+    var pr = pk.getBoundingClientRect();
+    var pTop = pr.top + y, pTravel = pk.offsetHeight - vh;
+    var flipY = pTop + FLIP_P * pTravel;
+    var mins = Math.round(END * clamp(y / Math.max(1, flipY), 0, 1));
+    var txt = clockText(mins);
+    if (cache.clock !== txt) { cache.clock = txt; clk.textContent = txt; pc.textContent = txt; }
+    var flipped = y >= flipY - 0.5;
+    if (cache.flip !== flipped) {
+      cache.flip = flipped;
+      if (flipped) doc.setAttribute("data-flip", "1"); else doc.removeAttribute("data-flip");
+    }
+    var inPeak = pr.top <= 0 && pr.bottom >= vh;
+    if (cache.inPeak !== inPeak) { cache.inPeak = inPeak; doc.classList.toggle("in-peak", inPeak); }
+
+    /* the wordmark stretches and leans with scroll speed */
+    var dt = Math.max(1, now - lastT);
+    var inst = (y - lastY) / dt;
+    lastY = y; lastT = now;
+    vel += (inst - vel) * 0.18;
+    if (Math.abs(vel) < 0.004) vel = 0;
+    var n = reduce ? 0 : clamp(vel / 2.2, -1, 1);
+    var skew = +(n * -14).toFixed(2), st = +(1 + Math.abs(n) * 0.4).toFixed(3);
+    if (skew !== shown.skew || st !== shown.st) {
+      shown.skew = skew; shown.st = st;
+      mark.style.transform = "skewX(" + skew + "deg) scaleY(" + st + ")";
+    }
+
+    /* 1 · hero: the cropped word travels so every letter is seen once */
+    var p1 = progress(hero);
+    var dx = reduce ? 0 : weirdExcess * ease(clamp(p1 / 0.92, 0, 1)) * (rtl ? 1 : -1);
+    weird.style.transform = "translate3d(" + dx.toFixed(1) + "px,0,0)";
+    setAttr(heroStage, "hero", "w" + Math.round(dx) + "|" + txt);
+
+    /* 2 · factions I: the first name wipes out, the second wipes in */
+    var p2 = progress(fa), a1, a2, b1, b2;
+    if (reduce) { a1 = p2 < 0.5 ? 1 : 0; a2 = 0; b1 = p2 >= 0.5 ? 1 : 0; b2 = 0; }
+    else { a1 = clamp(p2 / 0.08, 0, 1); a2 = clamp((p2 - 0.42) / 0.08, 0, 1); b1 = clamp((p2 - 0.52) / 0.1, 0, 1); b2 = 0; }
+    wipeFix(facs[0], a1, a2); wipeFix(facs[1], b1, b2);
+    setAttr(faStage, "fa", "a" + a1.toFixed(2) + "-" + a2.toFixed(2) + "|b" + b1.toFixed(2) + "|" + txt);
+
+    /* 4 · archive: authored silence once every line has arrived */
+    var p4 = progress(ar);
+    var lines = [0.1, 0.28, 0.46, 0.64].filter(function (t) { return p4 >= t; }).length;
+    setAttr(arStage, "ar", "lines" + lines + "|" + txt);
+    if (p4 >= 0.82) arStage.setAttribute("data-sc-verify-hold", "true"); else arStage.removeAttribute("data-sc-verify-hold");
+
+    /* 5 · peak */
+    var p5 = progress(pk);
+    setAttr(pkStage, "pk", "pk|" + txt + "|" + (flipped ? "flipped" : "dark") + (p5 >= 0.66 ? "|next" : ""));
+    if (p5 >= 0.78) pkStage.setAttribute("data-sc-verify-hold", "true"); else pkStage.removeAttribute("data-sc-verify-hold");
+
+    requestAnimationFrame(tick);
+  }
+
+  function init() { fitAll(); requestAnimationFrame(tick); }
+  var rt;
+  addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(fitAll, 120); });
+  var fam = getComputedStyle(doc).getPropertyValue("--f-display");
+  var fam2 = getComputedStyle(doc).getPropertyValue("--f-mono");
+  var ready = document.fonts && document.fonts.load
+    ? Promise.all([document.fonts.load("400 100px " + fam), document.fonts.load("800 100px " + fam), document.fonts.load("500 100px " + fam2), document.fonts.ready]).catch(function () {})
+    : Promise.resolve();
+  ready.then(init);
+
+  /* ---- the close: a real form, nothing leaves the browser ---------------- */
+  var form = $("joinForm");
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var reply = $("reply");
+      var name = form.elements.name, email = form.elements.email;
+      var okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
+      if (!name.value.trim()) { reply.textContent = form.getAttribute("data-err-name"); name.focus(); return; }
+      if (!okEmail) { reply.textContent = form.getAttribute("data-err-email"); email.focus(); return; }
+      reply.textContent = form.getAttribute("data-ok");
+      form.reset();
+    });
+  }
+})();
+</script>
+</body>
+</html>

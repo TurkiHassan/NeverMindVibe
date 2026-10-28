@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="@@lang@@" dir="@@dir@@">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>@@title@@</title>
+<meta name="description" content="@@desc@@">
+<link rel="alternate" hreflang="@@otherLang@@" href="@@otherHref@@">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23111827'/><circle cx='16' cy='16' r='6' fill='%23dfe6ff'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="@@fontsHref@@" rel="stylesheet">
+<link rel="stylesheet" href="@@enginePrefix@@_engine/scrollcraft.css">
+<style>
+  :root {
+    --sc-canvas:     #f5f7fb;
+    --sc-surface:    #ffffff;
+    --sc-ink:        #111827;
+    --sc-ink-soft:   #5b6475;
+    --sc-accent:     #2f5be8;
+    --sc-accent-ink: #ffffff;
+    --sc-font-display: @@fontText@@;
+    --sc-font-text:    @@fontText@@;
+    --sc-font-mono:    "Geist Mono", ui-monospace, monospace;
+    --kn-soft: #dfe6ff;
+    --kn-line: #d7def0;
+    --kn-dark: #111827;
+    --kn-dark-ink: #e8ecff;
+    --kn-dark-soft: #a9b4d4;
+    --kn-pad: clamp(0.9rem, 1.6vw, 1.5rem);
+  }
+  body { background: var(--sc-canvas); color: var(--sc-ink); }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  :focus-visible { outline: 2px solid var(--sc-accent); outline-offset: 2px; }
+  [dir] bdi { unicode-bidi: isolate; }
+
+  /* ---- the stage: sidebar | editor | run column ---- */
+  .kn-stage {
+    display: grid; background: var(--sc-canvas);
+    grid-template-columns: minmax(14.5rem, 17rem) minmax(0, 1fr) minmax(19rem, 24rem);
+  }
+  .kn-side {
+    display: flex; flex-direction: column; gap: var(--sc-4); min-height: 0;
+    padding: var(--kn-pad); border-inline-end: 1px solid var(--kn-line);
+  }
+  .kn-top { display: flex; align-items: center; flex-wrap: wrap; gap: var(--sc-1) var(--sc-3); }
+  .kn-brand { font: 600 var(--sc-t-lg)/1 var(--sc-font-display); letter-spacing: var(--sc-track-snug); }
+  .kn-tag { font: 500 var(--sc-t-xs)/1.2 var(--sc-font-text); color: var(--sc-ink-soft); border: 1px solid var(--sc-ink-soft); border-radius: var(--sc-r-pill); padding: 0.2rem 0.55rem; white-space: nowrap; }
+  .kn-lang { display: inline-flex; align-items: center; min-height: 2.75rem; padding-inline: var(--sc-2); color: var(--sc-ink-soft); font: 500 var(--sc-t-sm)/1 var(--sc-font-text); text-decoration: none; margin-inline-start: auto; }
+  @media (hover: hover) and (pointer: fine) { .kn-lang:hover { color: var(--sc-ink); text-decoration: underline; } }
+
+  .kn-lang-foot { display: none; margin-inline-start: 0; }
+  .kn-nav ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sc-1); }
+  .kn-step {
+    display: grid; grid-template-columns: 1.25rem 1fr; align-items: center; gap: var(--sc-3);
+    width: 100%; min-height: 2.75rem; padding-inline: var(--sc-3);
+    border: 0; border-inline-start: 3px solid transparent; border-radius: var(--sc-r-sm);
+    background: none; color: var(--sc-ink); text-align: start; cursor: pointer;
+    font: 500 var(--sc-t-sm)/1.2 var(--sc-font-text);
+    transition: background var(--sc-d-fast) var(--sc-ease-out);
+  }
+  @media (hover: hover) and (pointer: fine) { .kn-step:hover { background: color-mix(in oklab, var(--sc-ink) 6%, transparent); } }
+  .kn-step[aria-current="step"] { background: var(--sc-surface); border-inline-start-color: var(--sc-accent); font-weight: 600; }
+  .kn-g { position: relative; width: 0.8rem; height: 0.8rem; border-radius: 50%; border: 1.5px solid var(--sc-ink-soft); justify-self: center; }
+  .kn-step[data-s="run"] .kn-g { background: var(--sc-accent); border-color: var(--sc-accent); }
+  .kn-step[data-s="done"] .kn-g { background: var(--sc-ink); border-color: var(--sc-ink); }
+  .kn-step[data-s="done"] .kn-g::after { content: ""; position: absolute; inset: 0.08rem 0.18rem 0.2rem; border: solid var(--sc-surface); border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); }
+
+  .kn-note { flex: 1; min-height: 0; overflow: hidden; border-top: 1px solid var(--kn-line); padding-top: var(--sc-4); font-size: var(--sc-t-sm); line-height: 1.5; }
+  .kn-note > * { margin: 0; }
+  .kn-nt { font: 600 var(--sc-t-base)/1.2 var(--sc-font-display); }
+  .kn-nm { margin-top: var(--sc-1) !important; color: var(--sc-ink-soft); font-size: var(--sc-t-xs); }
+  .kn-nx { margin-top: var(--sc-3) !important; color: var(--sc-ink); text-wrap: pretty; }
+  .kn-nq { margin-top: var(--sc-3) !important; padding-inline-start: var(--sc-3); border-inline-start: 2px solid var(--sc-accent); }
+  .kn-nq p { margin: 0; text-wrap: pretty; }
+  .kn-nq footer { margin-top: var(--sc-2); color: var(--sc-ink-soft); font-size: var(--sc-t-xs); }
+  .kn-ntags { list-style: none; padding: 0; margin: var(--sc-3) 0 0; display: flex; flex-wrap: wrap; gap: var(--sc-1) var(--sc-2); }
+  .kn-ntags li { font-size: var(--sc-t-xs); color: var(--sc-ink-soft); border: 1px solid var(--kn-line); border-radius: var(--sc-r-pill); padding: 0.15rem 0.55rem; background: var(--sc-surface); }
+  .kn-nf { display: grid; gap: var(--sc-2); margin: var(--sc-3) 0 0; }
+  .kn-nf div { display: flex; justify-content: space-between; gap: var(--sc-3); border-top: 1px solid var(--kn-line); padding-top: var(--sc-2); }
+  .kn-nf dt { color: var(--sc-ink-soft); font-size: var(--sc-t-xs); }
+  .kn-nf dd { margin: 0; font-weight: 600; font-size: var(--sc-t-sm); white-space: nowrap; }
+
+  .kn-cta {
+    display: inline-flex; align-items: center; justify-content: center; min-height: 2.75rem; padding-inline: var(--sc-4);
+    background: var(--sc-accent); color: var(--sc-accent-ink); border-radius: var(--sc-r-sm);
+    font: 600 var(--sc-t-sm)/1.15 var(--sc-font-text); text-decoration: none; text-align: center;
+    transition: transform var(--sc-d-fast) var(--sc-ease-out);
+  }
+  .kn-cta:active { transform: scale(0.97); }
+  @media (hover: hover) and (pointer: fine) { .kn-cta:hover { transform: translateY(-1px); } }
+
+  /* ---- editor ---- */
+  .kn-ed { display: flex; flex-direction: column; min-width: 0; min-height: 0; gap: var(--sc-3); padding: var(--kn-pad); }
+  .kn-ed header h1 { margin: 0; font: 600 clamp(1.35rem, 0.9rem + 1.4vw, 2.1rem)/1.08 var(--sc-font-display); letter-spacing: var(--sc-track-tight); text-wrap: balance; }
+  .kn-ed header p { margin: var(--sc-2) 0 0; color: var(--sc-ink-soft); font-size: var(--sc-t-sm); max-width: 62ch; text-wrap: pretty; }
+  .kn-card { background: var(--sc-surface); border: 1px solid var(--kn-line); border-radius: var(--sc-r-md); }
+  .kn-file { container-type: inline-size; flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+  .kn-tabbar { display: flex; align-items: center; justify-content: space-between; gap: var(--sc-3); padding: var(--sc-2) var(--sc-4); border-bottom: 1px solid var(--kn-line); font: 500 var(--sc-t-xs)/1.2 var(--sc-font-text); }
+  .kn-tabbar .kn-fn { font-family: var(--sc-font-mono); color: var(--sc-ink); }
+  .kn-run-st { display: inline-flex; align-items: center; gap: var(--sc-2); color: var(--sc-ink-soft); }
+  .kn-dot { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--sc-accent); animation: kn-pulse 1.4s ease-in-out infinite; }
+  .is-done .kn-dot { background: var(--sc-ink); animation: none; }
+  @keyframes kn-pulse { 50% { opacity: 0.25; } }
+
+  .kn-code {
+    --fs: clamp(0.66rem, min(1.8vh, calc((100cqw - 4.5rem) / 47)), 1.05rem);
+    position: relative; flex: 1; min-height: 0; overflow: hidden;
+    list-style: none; margin: 0; padding: var(--sc-3) 0; direction: ltr; text-align: left;
+    font: 400 var(--fs)/1.7 var(--sc-font-mono);
+  }
+  .kn-l { display: grid; grid-template-columns: 3.2rem minmax(0, 1fr); padding-right: var(--sc-4); border-left: 3px solid transparent; min-height: 1.7em; }
+  .kn-l::before { content: attr(data-n); text-align: right; padding-right: 0.9rem; color: var(--sc-ink-soft); }
+  .kn-l > span { white-space: pre; }
+  .kn-l .k { color: var(--sc-accent); font-weight: 500; font-style: normal; }
+  .kn-l .s { font-style: normal; }
+  .kn-l.is-done { border-left-color: color-mix(in oklab, var(--sc-ink) 28%, transparent); }
+  .kn-l.is-cur { background: var(--kn-soft); border-left-color: var(--sc-accent); font-weight: 500; }
+  .kn-l.is-cur::before { color: var(--sc-ink); }
+  .kn-l.is-cur .k { color: var(--sc-ink); }
+
+  /* ---- run column ---- */
+  .kn-runcol { display: flex; flex-direction: column; gap: var(--sc-3); min-height: 0; padding: var(--kn-pad); padding-inline-start: 0; }
+  .kn-ph { margin: 0 0 var(--sc-2); font: 600 var(--sc-t-xs)/1.2 var(--sc-font-text); color: var(--sc-ink-soft); }
+  .kn-swap { display: grid; }
+  .kn-swap > * { grid-area: 1 / 1; transition: opacity var(--sc-d-base) var(--sc-ease-out), visibility 0s linear var(--sc-d-base); }
+  .kn-vars, .kn-slip { padding: var(--sc-4); }
+  .kn-slip { opacity: 0; visibility: hidden; }
+  .is-ship .kn-vars { opacity: 0; visibility: hidden; }
+  .is-ship .kn-slip { opacity: 1; visibility: visible; transition-delay: 0s; }
+  .kn-vars dl { direction: ltr; text-align: left; margin: 0; display: grid; gap: var(--sc-3); font: 400 0.82rem/1.45 var(--sc-font-mono); }
+  .kn-v { display: grid; grid-template-columns: 4.6rem minmax(0, 1fr); gap: var(--sc-2); padding: 0.2rem 0.35rem; border-radius: 4px; }
+  .kn-v dt { color: var(--sc-ink-soft); }
+  .kn-v dd { margin: 0; overflow-wrap: anywhere; color: var(--sc-ink-soft); }
+  .kn-v.is-set dd { color: var(--sc-ink); }
+  .kn-v.is-new { background: var(--kn-soft); }
+  .kn-slip dl { margin: 0; display: grid; gap: var(--sc-2); font-size: var(--sc-t-sm); }
+  .kn-sr { display: flex; justify-content: space-between; gap: var(--sc-3); padding-top: var(--sc-2); border-top: 1px solid var(--kn-line); visibility: hidden; opacity: 0; transition: opacity var(--sc-d-base) var(--sc-ease-out); }
+  .kn-sr.on { visibility: visible; opacity: 1; }
+  .kn-sr dt { color: var(--sc-ink-soft); }
+  .kn-sr dd { margin: 0; text-align: end; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .kn-sr.kn-tot dd { font-weight: 600; font-size: var(--sc-t-base); }
+  .kn-booked { justify-content: center; border-radius: var(--sc-r-sm); border-top: 0; background: var(--sc-accent); color: var(--sc-accent-ink); font-weight: 600; padding: var(--sc-3); text-align: center; }
+
+  .kn-log { flex: 1; min-height: 6rem; display: flex; flex-direction: column; overflow: hidden; background: var(--kn-dark); color: var(--kn-dark-ink); border-radius: var(--sc-r-md); padding: var(--sc-4); }
+  .kn-log .kn-ph { color: var(--kn-dark-soft); }
+  .kn-ll { flex: 1; min-height: 0; overflow: hidden; margin: 0; padding: 0; list-style: none; display: grid; gap: 0.35rem; font: 400 0.76rem/1.45 var(--sc-font-mono); }
+  .kn-ll bdi, .kn-out bdi { white-space: nowrap; }
+  .kn-ll::after { content: ""; width: 0.5rem; height: 1em; background: var(--kn-dark-ink); animation: kn-blink 1.1s steps(2, start) infinite; margin-inline-start: var(--sc-2); }
+  @keyframes kn-blink { to { visibility: hidden; } }
+  .kn-ll li, .kn-out li { display: grid; grid-template-columns: 5.4rem minmax(0, 1fr); gap: var(--sc-3); padding-inline-start: var(--sc-2); border-inline-start: 2px solid transparent; }
+  .kn-ll li b, .kn-out li b { font-weight: 500; color: var(--kn-dark-soft); font-family: @@fontText@@; }
+  .kn-ll li span, .kn-out li span { overflow-wrap: anywhere; font-family: @@fontMsg@@; }
+  .kn-ll li.is-new { border-inline-start-color: var(--kn-soft); color: #fff; }
+  .kn-ll li.is-new b { color: var(--kn-dark-ink); }
+  .kn-state { display: none; }
+
+  /* ---- close: the run console ---- */
+  .kn-close {
+    display: grid; align-content: center; gap: var(--sc-6) var(--sc-7);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    padding: var(--sc-6) var(--sc-gutter); background: var(--sc-canvas);
+  }
+  .kn-cl { display: grid; gap: var(--sc-4); align-content: center; min-width: 0; }
+  .kn-cl h2 { margin: 0; font: 600 var(--sc-t-2xl)/1 var(--sc-font-display); letter-spacing: var(--sc-track-tight); text-wrap: balance; }
+  .kn-cl > p { margin: 0; color: var(--sc-ink-soft); max-width: 48ch; text-wrap: pretty; }
+  .kn-form { display: grid; gap: var(--sc-3); }
+  .kn-form label { font: 600 var(--sc-t-sm)/1.2 var(--sc-font-text); }
+  .kn-hint { margin: 0; color: var(--sc-ink-soft); font-size: var(--sc-t-xs); }
+  .kn-form textarea {
+    direction: ltr; text-align: left; resize: vertical; width: 100%; min-height: 8rem;
+    padding: var(--sc-3); background: var(--sc-surface); color: var(--sc-ink);
+    border: 1px solid var(--sc-ink-soft); border-radius: var(--sc-r-sm);
+    font: 400 0.82rem/1.55 var(--sc-font-mono);
+  }
+  .kn-form button { justify-self: start; border: 0; cursor: pointer; font-family: var(--sc-font-text); }
+  .kn-foot { display: flex; flex-wrap: wrap; gap: 0 var(--sc-5); color: var(--sc-ink-soft); font-size: var(--sc-t-xs); align-items: center; }
+  .kn-foot a { display: inline-flex; align-items: center; min-height: 2.75rem; color: var(--sc-ink); }
+  .kn-console { background: var(--kn-dark); color: var(--kn-dark-ink); border-radius: var(--sc-r-md); padding: var(--sc-5); min-height: 0; display: flex; flex-direction: column; gap: var(--sc-3); align-self: center; }
+  .kn-console .kn-ph { color: var(--kn-dark-soft); margin: 0; }
+  .kn-sum { margin: 0; min-height: 1.5em; font-weight: 600; color: #fff; }
+  .kn-out { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; font: 400 0.8rem/1.5 var(--sc-font-mono); min-height: 7rem; }
+  .kn-out li.kn-flag { color: var(--kn-dark-ink); }
+  .kn-out .kn-idle { display: block; border: 0; padding: 0; color: var(--kn-dark-soft); font-family: @@fontText@@; }
+
+  /* ---- phones: composed separately ---- */
+  @media (max-width: 860px) {
+    .kn-stage {
+      grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+      grid-template-areas: "brand cta" "nav nav" "ed ed" "note note" "run run";
+    }
+    .kn-side { display: contents; }
+    .kn-top { grid-area: brand; padding: var(--sc-1) 0 var(--sc-1) var(--sc-gutter); padding-inline: var(--sc-gutter) var(--sc-2); gap: 0 var(--sc-2); flex-wrap: nowrap; }
+    .kn-side > .kn-cta { grid-area: cta; align-self: center; margin-inline-end: var(--sc-gutter); padding-inline: var(--sc-3); font-size: 0.8rem; }
+    .kn-brand { font-size: var(--sc-t-base); }
+    .kn-top .kn-lang { display: none; }
+    .kn-lang-foot { display: inline-flex; }
+    .kn-nav { grid-area: nav; border-bottom: 1px solid var(--kn-line); }
+    .kn-nav ul { grid-template-columns: repeat(5, 1fr); gap: 0; }
+    .kn-step { grid-template-columns: 1fr; justify-items: center; text-align: center; min-height: 2.75rem; padding-inline: 0.15rem; border-radius: 0; border-inline-start: 0; border-bottom: 3px solid transparent; font-size: 0.78rem; background: none !important; color: var(--sc-ink-soft); }
+    .kn-step[data-s="done"] { color: var(--sc-ink); }
+    .kn-step[aria-current="step"] { color: var(--sc-ink); border-bottom-color: var(--sc-accent); }
+    .kn-g { display: none; }
+    .kn-note { grid-area: note; flex: none; border: 0; padding: 0 var(--sc-gutter) var(--sc-2); min-height: 3.6em; font-size: var(--sc-t-xs); }
+    .kn-nt, .kn-nm, .kn-ntags, .kn-nf, .kn-nq footer { display: none; }
+    .kn-nx, .kn-nq { margin: 0 !important; border: 0; padding: 0; }
+    .kn-nx, .kn-nq p { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .kn-ed { grid-area: ed; padding: var(--sc-2) var(--sc-gutter) var(--sc-2); gap: var(--sc-2); }
+    .kn-ed header h1 { font-size: 1.1rem; }
+    .kn-ed header p { font-size: var(--sc-t-xs); margin-top: var(--sc-1); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .kn-tabbar { padding: var(--sc-1) var(--sc-3); }
+    .kn-code { --fs: 0.7rem; padding: var(--sc-2) 0; line-height: 1.55; }
+    .kn-l { grid-template-columns: 2.2rem minmax(0, 1fr); padding-right: var(--sc-2); }
+    .kn-l::before { padding-right: 0.5rem; }
+    .kn-l > span { white-space: pre-wrap; overflow-wrap: anywhere; }
+    .kn-runcol { grid-area: run; padding: 0 var(--sc-gutter) var(--sc-3); gap: var(--sc-2); }
+    .kn-swap { display: none; }
+    .kn-state { display: block; margin: 0; direction: ltr; text-align: start; font: 500 0.76rem/1.3 var(--sc-font-mono); color: var(--sc-ink); min-height: 1.3em; }
+    [dir="rtl"] .kn-state { text-align: end; }
+    .kn-log { flex: none; height: 8.6rem; min-height: 0; padding: var(--sc-3); }
+    .kn-log .kn-ph { margin-bottom: var(--sc-1); }
+    .kn-ll { font-size: 0.7rem; gap: 0.2rem; }
+    .kn-ll li { grid-template-columns: 4.4rem minmax(0, 1fr); gap: var(--sc-2); }
+
+    .kn-close { grid-template-columns: minmax(0, 1fr); gap: var(--sc-3); padding: var(--sc-3) var(--sc-gutter); align-content: center; }
+    .kn-cl { gap: var(--sc-2); }
+    .kn-cl h2 { font-size: var(--sc-t-xl); }
+    .kn-cl > p { font-size: var(--sc-t-xs); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .kn-form { gap: var(--sc-2); }
+    .kn-form textarea { min-height: 5.5rem; font-size: 0.74rem; }
+    .kn-form button { width: 100%; justify-self: stretch; }
+    .kn-console { padding: var(--sc-3); gap: var(--sc-2); }
+    .kn-out { min-height: 0; font-size: 0.72rem; gap: 0.3rem; }
+    .kn-out li { grid-template-columns: 4.4rem minmax(0, 1fr); gap: var(--sc-2); }
+    .kn-foot { gap: 0 var(--sc-4); }
+  }
+  @media (max-height: 700px) and (min-width: 861px) { .kn-ed header p { display: none; } .kn-note { font-size: var(--sc-t-xs); } }
+  @media (prefers-reduced-motion: reduce) {
+    .kn-dot, .kn-ll::after { animation: none; }
+    .kn-swap > *, .kn-sr, .kn-step, .kn-cta { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<main id="top">
+
+  <!-- THE EDITOR: one pinned surface. Scroll is the debugger: it steps the run one line at a time. -->
+  <section id="editor" data-sc-act="pin" data-sc-span="7" aria-label="@@aEditor@@">
+    <div data-sc-stage class="kn-stage" id="stage" data-sc-verify-state="" data-sc-verify-hold="false">
+
+      <aside class="kn-side">
+        <div class="kn-top">
+          <span class="kn-brand">@@brand@@</span>
+          <span class="kn-tag">@@tag@@</span>
+          <a class="kn-lang" href="@@langHref@@" hreflang="@@otherLang@@" lang="@@otherLang@@">@@langText@@</a>
+        </div>
+        <nav class="kn-nav" aria-label="@@navLabel@@">
+          <ul>
+            <li><button type="button" class="kn-step" data-i="0" data-s="todo"><span class="kn-g" aria-hidden="true"></span><span>@@s0@@</span><span class="sr-only"></span></button></li>
+            <li><button type="button" class="kn-step" data-i="1" data-s="todo"><span class="kn-g" aria-hidden="true"></span><span>@@s1@@</span><span class="sr-only"></span></button></li>
+            <li><button type="button" class="kn-step" data-i="2" data-s="todo"><span class="kn-g" aria-hidden="true"></span><span>@@s2@@</span><span class="sr-only"></span></button></li>
+            <li><button type="button" class="kn-step" data-i="3" data-s="todo"><span class="kn-g" aria-hidden="true"></span><span>@@s3@@</span><span class="sr-only"></span></button></li>
+            <li><button type="button" class="kn-step" data-i="4" data-s="todo"><span class="kn-g" aria-hidden="true"></span><span>@@s4@@</span><span class="sr-only"></span></button></li>
+          </ul>
+        </nav>
+        <div class="kn-note" id="note"></div>
+        <a class="kn-cta" href="#run">@@cta@@</a>
+      </aside>
+
+      <section class="kn-ed" aria-label="@@aEditor@@">
+        <header>
+          <h1>@@h1@@</h1>
+          <p>@@lede@@</p>
+        </header>
+        <div class="kn-card kn-file">
+          <div class="kn-tabbar">
+            <span class="kn-fn"><bdi dir="ltr">invoice-triage.js</bdi></span>
+            <span class="kn-run-st" id="runSt"><i class="kn-dot" aria-hidden="true"></i><span id="runStT">@@tabRunning@@</span></span>
+          </div>
+          <ol class="kn-code" id="code" dir="ltr" lang="en" aria-label="@@aCode@@">
+@@codeLines@@
+          </ol>
+        </div>
+      </section>
+
+      <section class="kn-runcol" aria-label="@@aRun@@">
+        <div class="kn-swap" id="swap">
+          <div class="kn-card kn-vars">
+            <h2 class="kn-ph">@@varsH@@</h2>
+            <dl id="vars">
+              <div class="kn-v" data-k="doc"><dt>doc</dt><dd>undefined</dd></div>
+              <div class="kn-v" data-k="facts"><dt>facts</dt><dd>undefined</dd></div>
+              <div class="kn-v" data-k="draft"><dt>draft</dt><dd>undefined</dd></div>
+              <div class="kn-v" data-k="approved"><dt>approved</dt><dd>undefined</dd></div>
+              <div class="kn-v" data-k="ret"><dt>return</dt><dd>undefined</dd></div>
+            </dl>
+          </div>
+          <div class="kn-card kn-slip" id="slip">
+            <h2 class="kn-ph">@@slipH@@</h2>
+            <dl id="slipRows"></dl>
+          </div>
+        </div>
+        <p class="kn-state" id="state"></p>
+        <div class="kn-log">
+          <h2 class="kn-ph">@@logH@@</h2>
+          <ol class="kn-ll" id="log" aria-label="@@logH@@"></ol>
+        </div>
+      </section>
+
+    </div>
+  </section>
+
+  <!-- THE RUN CONSOLE: a real Run button on pasted text. Sample logic, in the browser, nothing sent. -->
+  <section id="run" data-sc-act="pin" data-sc-span="1.2" aria-labelledby="closeTitle">
+    <div data-sc-stage class="kn-close" id="closeStage" data-sc-verify-state="ready" data-sc-verify-hold="true">
+      <div class="kn-cl">
+        <h2 id="closeTitle">@@closeH@@</h2>
+        <p>@@closeP@@</p>
+        <form class="kn-form" id="form" novalidate>
+          <label for="inv">@@invLabel@@</label>
+          <textarea id="inv" name="invoice" rows="6" spellcheck="false" dir="ltr" lang="en" aria-describedby="invHint">@@sample@@</textarea>
+          <p class="kn-hint" id="invHint">@@invHint@@</p>
+          <button type="submit" class="kn-cta">@@cta@@</button>
+        </form>
+        <div class="kn-foot">
+          <span>@@foot1@@</span>
+          <a href="@@backHref@@">@@back@@</a>
+          <a href="#top" id="again">@@again@@</a>
+          <a class="kn-lang kn-lang-foot" href="@@langHref@@" hreflang="@@otherLang@@" lang="@@otherLang@@">@@langText@@</a>
+        </div>
+      </div>
+      <div class="kn-console">
+        <h2 class="kn-ph">@@outH@@</h2>
+        <p class="kn-sum" id="sum" role="status"></p>
+        <ol class="kn-out" id="out"><li class="kn-idle"><b class="sr-only"></b><span>@@idle@@</span></li></ol>
+        <p class="kn-hint" style="color:var(--kn-dark-soft)">@@offline@@</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reading order and no-script alternative: the same run as text. -->
+  <section class="sr-only" aria-label="@@srH@@">
+    <h2>@@srH@@</h2>
+    <ol>
+@@srItems@@
+    </ol>
+  </section>
+
+</main>
+
+<script src="@@enginePrefix@@_engine/scrollcraft.js"></script>
+<script>ScrollCraft.mount(document.body);</script>
+<script>
+/* Kernel: scroll is the debugger. One pure runWorkflow(text) builds the whole trace
+   (line, variables, log). The scroll replays it for the built-in sample invoice; the
+   Run button replays it for whatever text is pasted. Sample logic, nothing is sent. */
+(function () {
+  "use strict";
+  var T = @@T@@;
+  var AR = document.documentElement.lang === "ar";
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var $ = function (id) { return document.getElementById(id); };
+  function clamp(x, a, b) { return Math.min(b, Math.max(a, x)); }
+  function seg(q, a, b) { return clamp((q - a) / (b - a), 0, 1); }
+  function fill(s, o) { return s.replace(/\{(\w+)\}/g, function (_, k) { return o && o[k] != null ? o[k] : ""; }); }
+  function fmt2(n) { return n.toFixed(2); }
+  // [[x]] marks Latin/code: wrapped in <bdi dir="ltr"> on the Arabic page. Text nodes only, never innerHTML.
+  function rich(node, str) {
+    node.textContent = "";
+    String(str).split(/\[\[(.+?)\]\]/).forEach(function (part, i) {
+      if (i % 2 && AR) { var b = document.createElement("bdi"); b.dir = "ltr"; b.textContent = part; node.appendChild(b); }
+      else if (part) node.appendChild(document.createTextNode(part));
+    });
+  }
+  function tagText(t) { return t === "run" ? T.run : typeof t === "number" ? T.nodes[t] : ""; }
+
+  // ---- sample data: vendors index and PO book ----
+  var VENDORS = [["V-118", "Harbor Paper Co."], ["V-204", "Linden Freight Ltd."], ["V-077", "Okafor Print Works"], ["V-310", "Marlow Office Supply"], ["V-052", "Quill and Ash Stationers"], ["V-163", "Harbor Freight Services"], ["V-091", "Tern Packaging"]];
+  var POS = { "PO-4471": { v: "V-118", max: 260 }, "PO-4490": { v: "V-204", max: 940 }, "PO-4502": { v: "V-077", max: 415.5 } };
+  function words(s) { return (s.toLowerCase().match(/[a-z0-9]+/g) || []).filter(function (w) { return w !== "co" && w !== "ltd" && w !== "and"; }); }
+
+  function parse(text) {
+    var m = text.match(/\bINV[-\s]?(\d+)\b/i), pm = text.match(/\bPO[-\s]?(\d+)\b/i);
+    var vm = text.match(/^\s*(?:from|vendor)\s*:\s*(.+?)\s*$/im), items = [];
+    text.split(/\r?\n/).forEach(function (l) {
+      var x = l.match(/^\s*(.+?)\s+(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d{1,2})?)\s*$/i);
+      if (x) items.push({ label: x[1], qty: +x[2], price: +x[3] });
+    });
+    var re = /total\s*:?\s*\$?\s*(\d[\d,]*(?:\.\d{1,2})?)/gi, t = null, a;
+    while ((a = re.exec(text))) t = parseFloat(a[1].replace(/,/g, ""));
+    var inv = m ? "INV-" + m[1] : null;
+    return { ok: !!(inv && t != null), inv: inv, po: pm ? "PO-" + pm[1] : null, vendor: vm ? vm[1] : null, items: items, total: t };
+  }
+
+  function runWorkflow(text) {
+    var d = parse(text), ev = [];
+    function add(id, line, step, tag, msg, set) { ev.push({ id: id, line: line, step: step, tag: tag, msg: msg, set: set || null }); }
+    add("start", 3, 0, "run", T.l.start);
+    add("queue", 3, 0, "run", T.l.queue);
+    add("ing1", 4, 0, 0, T.l.ing1);
+    if (!d.ok) { add("fail", 4, 0, 0, T.l.fail); return { ok: false, events: ev, d: d }; }
+    var vendor = d.vendor || T.unknown;
+    add("ing2", 4, 0, 0, fill(T.l.ing2, { inv: d.inv, vendor: vendor }), { doc: '{ invoice: "' + d.inv + '", vendor: "' + vendor + '" }' });
+    var vw = words(d.vendor || text);
+    var ranked = VENDORS.map(function (v) {
+      var s = 0; words(v[1]).forEach(function (w) { if (vw.indexOf(w) > -1) s++; });
+      return { id: v[0], name: v[1], s: s };
+    }).sort(function (a, b) { return b.s - a.s; });
+    var top = ranked.slice(0, 5), best = top[0].s > 0 ? top[0] : null;
+    add("ret1", 5, 1, 1, T.l.ret1);
+    add("ret2", 5, 1, 1, best ? fill(T.l.ret2, { n: top.length, id: best.id, name: best.name }) : T.l.retNone,
+      { facts: "{ n: " + top.length + ", best: " + (best ? '"' + best.id + '"' : "null") + " }" });
+    var flags = [], po = d.po ? POS[d.po] : null;
+    if (!d.po) flags.push(T.f.noPo);
+    else if (!po) flags.push(fill(T.f.unknownPo, { po: d.po }));
+    else {
+      if (best && po.v !== best.id) flags.push(fill(T.f.otherVendor, { po: d.po }));
+      if (d.total > po.max + 0.005) flags.push(fill(T.f.over, { t: fmt2(d.total), d: fmt2(d.total - po.max), po: d.po }));
+    }
+    var sum = d.items.reduce(function (s, it) { return s + it.qty * it.price; }, 0);
+    if (d.items.length && Math.abs(sum - d.total) > 0.005) flags.push(fill(T.f.sum, { a: fmt2(sum), b: fmt2(d.total) }));
+    var k = flags.length;
+    add("rs7", 7, 2, 2, T.l.rs7);
+    add("rs8", 8, 2, 2, T.l.rs8);
+    add("rs9", 9, 2, 2, T.l.rs9);
+    add("rs10", 10, 2, 2, fill(T.l.rs10, { n: top.length }));
+    add("rs11", 11, 2, 2, T.l.rs11);
+    add("rs12", 12, 2, 2, fill(T.l.rs12, { k: k }), { draft: "{ po: " + (d.po ? '"' + d.po + '"' : "null") + ", total: " + fmt2(d.total) + ", flags: " + k + " }" });
+    if (k) {
+      add("rv1", 14, 3, 3, fill(T.l.rv1f, { k: k }), { approved: "pending" });
+      add("rv2", 14, 3, 3, T.l.rv2, { approved: "{ approved: true }" });
+    } else add("rv1", 14, 3, 3, T.l.rv1n, { approved: "{ approved: true }" });
+    var bill = "BILL-" + d.inv.slice(4);
+    add("sh1", 15, 4, 4, T.l.sh1);
+    add("sh2", 15, 4, 4, fill(T.l.sh2, { name: vendor, po: d.po || T.none }));
+    add("sh3", 15, 4, 4, fill(T.l.sh3, { n: d.items.length }));
+    add("sh4", 15, 4, 4, fill(T.l.sh4, { t: fmt2(d.total) }));
+    add("sh5", 15, 4, 4, fill(T.l.sh5, { bill: bill }), { ret: '{ bill: "' + bill + '", to: "erp.bills" }' });
+    add("sh6", 16, 4, 4, T.l.sh6);
+    return { ok: true, events: ev, d: d, flags: flags, bill: bill, vendor: vendor };
+  }
+
+  // ---- the scroll score: where each event lands in the 7vh pin. Review is the held quiet; Ship (0.56 to 0.97) is the peak. ----
+  var SCHED = { start: 0, queue: 0, ing1: 0, ing2: 0.10, ret1: 0.15, ret2: 0.21, rs7: 0.27, rs8: 0.30, rs9: 0.33, rs10: 0.36, rs11: 0.39, rs12: 0.43,
+    rv1: 0.49, rv2: 0.55, sh1: 0.58, sh2: 0.66, sh3: 0.74, sh4: 0.82, sh5: 0.90, sh6: 0.96 };
+  var STEP_AT = [0.02, SCHED.ret1, SCHED.rs7, SCHED.rv1, SCHED.sh1];
+  var S = runWorkflow(T.sample), EV = S.events;
+  function idxAt(p) { var r = 0; for (var i = 0; i < EV.length; i++) if (SCHED[EV[i].id] <= p + 1e-9) r = i; return r; }
+  function idxOf(id) { for (var i = 0; i < EV.length; i++) if (EV[i].id === id) return i; return -1; }
+  var I_SHIP = idxOf("sh1"), I_BOOK = idxOf("sh5");
+
+  var act = $("editor"), stage = $("stage"), codeEl = $("code"), logEl = $("log"), noteEl = $("note"), stateEl = $("state");
+  var lines = codeEl.children, steps = document.querySelectorAll(".kn-step"), varEls = {};
+  Array.prototype.forEach.call($("vars").children, function (r) { varEls[r.getAttribute("data-k")] = r; });
+  var cache = {};
+  function setText(node, key, val) { if (cache[key] !== val) { cache[key] = val; node.textContent = val; } }
+
+  // slip rows, built once from the sample's parsed lines
+  var slipEl = $("slipRows"), slipRows = [];
+  function srow(label, cls) {
+    var r = document.createElement("div"); r.className = "kn-sr" + (cls ? " " + cls : "");
+    var dt = document.createElement("dt"), dd = document.createElement("dd"); dt.textContent = label;
+    r.appendChild(dt); r.appendChild(dd); slipEl.appendChild(r); return { r: r, dd: dd };
+  }
+  var rVendor = srow(T.sl.vendor), rPo = srow(T.sl.po);
+  rich(rVendor.dd, "[[" + S.vendor + "]]"); rich(rPo.dd, "[[" + (S.d.po || T.none) + "]]");
+  var rItems = S.d.items.map(function (it) { var x = srow(it.label); rich(x.dd, "[[" + it.qty + " × " + fmt2(it.price) + "]]"); return x; });
+  var rTot = srow(T.sl.total, "kn-tot");
+  var rBook = srow("", "kn-booked"); rBook.r.removeChild(rBook.r.firstChild); rBook.dd.style.textAlign = "center"; rBook.dd.style.width = "100%";
+  rich(rBook.dd, fill(T.sl.booked, { bill: "[[" + S.bill + "]]" }));
+  function itemWin(i) { return [0.68 + 0.06 * i, 0.74 + 0.06 * i]; }
+
+  var lastIdx = -1, lastStep = -1, lastVar = "";
+  function applyEvent(i) {
+    var e = EV[i], visited = {}, vals = {}, k;
+    for (var a = 0; a <= i; a++) { visited[EV[a].line] = 1; if (EV[a].set) for (k in EV[a].set) { vals[k] = EV[a].set[k]; lastVar = k + " = " + vals[k]; } }
+    for (var n = 0; n < lines.length; n++) {
+      var ln = n + 1, li = lines[n];
+      li.classList.toggle("is-cur", ln === e.line);
+      li.classList.toggle("is-done", !!visited[ln] && ln !== e.line);
+    }
+    if (codeEl.scrollHeight > codeEl.clientHeight + 2) {
+      var cur = lines[e.line - 1];
+      codeEl.scrollTop = clamp(cur.offsetTop - codeEl.clientHeight * 0.4, 0, codeEl.scrollHeight - codeEl.clientHeight);
+    }
+    // log
+    logEl.textContent = "";
+    var shown = EV.slice(0, i + 1).slice(-14);
+    shown.forEach(function (x, idx) {
+      var li = document.createElement("li"); if (idx === shown.length - 1) li.className = "is-new";
+      var b = document.createElement("b"), s = document.createElement("span");
+      b.textContent = tagText(x.tag); rich(s, x.msg); li.appendChild(b); li.appendChild(s); logEl.appendChild(li);
+    });
+    // keep the newest lines: drop the oldest until the list fits its panel
+    while (logEl.children.length > 1 && logEl.scrollHeight > logEl.clientHeight + 1) logEl.removeChild(logEl.firstChild);
+    // variables
+    for (k in varEls) {
+      var row = varEls[k], dd = row.lastChild, v = vals[k];
+      dd.textContent = v != null ? v : "undefined";
+      row.classList.toggle("is-set", v != null);
+      row.classList.toggle("is-new", !!(e.set && k in e.set));
+    }
+    // steps and note
+    var booked = i >= I_BOOK;
+    for (var j = 0; j < steps.length; j++) {
+      var st = booked || j < e.step ? "done" : j === e.step ? "run" : "todo";
+      steps[j].setAttribute("data-s", st);
+      if (st === "run") steps[j].setAttribute("aria-current", "step"); else steps[j].removeAttribute("aria-current");
+      steps[j].lastChild.textContent = " (" + T.stat[st] + ")";
+    }
+    if (e.step !== lastStep) { lastStep = e.step; renderNote(e.step); }
+    stage.classList.toggle("is-ship", i >= I_SHIP);
+    var tab = $("runSt"); tab.classList.toggle("is-done", booked);
+    setText($("runStT"), "tab", booked ? T.tabBooked : T.tabRunning);
+    lastIdx = i;
+  }
+
+  function renderNote(n) {
+    var d = T.notes[n], f = document.createDocumentFragment();
+    function el(tag, cls, text) { var x = document.createElement(tag); if (cls) x.className = cls; if (text != null) x.textContent = text; f.appendChild(x); return x; }
+    el("p", "kn-nt", d.title);
+    if (d.meta) el("p", "kn-nm", d.meta);
+    if (d.text) el("p", "kn-nx", d.text);
+    if (d.quote) { var q = el("blockquote", "kn-nq"); var p = document.createElement("p"); p.textContent = d.quote; q.appendChild(p); var ft = document.createElement("footer"); ft.textContent = d.who; q.appendChild(ft); }
+    if (d.tags) { var ul = el("ul", "kn-ntags"); d.tags.forEach(function (t) { var li = document.createElement("li"); li.textContent = t; ul.appendChild(li); }); }
+    if (d.facts) { var dl = el("dl", "kn-nf"); d.facts.forEach(function (x) { var dv = document.createElement("div"), dt = document.createElement("dt"), dd = document.createElement("dd"); dt.textContent = x[0]; dd.textContent = x[1]; dv.appendChild(dt); dv.appendChild(dd); dl.appendChild(dv); }); }
+    noteEl.textContent = ""; noteEl.appendChild(f);
+  }
+
+  function render(p) {
+    var i = idxAt(p);
+    if (i !== lastIdx) applyEvent(i);
+    // slip: rows land with the peak; the total is computed from the parsed lines and counts with scroll
+    var tot = 0;
+    S.d.items.forEach(function (it, n) { var w = itemWin(n); tot += it.qty * it.price * seg(p, w[0], w[1]); });
+    rVendor.r.classList.toggle("on", p >= SCHED.sh2); rPo.r.classList.toggle("on", p >= SCHED.sh2);
+    rItems.forEach(function (x, n) { x.r.classList.toggle("on", p >= itemWin(n)[0]); });
+    rTot.r.classList.toggle("on", p >= 0.68);
+    var posted = p >= SCHED.sh4;
+    var totKey = fmt2(tot) + posted;
+    if (cache.tot !== totKey) { cache.tot = totKey; rich(rTot.dd, "[[" + fmt2(tot) + "]]" + (posted ? " " + T.sl.posted : "")); }
+    rBook.r.classList.toggle("on", p >= SCHED.sh5);
+    // phone: one line that says what the hidden panels would
+    var line = i >= I_SHIP ? T.sl.total + " " + fmt2(tot) + (p >= SCHED.sh5 ? " · " + S.bill : "") : lastVar;
+    setText(stateEl, "state", line);
+    var hold = p < 0.04 || (p >= 0.49 && p < 0.555) || p >= 0.965;
+    stage.setAttribute("data-sc-verify-hold", hold ? "true" : "false");
+    stage.setAttribute("data-sc-verify-state", [i, fmt2(tot), Object.keys(varEls).filter(function (k) { return varEls[k].classList.contains("is-set"); }).length].join("|"));
+  }
+
+  var shownP = -1;
+  function readP() { var r = act.getBoundingClientRect(), travel = act.offsetHeight - innerHeight; return travel > 0 ? clamp(-r.top / travel, 0, 1) : 0; }
+  function tick() { var p = readP(); if (Math.abs(p - shownP) > 1e-5) { shownP = p; render(p); } requestAnimationFrame(tick); }
+  render(0); shownP = 0; requestAnimationFrame(tick);
+
+  function goTo(p) {
+    var top = act.getBoundingClientRect().top + scrollY, travel = act.offsetHeight - innerHeight;
+    scrollTo({ top: top + p * travel, behavior: reduce ? "auto" : "smooth" });
+  }
+  Array.prototype.forEach.call(steps, function (b) {
+    b.addEventListener("click", function () { goTo(STEP_AT[+b.getAttribute("data-i")] + 0.004); });
+  });
+  $("again").addEventListener("click", function (e) { e.preventDefault(); scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" }); });
+
+  // ---- the run console: the same runWorkflow, on pasted text ----
+  var timers = [];
+  $("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    timers.forEach(clearTimeout); timers = [];
+    var r = runWorkflow($("inv").value), out = $("out"), sum = $("sum");
+    out.textContent = ""; sum.textContent = "";
+    var ids = r.ok ? ["ing2", "ret2", "rs12", r.flags.length ? "rv2" : "rv1", "sh5"] : ["ing1", "fail"], rows = [];
+    r.events.forEach(function (ev) {
+      if (ids.indexOf(ev.id) < 0) return;
+      rows.push({ tag: tagText(ev.tag), msg: ev.msg, cls: "" });
+      if (ev.id === "rs12" && r.ok) r.flags.forEach(function (f) { rows.push({ tag: "", msg: f, cls: "kn-flag" }); });
+    });
+    function show(row) {
+      var li = document.createElement("li"); if (row.cls) li.className = row.cls;
+      var b = document.createElement("b"), s = document.createElement("span"); b.textContent = row.tag; rich(s, row.msg);
+      li.appendChild(b); li.appendChild(s); out.appendChild(li);
+    }
+    function finish() {
+      rich(sum, r.ok ? (r.flags.length ? fill(T.c.okFlag, { bill: "[[" + r.bill + "]]", k: r.flags.length }) : fill(T.c.okClean, { bill: "[[" + r.bill + "]]" })) : T.c.fail);
+      $("closeStage").setAttribute("data-sc-verify-state", r.ok ? "booked|" + r.bill : "failed");
+    }
+    if (reduce) { rows.forEach(show); finish(); }
+    else {
+      rows.forEach(function (row, n) { timers.push(setTimeout(function () { show(row); }, n * 240)); });
+      timers.push(setTimeout(finish, rows.length * 240));
+    }
+  });
+})();
+</script>
+</body>
+</html>

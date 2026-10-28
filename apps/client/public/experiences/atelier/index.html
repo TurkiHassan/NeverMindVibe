@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>atelier · Cut for the life you want (sample brand)</title>
+<meta name="description" content="An independent label cutting twenty-eight looks from one material story. Autumn/winter 2026. A sample brand from Landscape Lab.">
+<link rel="alternate" hreflang="en" href="index.html">
+<link rel="alternate" hreflang="ar" href="ar/index.html">
+<link rel="alternate" hreflang="x-default" href="index.html">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23ce3f46'/><rect x='6' y='14' width='20' height='4' fill='%23f8f2ee'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,700&family=Jost:wght@400;500;600&family=Markazi+Text:wght@500;700&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_engine/scrollcraft.css">
+<style>
+:root {
+  --paper: #f8f2ee; --ink: #1e1817; --rouge: #ce3f46; --soft: #f3d8d7; --line: #e3d3cd;
+  --sc-canvas: #f8f2ee; --sc-surface: #f3d8d7; --sc-ink: #1e1817; --sc-ink-soft: #5e504b;
+  --sc-accent: #ce3f46; --sc-accent-ink: #ffffff;
+  --f-d: "Bodoni Moda", "Bodoni 72", Didot, Georgia, serif;
+  --f-t: "Jost", system-ui, sans-serif;
+  --sc-font-display: var(--f-d); --sc-font-text: var(--f-t);
+  --pad: clamp(1.25rem, 4vw, 3.5rem);
+  --bar: 64px; --tape: 52px; --mq: 0px;
+  --chrome: calc(var(--bar) + var(--tape));
+  --readx: clamp(1.25rem, 14vw, 14rem);
+  --ds: 1; --lh: 1.55; --body: 1.125rem;
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+}
+:root[lang="ar"] {
+  --f-d: "Markazi Text", "Noto Naskh Arabic", serif;
+  --f-t: "Noto Naskh Arabic", "Markazi Text", serif;
+  --ds: 1.22; --lh: 1.85; --body: 1.1875rem;
+}
+@media (max-width: 859px) {
+  :root { --bar: 56px; --mq: 30px; --tape: 44px; --chrome: calc(var(--bar) + var(--mq) + var(--tape)); }
+}
+html { background: var(--paper); scroll-behavior: auto; -webkit-text-size-adjust: 100%; }
+body { margin: 0; font-family: var(--f-t); font-size: var(--body); line-height: var(--lh); color: var(--ink); background: var(--paper); overflow-x: clip; }
+p, h1, h2, figure, blockquote, dl, dd, ul, table { margin: 0; }
+ul { padding: 0; list-style: none; }
+::selection { background: var(--ink); color: var(--paper); }
+:focus-visible { outline: 3px solid var(--ring, #1e1817); outline-offset: 3px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+bdi { unicode-bidi: isolate; }
+
+.g-paper { background: var(--paper); color: var(--ink); --mut: #5e504b; --ring: #1e1817; --rule: var(--ink); }
+.g-soft  { background: var(--soft);  color: var(--ink); --mut: #5a4b47; --ring: #1e1817; --rule: var(--ink); }
+.g-ink   { background: var(--ink);   color: var(--paper); --mut: #d9ccc7; --ring: #f8f2ee; --rule: var(--paper); }
+.g-rouge { background: var(--rouge); color: #fff; --mut: #fff; --ring: #fff; --rule: #fff; }
+
+/* ---------------------------------------------------------- chrome */
+.chrome { position: fixed; inset: 0 0 auto 0; z-index: 60; color: var(--paper); --ring: #f8f2ee; }
+.bar {
+  background: var(--ink); height: var(--bar); display: grid; align-items: center;
+  grid-template-columns: auto minmax(0, 1fr) auto auto; grid-template-areas: "mark mq cta lang";
+  column-gap: clamp(0.75rem, 2vw, 1.5rem);
+  padding-inline: max(var(--pad), env(safe-area-inset-left)) max(var(--pad), env(safe-area-inset-right));
+}
+.mark, .cta {
+  font: 700 calc(1.65rem * var(--ds))/1 var(--f-d); letter-spacing: -0.01em; text-decoration: none;
+  display: inline-flex; align-items: center; min-height: 44px; color: inherit;
+}
+.mark { grid-area: mark; }
+.cta {
+  grid-area: cta; padding-inline: 1.1rem; background: var(--rouge); color: #fff; white-space: nowrap;
+  transition: background-color 140ms var(--ease), color 140ms var(--ease), transform 120ms var(--ease);
+}
+.cta:active { transform: translateY(1px); }
+.lang {
+  grid-area: lang; min-width: 44px; min-height: 44px; padding-inline: 0.9rem; display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid #9a8d88; color: var(--paper); text-decoration: none; font: 500 0.9375rem/1 var(--f-t);
+  transition: background-color 140ms var(--ease), color 140ms var(--ease), transform 120ms var(--ease);
+}
+.lang:active { transform: translateY(1px); }
+@media (hover: hover) and (pointer: fine) {
+  .cta:hover { background: var(--paper); color: var(--ink); }
+  .lang:hover { background: var(--paper); color: var(--ink); }
+}
+.mq { grid-area: mq; overflow: clip; min-width: 0; display: flex; align-items: center; }
+.mq-track { display: flex; width: max-content; animation: mq 36s linear infinite; }
+:root[dir="rtl"] .mq-track { animation-name: mqr; }
+.mq-list { display: flex; align-items: center; gap: 1.4rem; padding-inline-end: 1.4rem; white-space: nowrap; font: 500 calc(0.95rem * 1) var(--f-t); }
+:root[lang="ar"] .mq-list { font-size: 1.05rem; }
+.mq-list li { display: inline-flex; align-items: center; gap: 1.4rem; }
+.mq-list li::after { content: ""; width: 7px; height: 7px; background: var(--rouge); flex: none; }
+@keyframes mq { to { transform: translateX(-50%); } }
+@keyframes mqr { to { transform: translateX(50%); } }
+@media (max-width: 859px) {
+  .bar { height: auto; grid-template-columns: minmax(0, 1fr) auto auto; grid-template-areas: "mark cta lang" "mq mq mq"; grid-template-rows: var(--bar) var(--mq); }
+  .mark, .cta { font-size: calc(1.3rem * var(--ds)); }
+  .mq { margin-inline: calc(max(var(--pad), 1rem) * -1); background: #33292a; height: var(--mq); }
+  .mq-list { padding-inline-start: 0; }
+}
+
+/* the tape measure: the signature move, drawn in the fixed chrome and driven by page scroll */
+.tape {
+  position: relative; height: var(--tape); overflow: clip; background: var(--paper); color: var(--ink);
+  border-bottom: 2px solid var(--ink);
+  --tk: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='24'%3E%3Cpath d='M.5 24V2M10.5 24V16M20.5 24V16M30.5 24V16M40.5 24V16M50.5 24V10M60.5 24V16M70.5 24V16M80.5 24V16M90.5 24V16' stroke='%231e1817' fill='none'/%3E%3C/svg%3E");
+}
+.tape.live { background: var(--rouge); color: #fff; --tk: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='24'%3E%3Cpath d='M.5 24V2M10.5 24V16M20.5 24V16M30.5 24V16M40.5 24V16M50.5 24V10M60.5 24V16M70.5 24V16M80.5 24V16M90.5 24V16' stroke='%23ffffff' fill='none'/%3E%3C/svg%3E"); }
+.strip { position: absolute; inset-block: 0; inset-inline-start: 0; background: var(--tk) repeat-x left bottom / 100px 24px; will-change: transform; }
+.tick { position: absolute; top: 4px; font: 500 0.6875rem/1 var(--f-t); letter-spacing: 0.02em; direction: ltr; }
+.notch { position: absolute; inset-block: 0; inset-inline-start: var(--readx); width: 2px; background: currentColor; z-index: 2; }
+.stamp {
+  position: absolute; top: 5px; height: calc(100% - 10px); display: inline-flex; align-items: center; gap: 0.7rem;
+  padding-inline: 0.9rem; background: var(--ink); color: var(--paper); white-space: nowrap; visibility: hidden; z-index: 3;
+  font: 500 0.8125rem/1 var(--f-t); transform-origin: 0 50%;
+}
+:root[dir="rtl"] .stamp { transform-origin: 100% 50%; font-size: 0.9rem; }
+.stamp b { font-weight: 600; }
+.stamp i { font-style: normal; font-weight: 600; padding: 0.2rem 0.4rem; background: var(--rouge); color: #fff; }
+.stamp.on { visibility: visible; animation: press 200ms var(--ease); }
+@keyframes press { from { transform: scale(1.25) rotate(-2.5deg); } to { transform: none; } }
+@media (max-width: 859px) { .stamp { font-size: 0.75rem; gap: 0.5rem; padding-inline: 0.65rem; } .tick { font-size: 0.625rem; top: 3px; } }
+
+/* ---------------------------------------------------------- acts */
+.act {
+  --h: 0.95; position: relative; box-sizing: border-box; display: grid;
+  min-height: calc(var(--h) * 100vh); min-height: calc(var(--h) * 100svh);
+  padding-top: var(--chrome); overflow: clip;
+}
+.disp { font-family: var(--f-d); font-weight: 500; letter-spacing: -0.02em; line-height: 1.02; text-wrap: balance; }
+:root[lang="ar"] .disp { letter-spacing: 0; line-height: 1.2; font-weight: 700; }
+h1.disp { font-size: calc(clamp(2.75rem, 6.3vw, 6rem) * var(--ds)); }
+.look h2 { font-size: calc(clamp(2.5rem, 5.6vw, 5.5rem) * var(--ds)); }
+.meta { font: 500 0.9375rem/1.4 var(--f-t); color: var(--mut); }
+:root[lang="ar"] .meta { font-size: 1.0625rem; }
+.note { max-width: 34ch; text-wrap: pretty; }
+.fit { font: 500 0.9375rem/1.4 var(--f-t); padding-top: 0.75rem; border-top: 1px solid var(--rule); max-width: 34ch; }
+:root[lang="ar"] .fit { font-size: 1.0625rem; }
+.shot { position: relative; margin: 0; min-height: 0; background: var(--soft); }
+.shot img, .shot video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; object-position: var(--op, 50% 50%); }
+.hd, .bd { display: grid; gap: 0.9rem; align-content: start; }
+
+/* 1 hero + look 03 */
+.hero { --h: 1; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+.hero .copy { padding: calc(var(--pad) * 1.2) var(--pad) var(--pad); display: grid; grid-template-rows: 1fr auto; gap: 2rem; align-content: stretch; }
+.hero .copy > div { align-self: center; display: grid; gap: 1.5rem; }
+.hero .lede { max-width: 40ch; font-size: calc(var(--body) * 1.1); text-wrap: pretty; }
+.hero .proof { font: 500 0.9375rem/1.4 var(--f-t); }
+.hero .fine { font-size: 0.875rem; line-height: 1.5; color: var(--mut); max-width: 56ch; }
+:root[lang="ar"] .hero .fine { font-size: 1rem; }
+.hero .film { display: grid; grid-template-rows: minmax(0, 1fr) auto; background: var(--ink); }
+.hero .film .shot { min-height: 52svh; }
+.hero figcaption { background: var(--paper); padding: 1rem var(--pad); display: grid; gap: 0.35rem; border-top: 2px solid var(--ink); }
+.hero figcaption strong { font: 700 calc(1.5rem * var(--ds))/1.1 var(--f-d); }
+
+/* looks 07 12 15 19 26 */
+.look--a { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); grid-template-rows: 1fr 1fr; grid-template-areas: "shot hd" "shot bd"; }
+.look--b { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: 1fr 1fr; grid-template-areas: "hd shot" "bd shot"; }
+.look--c { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); grid-template-rows: auto 1fr; grid-template-areas: "hd hd" "shot bd"; padding-inline: var(--pad); padding-bottom: var(--pad); column-gap: var(--pad); row-gap: 1.5rem; }
+.look--d { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); grid-template-rows: minmax(36svh, 1fr) auto; grid-template-areas: "shot shot" "hd bd"; }
+.look--e { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); grid-template-rows: 1fr 1fr; grid-template-areas: "hd shot" "bd shot"; }
+.look .hd { grid-area: hd; } .look .bd { grid-area: bd; } .look .shot { grid-area: shot; }
+.look--a .hd, .look--b .hd, .look--e .hd { padding: var(--pad) var(--pad) 0; align-self: end; }
+.look--a .bd, .look--b .bd, .look--e .bd { padding: 1.25rem var(--pad) var(--pad); align-self: start; }
+.look--b .shot { margin-block-start: 6svh; }
+.look--e .shot { margin: 4svh var(--pad) var(--pad); }
+.look--e .hd { padding-bottom: 0; }
+.look--c .hd { max-width: 18ch; }
+.look--c .bd { align-self: end; }
+.look--d .hd { padding: var(--pad) 0 var(--pad) var(--pad); }
+.look--d .bd { padding: var(--pad) var(--pad) var(--pad) 0; align-self: center; }
+.look--d .hd, .look--e .hd, .look--b .hd { max-width: none; }
+
+/* 7 to 14 */
+.cloth, .sizehd, .foot, .quote, .facts, .jointitle { align-content: center; padding-inline: var(--pad); padding-bottom: var(--pad); }
+.cloth { --h: 0.78; }
+.cloth h2, .sizehd h2, .jointitle h2 { font-size: calc(clamp(2.75rem, 7.4vw, 6rem) * var(--ds)); max-width: 15ch; }
+.cloth .lede, .sizehd .lede, .jointitle .lede { margin-block-start: 1.75rem; max-width: 52ch; font-size: calc(var(--body) * 1.1); text-wrap: pretty; }
+.sizehd { --h: 0.72; }
+.sizing { --h: 1.35; align-content: center; padding-inline: var(--pad); padding-bottom: var(--pad); }
+.sizing table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums lining-nums; }
+.sizing caption { text-align: start; }
+.sizing th, .sizing td { text-align: start; padding: 0.9rem 0.75rem; border-bottom: 1px solid var(--line); }
+.sizing thead th { font: 500 0.9375rem/1.3 var(--f-t); color: var(--mut); border-bottom: 2px solid var(--ink); vertical-align: bottom; }
+:root[lang="ar"] .sizing thead th { font-size: 1.0625rem; }
+.sizing tbody th, .sizing tbody td { font: 500 calc(clamp(1.5rem, 3.4vw, 2.9rem) * var(--ds))/1.1 var(--f-d); }
+.sizing tr.ref { background: var(--soft); }
+.sizing .tn { margin-block-start: 1.25rem; font: 500 0.9375rem/1.4 var(--f-t); color: var(--mut); }
+:root[lang="ar"] .sizing .tn { font-size: 1.0625rem; }
+.foot { --h: 0.8; }
+.foot p { font: 500 calc(clamp(1.9rem, 4.1vw, 3.9rem) * var(--ds))/1.15 var(--f-d); max-width: 26ch; text-wrap: balance; }
+:root[lang="ar"] .foot p { line-height: 1.35; font-weight: 700; }
+.quote { --h: 0.95; gap: 1.75rem; }
+.quote h2, .facts h2 { font: 500 calc(1.35rem * var(--ds))/1.2 var(--f-d); }
+.quote blockquote { font: 500 calc(clamp(1.8rem, 3.7vw, 3.5rem) * var(--ds))/1.16 var(--f-d); max-width: 28ch; text-wrap: balance; }
+:root[lang="ar"] .quote blockquote { line-height: 1.4; font-weight: 700; }
+.quote .who { font: 500 1rem/1.4 var(--f-t); color: var(--mut); }
+.facts { --h: 0.9; gap: 2rem; }
+.facts dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.25rem var(--pad); }
+.facts dt { font: 500 0.9375rem/1.4 var(--f-t); color: var(--mut); order: 2; }
+:root[lang="ar"] .facts dt { font-size: 1.0625rem; }
+.facts dd { font: 500 calc(clamp(1.9rem, 3.6vw, 3.4rem) * var(--ds))/1.1 var(--f-d); }
+.facts .fact { display: flex; flex-direction: column; gap: 0.5rem; border-top: 2px solid var(--rule); padding-top: 1rem; }
+.jointitle { --h: 0.75; }
+.email { --h: 1; align-content: center; padding-inline: var(--pad); padding-bottom: var(--pad); }
+.email form { display: grid; gap: 1.5rem; max-width: 62rem; }
+.email label { font: 500 1rem/1.4 var(--f-t); }
+.email input {
+  width: 100%; box-sizing: border-box; background: transparent; color: #fff; border: 0; border-bottom: 3px solid #fff; border-radius: 0;
+  font: 500 calc(clamp(1.9rem, 5vw, 4.5rem) * 1)/1.2 var(--f-d); padding: 0.4rem 0; direction: ltr; text-align: start; caret-color: #fff;
+}
+:root[dir="rtl"] .email input { text-align: right; }
+.email input:focus-visible { outline: 3px solid #fff; outline-offset: 6px; }
+.email button {
+  justify-self: start; min-height: 56px; padding-inline: 1.75rem; background: var(--ink); color: var(--paper); border: 0; cursor: pointer;
+  font: 700 calc(1.4rem * var(--ds))/1 var(--f-d);
+  transition: background-color 140ms var(--ease), color 140ms var(--ease), transform 120ms var(--ease);
+}
+.email button:active { transform: translateY(1px); }
+.email button:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
+@media (hover: hover) and (pointer: fine) { .email button:hover { background: var(--paper); color: var(--ink); } }
+.reply { min-height: 1.6em; font: 500 1.0625rem/1.5 var(--f-t); max-width: 52ch; }
+
+@media (max-width: 859px) {
+  .act { grid-template-columns: minmax(0, 1fr); }
+  .hero { grid-template-columns: minmax(0, 1fr); }
+  .hero .copy { padding: 1.5rem var(--pad) 1.5rem; gap: 1.25rem; grid-template-rows: auto auto; }
+  .hero .copy > div { gap: 1rem; }
+  .hero .film .shot { min-height: 30svh; }
+  h1.disp { font-size: calc(clamp(2.6rem, 11vw, 3.4rem) * var(--ds)); }
+  .look--a, .look--b, .look--c, .look--d, .look--e { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto; grid-template-areas: "shot" "hd" "bd"; padding-inline: 0; padding-bottom: 0; row-gap: 0; }
+  .look .shot { height: 32svh; min-height: 210px; margin: 0 !important; }
+  .look .hd, .look .bd { padding-inline: var(--pad) !important; max-width: none; }
+  .look .hd { padding-top: 1.25rem !important; padding-bottom: 0 !important; }
+  .look .bd { padding-top: 0.9rem !important; padding-bottom: 1.5rem !important; }
+  .look h2 { font-size: calc(clamp(2.3rem, 9.5vw, 3rem) * var(--ds)); }
+  .look--c .hd { max-width: none; }
+  .cloth h2, .sizehd h2, .jointitle h2 { font-size: calc(clamp(2.3rem, 10vw, 3.2rem) * var(--ds)); }
+  .sizing th, .sizing td { padding: 0.65rem 0.4rem; }
+  .sizing tbody th, .sizing tbody td { font-size: calc(1.45rem * var(--ds)); }
+  .sizing thead th { font-size: 0.8125rem; }
+  .facts dl { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+  .foot p { font-size: calc(clamp(1.65rem, 7vw, 2.2rem) * var(--ds)); }
+  .quote blockquote { font-size: calc(clamp(1.55rem, 6.4vw, 2.1rem) * var(--ds)); }
+  .email input { font-size: calc(clamp(1.5rem, 7vw, 2.2rem) * 1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mq-track { animation: none; }
+  .stamp.on { animation: none; }
+  .cta, .lang, .email button { transition: none; }
+}
+
+</style>
+</head>
+<body>
+
+<header class="chrome" id="chrome">
+  <div class="bar">
+    <a class="mark" href="#top">atelier</a>
+    <div class="mq" aria-hidden="true"><div class="mq-track"><ul class="mq-list"><li>The Quay Coat</li><li>Night Ferry Trouser</li><li>Salt Shirt</li><li>Rouge Vest</li><li>Harbour Skirt</li><li>Evening Knit</li><li>The Quay Coat</li><li>Night Ferry Trouser</li><li>Salt Shirt</li><li>Rouge Vest</li><li>Harbour Skirt</li><li>Evening Knit</li></ul><ul class="mq-list" aria-hidden="true"><li>The Quay Coat</li><li>Night Ferry Trouser</li><li>Salt Shirt</li><li>Rouge Vest</li><li>Harbour Skirt</li><li>Evening Knit</li><li>The Quay Coat</li><li>Night Ferry Trouser</li><li>Salt Shirt</li><li>Rouge Vest</li><li>Harbour Skirt</li><li>Evening Knit</li></ul></div></div>
+    <a class="cta" href="#join">Join the list</a>
+    <a class="lang" href="ar/index.html" hreflang="ar" lang="ar">العربية</a>
+  </div>
+  <div class="tape" id="tape" aria-hidden="true" data-sc-verify-state="">
+    <div class="strip" id="strip"></div>
+    <div class="notch"></div>
+  </div>
+</header>
+
+<main id="top">
+
+  <section id="hero" class="act hero g-paper" data-sc-act="flow" data-look="03" data-measure="bust" aria-labelledby="h1">
+    <div class="copy">
+      <div>
+        <h1 id="h1" class="disp">Cut for the life you want.</h1>
+        <p class="lede">An independent label cutting twenty-eight looks from one material story. Autumn/winter 2026.</p>
+        <p class="proof">FW26 · 28 looks · 1 material story</p>
+      </div>
+      <p class="fine">atelier is a sample brand from Landscape Lab. Every look, figure and quote on this page is sample content.</p>
+    </div>
+    <figure class="film">
+      <div class="shot"><video id="film" muted loop playsinline preload="metadata" poster="../../assets/domain-stills/atelier-1.webp" aria-label="Red wool cloth unrolling on a cream table. Sample footage."><source src="../../assets/domain-heroes/atelier-hero.mp4" type="video/mp4"></video></div>
+      <figcaption><span class="meta">Look 03 · double-faced wool</span><strong>The Quay Coat</strong><span class="meta">Size M · Bust <bdi dir="ltr">90</bdi> cm</span></figcaption>
+    </figure>
+  </section>
+
+  <section id="look-07" class="act look look--a g-ink" data-sc-act="flow" data-look="07" data-measure="waist" aria-labelledby="h-07">
+    <div class="hd" data-sc-in data-sc-stagger="50">
+      <h2 id="h-07" class="disp">Night Ferry Trouser</h2>
+      <p class="meta">Look 07 · wool crepe</p>
+    </div>
+    <figure class="shot"><img src="../../assets/domain-stills/atelier-2.webp" alt="Red wool cloth on a cream table. Sample image." width="960" height="540" loading="lazy" style="--op:70% 50%"></figure>
+    <div class="bd" data-sc-in data-sc-stagger="50">
+      <p class="note">High waist, wide leg, and a hem weighted with lead tape so it swings when you walk.</p>
+      <p class="fit">Size M · Waist <bdi dir="ltr">72</bdi> cm</p>
+    </div>
+  </section>
+
+  <section id="look-12" class="act look look--b g-rouge" data-sc-act="flow" data-look="12" data-measure="bust" aria-labelledby="h-12">
+    <div class="hd" data-sc-in data-sc-stagger="50">
+      <h2 id="h-12" class="disp">Salt Shirt</h2>
+      <p class="meta">Look 12 · washed wool poplin</p>
+    </div>
+    <figure class="shot"><img src="../../assets/domain-stills/atelier-3.webp" alt="Red wool cloth on a cream table. Sample image." width="960" height="540" loading="lazy" style="--op:30% 60%"></figure>
+    <div class="bd" data-sc-in data-sc-stagger="50">
+      <p class="note">Oversized, cut on the straight grain, with a placket you can fold two ways.</p>
+      <p class="fit">Size M · Bust <bdi dir="ltr">90</bdi> cm</p>
+    </div>
+  </section>
+
+  <section id="look-15" class="act look look--c g-soft" data-sc-act="flow" data-look="15" data-measure="bust" aria-labelledby="h-15">
+    <div class="hd" data-sc-in data-sc-stagger="50">
+      <h2 id="h-15" class="disp">Rouge Vest</h2>
+      <p class="meta">Look 15 · brushed wool</p>
+    </div>
+    <figure class="shot"><img src="../../assets/domain-stills/atelier-4.webp" alt="Red wool cloth on a cream table. Sample image." width="960" height="540" loading="lazy" style="--op:80% 50%"></figure>
+    <div class="bd" data-sc-in data-sc-stagger="50">
+      <p class="note">Dyed in a single one-hundred-and-twenty-metre batch, so every vest matches.</p>
+      <p class="fit">Size M · Bust <bdi dir="ltr">90</bdi> cm</p>
+    </div>
+  </section>
+
+  <section id="look-19" class="act look look--d g-ink" data-sc-act="flow" data-look="19" data-measure="hip" aria-labelledby="h-19">
+    <div class="hd" data-sc-in data-sc-stagger="50">
+      <h2 id="h-19" class="disp">Harbour Skirt</h2>
+      <p class="meta">Look 19 · twill, hand-pleated</p>
+    </div>
+    <figure class="shot"><img src="../../assets/domain-stills/atelier-2.webp" alt="Red wool cloth on a cream table. Sample image." width="960" height="540" loading="lazy" style="--op:20% 40%"></figure>
+    <div class="bd" data-sc-in data-sc-stagger="50">
+      <p class="note">Forty-two pleats, each pressed and pinned by one person in one afternoon.</p>
+      <p class="fit">Size M · Hip <bdi dir="ltr">98</bdi> cm</p>
+    </div>
+  </section>
+
+  <section id="look-26" class="act look look--e g-paper" data-sc-act="flow" data-look="26" data-measure="bust" aria-labelledby="h-26">
+    <div class="hd" data-sc-in data-sc-stagger="50">
+      <h2 id="h-26" class="disp">Evening Knit</h2>
+      <p class="meta">Look 26 · lambswool</p>
+    </div>
+    <figure class="shot"><img src="../../assets/domain-stills/atelier-1.webp" alt="Red wool cloth on a cream table. Sample image." width="960" height="540" loading="lazy" style="--op:85% 70%"></figure>
+    <div class="bd" data-sc-in data-sc-stagger="50">
+      <p class="note">A boxy jumper knitted flat and linked by hand, with seams that sit on the inside.</p>
+      <p class="fit">Size M · Bust <bdi dir="ltr">90</bdi> cm</p>
+    </div>
+  </section>
+
+  <section id="cloth" class="act cloth g-rouge" data-sc-act="flow" aria-labelledby="h-cloth">
+    <div><h2 id="h-cloth" class="disp">Twenty-eight looks, one cloth story</h2><p class="lede">Autumn/winter 2026 was cut from a single mill's wool, dyed in one red, and finished by hand in our Lisbon workroom. Six of the looks are shown here.</p></div>
+  </section>
+
+  <section id="sizehd" class="act sizehd g-ink" data-sc-act="flow" aria-labelledby="h-size">
+    <div><h2 id="h-size" class="disp">Measured on bodies, not on charts</h2><p class="lede">Body measurements in centimetres. Each size was fitted on three people before it was graded.</p></div>
+  </section>
+
+  <section id="sizing" class="act sizing g-paper" data-sc-act="flow" aria-label="Measured on bodies, not on charts">
+    <div>
+    <table id="sizeTable">
+      <caption class="sr">Measured on bodies, not on charts</caption>
+      <thead><tr><th scope="col">Size</th><th scope="col">Bust (cm)</th><th scope="col">Waist (cm)</th><th scope="col">Hip (cm)</th></tr></thead>
+      <tbody>
+        <tr data-size="XS"><th scope="row"><bdi dir="ltr">XS</bdi></th><td data-col="bust"><bdi dir="ltr">82</bdi></td><td data-col="waist"><bdi dir="ltr">64</bdi></td><td data-col="hip"><bdi dir="ltr">90</bdi></td></tr>
+        <tr data-size="S"><th scope="row"><bdi dir="ltr">S</bdi></th><td data-col="bust"><bdi dir="ltr">86</bdi></td><td data-col="waist"><bdi dir="ltr">68</bdi></td><td data-col="hip"><bdi dir="ltr">94</bdi></td></tr>
+        <tr data-size="M" class="ref"><th scope="row"><bdi dir="ltr">M</bdi></th><td data-col="bust"><bdi dir="ltr">90</bdi></td><td data-col="waist"><bdi dir="ltr">72</bdi></td><td data-col="hip"><bdi dir="ltr">98</bdi></td></tr>
+        <tr data-size="L"><th scope="row"><bdi dir="ltr">L</bdi></th><td data-col="bust"><bdi dir="ltr">95</bdi></td><td data-col="waist"><bdi dir="ltr">77</bdi></td><td data-col="hip"><bdi dir="ltr">103</bdi></td></tr>
+        <tr data-size="XL"><th scope="row"><bdi dir="ltr">XL</bdi></th><td data-col="bust"><bdi dir="ltr">101</bdi></td><td data-col="waist"><bdi dir="ltr">83</bdi></td><td data-col="hip"><bdi dir="ltr">109</bdi></td></tr>
+      </tbody>
+    </table>
+    <p class="tn">Each look is stamped on the tape at size M.</p>
+    </div>
+  </section>
+
+  <section id="foot" class="act foot g-rouge" data-sc-act="flow" aria-label="Measured on bodies, not on charts">
+    <p>Coats and knits are cut generously: between sizes, take the smaller. Trousers run true to the waist measurement.</p>
+  </section>
+
+  <section id="quote" class="act quote g-paper" data-sc-act="flow" aria-labelledby="h-quote">
+    <h2 id="h-quote">Worn, mended and written about</h2>
+    <blockquote>“I have worn the Quay Coat every day since October and it only looks better. Nothing else in my wardrobe has earned that.”</blockquote>
+    <p class="who">Helena Brandt, buyer, Galerie Lindqvist, Copenhagen</p>
+  </section>
+
+  <section id="facts" class="act facts g-ink" data-sc-act="flow" aria-labelledby="h-facts">
+    <h2 id="h-facts">The atelier</h2>
+    <dl>
+      <div class="fact"><dt>Looks in FW26</dt><dd><bdi dir="ltr">28</bdi></dd></div>
+      <div class="fact"><dt>Made in</dt><dd>Lisbon, by <bdi dir="ltr">11</bdi> people</dd></div>
+      <div class="fact"><dt>Pieces per style</dt><dd>Never more than <bdi dir="ltr">120</bdi></dd></div>
+      <div class="fact"><dt>Repairs</dt><dd>Free for life</dd></div>
+    </dl>
+  </section>
+
+  <section id="jointitle" class="act jointitle g-soft" data-sc-act="flow" aria-labelledby="h-join">
+    <div><h2 id="h-join" class="disp">Be first through the door.</h2><p class="lede">The drop opens to the list a day before it opens to everyone. Leave your size and we will hold a place.</p></div>
+  </section>
+
+  <section id="join" class="act email g-rouge" data-sc-act="flow" aria-label="Join the list">
+    <form id="joinForm" novalidate>
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" inputmode="email" autocomplete="email" required dir="ltr">
+      <button type="submit">Join the list</button>
+      <p id="reply" class="reply" role="status"></p>
+    </form>
+  </section>
+
+</main>
+
+<script src="../_engine/scrollcraft.js"></script>
+<script>ScrollCraft.mount(document.body);</script>
+<script>
+/* atelier: a rhythmic cutlist. The acts only cut; the tape measure in the fixed
+   chrome is the one moving thing. It is driven by page scroll (not by an act's
+   --sc-p) and every stamp is read from the sizing table below, cell by cell. */
+(function () {
+  "use strict";
+  var T = {"look":"Look","label":{"bust":"Bust","waist":"Waist","hip":"Hip"},"cm":"cm","ok":"You are on the list. We will write the evening before the drop opens. This is a sample brand: nothing was sent.","err":"Please add a valid email address."};
+  var FMT = (n, lab, v, cm) => `<b>Look <bdi dir="ltr">${n}</bdi></b><span>${lab} <bdi dir="ltr">${v}</bdi> ${cm}</span><i>M</i>`;
+  var doc = document.documentElement;
+  var rtl = getComputedStyle(doc).direction === "rtl";
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var K = 1;
+  var $ = function (id) { return document.getElementById(id); };
+  var chrome = $("chrome"), tape = $("tape"), strip = $("strip");
+  var notch = tape.querySelector(".notch");
+  var looks = Array.prototype.slice.call(document.querySelectorAll("[data-look]"));
+  var stamps = [], ys = [], yEnd = 0, notchPx = 0, tickBuilt = 0;
+
+  /* stamps: values come from the table cells, not from the copy */
+  looks.forEach(function (a) {
+    var m = a.getAttribute("data-measure");
+    var c = document.querySelector('#sizeTable tr[data-size="M"] td[data-col="' + m + '"]');
+    var v = c ? c.textContent.trim() : "";
+    var s = document.createElement("div");
+    s.className = "stamp";
+    s.innerHTML = FMT(a.getAttribute("data-look"), T.label[m], v, T.cm);
+    strip.appendChild(s);
+    stamps.push(s);
+  });
+
+  function measure() {
+    var ch = chrome.offsetHeight, sy = window.scrollY || 0;
+    var W = tape.clientWidth;
+    var nr = notch.getBoundingClientRect();
+    notchPx = rtl ? W - nr.right : nr.left;
+    looks.forEach(function (a, i) {
+      var top = a.getBoundingClientRect().top + sy;
+      ys[i] = Math.max(0, Math.round(top - ch));
+      stamps[i].style.insetInlineStart = (ys[i] * K) + "px";
+    });
+    var cloth = $("cloth");
+    yEnd = Math.round(cloth.getBoundingClientRect().top + sy - ch);
+    var docH = doc.scrollHeight;
+    var len = Math.ceil((docH * K + innerWidth * 3) / 100) * 100;
+    strip.style.width = len + "px";
+    if (tickBuilt !== len) {
+      Array.prototype.slice.call(strip.querySelectorAll(".tick")).forEach(function (n) { n.remove(); });
+      var frag = document.createDocumentFragment();
+      for (var i = 0; i < len / 100; i++) {
+        var t = document.createElement("span");
+        t.className = "tick"; t.textContent = String(i * 10);
+        t.style.insetInlineStart = (i * 100 + 5) + "px";
+        frag.appendChild(t);
+      }
+      strip.insertBefore(frag, strip.firstChild);
+      tickBuilt = len;
+    }
+    update();
+  }
+
+  var queued = false;
+  function update() {
+    queued = false;
+    var y = window.scrollY || 0;
+    var last = -1;
+    for (var i = 0; i < ys.length; i++) {
+      var on = y >= ys[i] - 0.5;
+      if (on) last = i;
+      stamps[i].classList.toggle("on", !reduce && on);
+    }
+    if (reduce) {
+      for (var j = 0; j < stamps.length; j++) {
+        var show = (j === last && y < yEnd);
+        stamps[j].style.visibility = show ? "visible" : "hidden";
+      }
+      strip.style.transform = "translate3d(" + (rtl ? -(notchPx - ys[Math.max(0, last)] * K) : (notchPx - ys[Math.max(0, last)] * K)) + "px,0,0)";
+    } else {
+      var x = notchPx - y * K;
+      strip.style.transform = "translate3d(" + (rtl ? -x : x) + "px,0,0)";
+    }
+    tape.classList.toggle("live", y < yEnd);
+    var q = (reduce ? "r" : "s") + last + "-" + Math.round(y / 24);
+    if (tape.getAttribute("data-sc-verify-state") !== q) tape.setAttribute("data-sc-verify-state", q);
+  }
+  function onScroll() { if (!queued) { queued = true; requestAnimationFrame(update); } }
+  addEventListener("scroll", onScroll, { passive: true });
+  addEventListener("resize", measure);
+  addEventListener("load", measure);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+  measure();
+
+  /* hero film: poster only when motion is reduced */
+  var film = $("film");
+  if (film && !reduce) { var p = film.play(); if (p && p.catch) p.catch(function () {}); }
+
+  /* the call to action lands on the field */
+  var cta = document.querySelector(".cta"), email = $("email");
+  cta.addEventListener("click", function () { setTimeout(function () { email.focus({ preventScroll: true }); }, 0); });
+
+  /* local only: nothing is sent anywhere */
+  var form = $("joinForm"), reply = $("reply");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!email.value || !email.checkValidity()) { reply.textContent = T.err; email.setAttribute("aria-invalid", "true"); email.focus(); return; }
+    email.removeAttribute("aria-invalid");
+    reply.textContent = T.ok;
+    form.reset();
+  });
+})();
+</script>
+</body>
+</html>

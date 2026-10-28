@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-loop="off">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>loop · Keep your best work in motion (sample brand)</title>
+<meta name="description" content="One studio for makers: ideas, drafts and releases in a single place. A scrolling loop that returns to its first cut with the next release note. A sample brand from Landscape Lab.">
+<link rel="alternate" hreflang="en" href="index.html">
+<link rel="alternate" hreflang="ar" href="ar/index.html">
+<link rel="alternate" hreflang="x-default" href="index.html">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%232a214a'/><circle cx='16' cy='16' r='8' fill='none' stroke='%23ff756e' stroke-width='4'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600;800&family=Cairo:wght@400;500;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_engine/scrollcraft.css">
+<style>
+:root {
+  --paper: #f6f0ff; --ink: #2a214a; --co: #ff756e; --soft: #ffe0e1; --line: #e0d4f2; --edge: #a99fd0;
+  --sc-canvas: #f6f0ff; --sc-surface: #e0d4f2; --sc-ink: #2a214a; --sc-ink-soft: #5a4d7a;
+  --sc-accent: #ff756e; --sc-accent-ink: #2a214a;
+  --f-d: "Rethink Sans", system-ui, sans-serif; --f-t: "Rethink Sans", system-ui, sans-serif;
+  --sc-font-display: var(--f-d); --sc-font-text: var(--f-t);
+  --pad: clamp(1.1rem, 4vw, 3.5rem); --gap: clamp(0.75rem, 2vw, 1.75rem);
+  --bar: 60px; --tb: 52px; --chrome: calc(var(--bar) + var(--tb));
+  --ds: 1; --lh: 1.55; --body: 1.125rem; --small: 1rem;
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+}
+:root[lang="ar"] {
+  --f-d: "Cairo", system-ui, sans-serif; --f-t: "Cairo", system-ui, sans-serif;
+  --ds: 0.94; --lh: 1.8; --body: 1.1875rem; --small: 1.0625rem;
+}
+@media (max-width: 859px) { :root { --bar: 56px; --tb: 48px; } }
+html { background: var(--paper); scroll-behavior: auto; -webkit-text-size-adjust: 100%; overflow-anchor: none; }
+body { margin: 0; font-family: var(--f-t); font-size: var(--body); line-height: var(--lh); color: var(--ink); background: var(--paper); overflow-x: clip; overflow-anchor: none; }
+p, h1, h2, h3, figure, blockquote, dl, dd, ul, ol, fieldset { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+::selection { background: var(--ink); color: var(--paper); }
+:focus-visible { outline: 3px solid var(--ring, #2a214a); outline-offset: 3px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+bdi { unicode-bidi: isolate; }
+svg { display: block; }
+
+.g-paper { background: var(--paper); color: var(--ink); --mut: #5a4d7a; --ring: #2a214a; }
+.g-line  { background: var(--line);  color: var(--ink); --mut: #4a3e6e; --ring: #2a214a; }
+.g-soft  { background: var(--soft);  color: var(--ink); --mut: #5a4d7a; --ring: #2a214a; }
+.g-ink   { background: var(--ink);   color: var(--paper); --mut: #d9ccf0; --ring: #f6f0ff; }
+.g-co    { background: var(--co);    color: var(--ink); --mut: #2a214a; --ring: #2a214a; }
+.mut { color: var(--mut); }
+.disp { font-family: var(--f-d); font-weight: 800; letter-spacing: -0.025em; line-height: 1; text-wrap: balance; overflow-wrap: anywhere; }
+:root[lang="ar"] .disp { letter-spacing: 0; line-height: 1.25; }
+
+/* ------------------------------------------------ chrome: a loud row of tools */
+.chrome { position: fixed; inset: 0 0 auto 0; z-index: 60; }
+.bar {
+  background: var(--ink); color: var(--paper); height: var(--bar); box-sizing: border-box; --ring: #f6f0ff;
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto auto; align-items: center; column-gap: 0.6rem;
+  padding-inline: max(var(--pad), env(safe-area-inset-left)) max(var(--pad), env(safe-area-inset-right));
+}
+.mark { grid-column: 1; font: 800 calc(1.8rem * var(--ds))/1 var(--f-d); letter-spacing: -0.02em; text-decoration: none; color: inherit; display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+.stop {
+  grid-column: 3; min-height: 44px; min-width: 44px; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  padding-inline: 0.8rem; background: transparent; color: var(--paper); border: 2px solid var(--edge); border-radius: 10px; cursor: pointer;
+  font: 700 0.9375rem/1 var(--f-t); transition: background-color 140ms var(--ease), color 140ms var(--ease), transform 120ms var(--ease);
+}
+:root[lang="ar"] .stop { font-size: 1.0625rem; }
+.stop:active { transform: translateY(1px); }
+.stop svg { width: 22px; height: 22px; flex: none; }
+.stop .slash { display: none; }
+.stop[aria-pressed="false"] .slash { display: block; }
+.stop[aria-pressed="true"] { background: var(--co); color: var(--ink); border-color: var(--co); }
+.stop .st { font-weight: 800; min-width: 2ch; }
+.cta {
+  grid-column: 4; display: inline-flex; align-items: center; min-height: 44px; padding-inline: 1.1rem; box-sizing: border-box; background: var(--co); color: var(--ink);
+  text-decoration: none; white-space: nowrap; border-radius: 10px; font: 800 calc(1.05rem * var(--ds))/1 var(--f-d);
+  transition: background-color 140ms var(--ease), transform 120ms var(--ease);
+}
+.cta:active { transform: translateY(1px); }
+.lang {
+  grid-column: 5; min-width: 44px; min-height: 44px; box-sizing: border-box; padding-inline: 0.85rem; display: inline-flex; align-items: center; justify-content: center;
+  border: 2px solid var(--edge); border-radius: 10px; color: var(--paper); text-decoration: none; font: 600 0.9375rem/1 var(--f-t);
+  transition: background-color 140ms var(--ease), color 140ms var(--ease), transform 120ms var(--ease);
+}
+.lang:active { transform: translateY(1px); }
+@media (hover: hover) and (pointer: fine) {
+  .cta:hover { background: var(--paper); }
+  .lang:hover, .stop[aria-pressed="false"]:hover { background: var(--paper); color: var(--ink); }
+}
+.tabs { background: var(--co); height: var(--tb); box-sizing: border-box; border-bottom: 2px solid var(--ink); --ring: #2a214a; color: var(--ink); }
+.tabs ul { display: flex; height: 100%; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; }
+.tabs ul::-webkit-scrollbar { display: none; }
+.tabs li { flex: 1 0 auto; display: flex; }
+.tabs li + li { border-inline-start: 2px solid var(--ink); }
+.tabs a {
+  flex: 1; display: flex; align-items: center; justify-content: center; padding-inline: clamp(0.7rem, 1.6vw, 1.5rem); color: var(--ink); text-decoration: none; white-space: nowrap;
+  font: 800 calc(1.05rem * var(--ds))/1.1 var(--f-d); transition: background-color 120ms var(--ease), color 120ms var(--ease);
+}
+.tabs a:focus-visible { outline-offset: -6px; }
+.tabs a[aria-current="true"] { background: var(--ink); color: var(--paper); }
+.tabs a[aria-current="true"]:focus-visible { outline-color: #ff756e; }
+.tabs a[data-new]::after { content: ""; width: 9px; height: 9px; border-radius: 50%; background: currentColor; margin-inline-start: 0.5rem; flex: none; }
+@media (hover: hover) and (pointer: fine) { .tabs a:not([aria-current="true"]):hover { background: #ff9a94; } }
+@media (max-width: 1099px) { .tabs a { font-size: calc(0.95rem * var(--ds)); padding-inline: 0.85rem; } }
+@media (max-width: 859px) {
+  .bar { column-gap: 0.4rem; }
+  .mark { font-size: calc(1.45rem * var(--ds)); }
+  .cta { font-size: calc(0.95rem * var(--ds)); padding-inline: 0.8rem; }
+  .lang { padding-inline: 0.65rem; font-size: 0.875rem; }
+}
+@media (max-width: 520px) {
+  .stop { padding-inline: 0; width: 44px; }
+  .stop .sl, .stop .st { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; min-width: 0; }
+}
+.toast {
+  position: fixed; inset-inline: max(var(--pad), env(safe-area-inset-left)); inset-block-end: max(1rem, env(safe-area-inset-bottom)); z-index: 70; max-width: 34rem; box-sizing: border-box;
+  background: var(--ink); color: var(--paper); border: 2px solid var(--co); border-radius: 14px; padding: 0.9rem 1.1rem; font: 600 var(--small)/1.5 var(--f-t);
+  opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity 200ms var(--ease), transform 200ms var(--ease);
+}
+.toast.show { opacity: 1; transform: none; }
+
+/* ------------------------------------------------ cuts */
+.cut {
+  --h: 1.1; position: relative; box-sizing: border-box; display: grid; min-height: calc(var(--h) * 100vh); min-height: calc(var(--h) * 100svh);
+  padding: calc(var(--chrome) + clamp(1.25rem, 4vh, 3rem)) var(--pad) clamp(1.5rem, 5vh, 3.5rem);
+  grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); row-gap: clamp(1rem, 3vh, 2rem); align-content: center; align-items: start; overflow: clip;
+}
+.note { font-size: calc(var(--body) * 1.1); text-wrap: pretty; max-width: 40ch; }
+.tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.tags li { border: 2px solid currentColor; border-radius: 999px; padding: 0.1rem 0.85rem; font: 700 0.9375rem/1.5 var(--f-t); }
+:root[lang="ar"] .tags li { font-size: 1.0625rem; }
+.side { display: grid; gap: 1.25rem; align-content: start; min-width: 0; }
+.pic { margin: 0; position: relative; border: 2px solid var(--ink); border-radius: 18px; overflow: clip; background: var(--line); min-width: 0; aspect-ratio: 4 / 3; }
+.g-ink .pic { border-color: var(--paper); }
+.pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; object-position: var(--op, 50% 50%); }
+.name { font-size: calc(clamp(3rem, 9vw, 9rem) * var(--ds)); }
+
+.rel { border: 2px solid currentColor; border-radius: 18px; padding: 1rem 1.25rem; display: grid; gap: 0.35rem; align-content: start; min-width: 0; box-sizing: border-box; }
+.rel .rwhen { font: 700 var(--small)/1.3 var(--f-t); }
+.rel .rt { font: 800 calc(1.45rem * var(--ds))/1.2 var(--f-d); text-wrap: balance; }
+.rel .rn { font-size: var(--small); line-height: 1.5; text-wrap: pretty; }
+.rel .rflag { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.35rem; font: 800 var(--small)/1.2 var(--f-t); }
+.rel .rflag svg { width: 18px; height: 18px; flex: none; }
+.rel:not(.on) .rflag { visibility: hidden; }
+.rel.on { background: var(--co); color: var(--ink); border-color: var(--ink); }
+.g-co .rel.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.g-ink .rel.on { border-color: var(--co); }
+
+/* hero: the film, then a hard cut to the first tool, all in one screen */
+.hero { --h: 1; display: flex; flex-direction: column; min-height: 100vh; min-height: 100svh; padding: var(--chrome) 0 0; box-sizing: border-box; position: relative; overflow: clip; background: var(--ink); }
+.film { position: relative; flex: 1 1 auto; min-height: 330px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); align-items: end; padding: clamp(1rem, 3vh, 2rem) var(--pad); background: var(--ink); color: var(--paper); overflow: clip; --ring: #f6f0ff; }
+.film video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 62% 42%; display: block; }
+.plate { grid-column: 1 / span 7; position: relative; z-index: 1; background: var(--ink); color: var(--paper); border-radius: 18px; padding: clamp(1.1rem, 2.6vw, 2.25rem); display: grid; gap: 1rem; }
+.plate h1 { font-size: calc(clamp(2.5rem, 5vw, 5rem) * var(--ds)); line-height: 0.98; }
+:root[lang="ar"] .plate h1 { line-height: 1.2; }
+.plate .lede { max-width: 44ch; font-size: calc(var(--body) * 1.05); text-wrap: pretty; }
+.plate .fine { font-size: 0.9375rem; line-height: 1.5; color: #d9ccf0; max-width: 54ch; }
+:root[lang="ar"] .plate .fine { font-size: 1.0625rem; }
+.slip { grid-column: 9 / span 4; position: relative; z-index: 1; background: var(--co); color: var(--ink); border: 2px solid var(--ink); border-radius: 18px; padding: 1rem 1.25rem; display: grid; --ring: #2a214a; }
+.slip.fresh { animation: stamp 520ms var(--ease); }
+@keyframes stamp { from { transform: translateY(10px) rotate(-1.6deg) scale(1.04); } to { transform: none; } }
+.slip ol { display: grid; }
+.slip li { grid-area: 1 / 1; visibility: hidden; display: grid; gap: 0.3rem; align-content: start; }
+.slip li.on { visibility: visible; }
+.slip .sflag { display: flex; align-items: center; gap: 0.4rem; font: 800 var(--small)/1.2 var(--f-t); }
+.slip .sflag svg { width: 18px; height: 18px; flex: none; }
+.slip .swhen { font: 700 var(--small)/1.3 var(--f-t); }
+.slip .stitle { display: block; min-height: 44px; font: 800 calc(1.5rem * var(--ds))/1.2 var(--f-d); text-wrap: balance; color: var(--ink); text-underline-offset: 0.18em; text-decoration-thickness: 2px; }
+.slip .snote { font-size: var(--small); line-height: 1.5; text-wrap: pretty; }
+.t1 { flex: none; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); row-gap: 1rem; align-items: start; padding: clamp(1.25rem, 3.5vh, 2.25rem) var(--pad) clamp(1.5rem, 4vh, 2.5rem); scroll-margin-top: var(--chrome); }
+.t1 .name { grid-column: 1 / span 4; font-size: calc(clamp(2.6rem, 5.4vw, 5.5rem) * var(--ds)); }
+.t1 .side { grid-column: 5 / span 4; }
+.t1 .rel { grid-column: 9 / span 4; }
+
+/* tool cuts: five different compositions */
+.L-a .name { grid-column: 1 / -1; grid-row: 1; }
+.L-a .pic { grid-column: 1 / span 7; grid-row: 2; }
+.L-a .side { grid-column: 8 / span 5; grid-row: 2; }
+
+.L-b .name { grid-column: 1 / span 8; grid-row: 1; font-size: calc(clamp(3.5rem, 11vw, 11rem) * var(--ds)); }
+.L-b .pic { grid-column: 9 / span 4; grid-row: 1 / span 2; aspect-ratio: auto; min-height: 320px; align-self: stretch; }
+.L-b .side { grid-column: 1 / span 8; grid-row: 2; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem var(--gap); align-items: start; }
+.L-b .side .note { grid-column: 1; } .L-b .side .tags { grid-column: 1; } .L-b .side .rel { grid-column: 2; grid-row: 1 / span 2; }
+
+.L-c .name { grid-column: 1 / -1; grid-row: 1; text-align: center; }
+.L-c .pic { grid-column: 1 / span 5; grid-row: 2; aspect-ratio: 1 / 1; }
+.L-c .side { grid-column: 7 / span 6; grid-row: 2; align-self: center; }
+
+.L-d .pic { grid-column: 1 / -1; grid-row: 1; aspect-ratio: 21 / 8; }
+.L-d .name { grid-column: 1 / span 6; grid-row: 2; font-size: calc(clamp(2.8rem, 6.4vw, 6.5rem) * var(--ds)); }
+.L-d .side { grid-column: 8 / span 5; grid-row: 2; }
+
+.L-e .side { grid-column: 1 / span 5; grid-row: 1; }
+.L-e .pic { grid-column: 6 / span 7; grid-row: 1 / span 2; aspect-ratio: 5 / 4; }
+.L-e .name { grid-column: 1 / span 5; grid-row: 2; align-self: end; font-size: calc(clamp(3rem, 7.4vw, 7.5rem) * var(--ds)); }
+
+/* proof */
+.proof { --h: 1; }
+.proof .q { grid-column: 1 / span 7; display: grid; gap: 1.5rem; }
+.proof .q h2 { font: 800 calc(1.3rem * var(--ds))/1.2 var(--f-d); color: var(--co); }
+.proof blockquote { font: 800 calc(clamp(1.9rem, 3.7vw, 3.5rem) * var(--ds))/1.14 var(--f-d); text-wrap: balance; }
+:root[lang="ar"] .proof blockquote { line-height: 1.45; }
+.proof .who { color: var(--mut); font-size: var(--small); }
+.proof dl { grid-column: 8 / span 5; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 1.5rem; align-self: center; }
+.proof .fact { display: flex; flex-direction: column; gap: 0.4rem; border-top: 2px solid var(--paper); padding-top: 0.9rem; }
+.proof dt { order: 2; color: var(--mut); font: 600 var(--small)/1.3 var(--f-t); }
+.proof dd { font: 800 calc(clamp(2.2rem, 4vw, 3.8rem) * var(--ds))/1.05 var(--f-d); color: var(--co); }
+
+/* close: abrupt, loud, and the button is the loop */
+.close { --h: 1.25; }
+.close .ch { grid-column: 1 / span 7; display: grid; gap: 1.25rem; }
+.close h2 { font-size: calc(clamp(3.2rem, 8.2vw, 8.5rem) * var(--ds)); line-height: 0.94; }
+:root[lang="ar"] .close h2 { line-height: 1.18; }
+.close .lede { max-width: 40ch; font-size: calc(var(--body) * 1.08); text-wrap: pretty; }
+.close .how { max-width: 52ch; font-size: var(--small); line-height: 1.55; }
+.close form { grid-column: 8 / span 5; display: grid; gap: 1rem; align-self: center; }
+.close label.fl { display: block; font: 800 calc(1.15rem * var(--ds))/1.3 var(--f-d); margin-bottom: 0.4rem; }
+.close input[type="email"] {
+  width: 100%; box-sizing: border-box; min-height: 60px; background: var(--paper); color: var(--ink); border: 2px solid var(--ink); border-radius: 14px;
+  font: 600 1.25rem/1.2 var(--f-t); padding: 0.5rem 1rem; direction: ltr; text-align: start;
+}
+:root[dir="rtl"] .close input[type="email"] { text-align: right; }
+.close input[type="email"]:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.close input[aria-invalid="true"] { border-width: 4px; }
+.close button {
+  min-height: 64px; padding-inline: 1.75rem; background: var(--ink); color: var(--paper); border: 2px solid var(--ink); border-radius: 14px; cursor: pointer;
+  font: 800 calc(1.5rem * var(--ds))/1 var(--f-d); transition: background-color 140ms var(--ease), color 140ms var(--ease), transform 120ms var(--ease);
+}
+.close button:active { transform: translateY(1px); }
+.close button:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+@media (hover: hover) and (pointer: fine) { .close button:hover { background: var(--paper); color: var(--ink); } }
+.reply { min-height: 1.6em; font: 700 var(--small)/1.5 var(--f-t); }
+
+#again { display: none; }
+html[data-loop="on"] #again { display: block; }
+
+@media (max-width: 859px) {
+  .cut { grid-template-columns: minmax(0, 1fr); align-content: start; row-gap: 1.25rem; }
+  .cut > *, .t1 > *, .film > * { grid-column: 1 / -1 !important; grid-row: auto !important; align-self: auto !important; }
+  .name, .L-b .name, .L-d .name, .L-e .name, .t1 .name { font-size: calc(clamp(2.9rem, 14vw, 4.2rem) * var(--ds)); text-align: start; }
+  .L-b .pic { min-height: 0; }
+  .pic, .L-b .pic, .L-c .pic, .L-d .pic, .L-e .pic { aspect-ratio: 16 / 10; }
+  .L-b .side { grid-template-columns: minmax(0, 1fr); }
+  .L-b .side .note, .L-b .side .tags, .L-b .side .rel { grid-column: 1; grid-row: auto; }
+  .L-e .side { order: 0; } .L-e .name { order: -1; } .L-d .pic { order: 0; }
+  .hero .film { padding-top: 24svh; row-gap: 1rem; grid-template-columns: minmax(0, 1fr); }
+  .t1 { grid-template-columns: minmax(0, 1fr); }
+  .plate h1 { font-size: calc(clamp(2.4rem, 11vw, 3.2rem) * var(--ds)); }
+  .proof dl { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 1rem; }
+  .close h2 { font-size: calc(clamp(3rem, 14vw, 4.2rem) * var(--ds)); }
+  .close { --h: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slip.fresh { animation: none; }
+  .toast, .stop, .cta, .lang, .tabs a, .close button { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="chrome" id="chrome">
+  <div class="bar">
+    <a class="mark" href="#top">loop</a>
+    <button class="stop" id="stop" type="button" aria-pressed="false" aria-describedby="stopdesc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.8-6.1"/><path d="M20 4v5h-5"/><path class="slash" d="M4 4l16 16"/></svg><span class="sl">Loop</span><span class="st" aria-hidden="true">off</span></button>
+    <a class="cta" href="#join">Start a loop</a>
+    <a class="lang" href="ar/index.html" hreflang="ar" lang="ar">العربية</a>
+  </div>
+  <nav class="tabs" id="tabs" aria-label="Tools" data-sc-verify-state=""><ul><li><a href="#t1" data-tool="t1">Scratchpad<span class="sr snew"></span></a></li><li><a href="#t2" data-tool="t2">Moodwall<span class="sr snew"></span></a></li><li><a href="#t3" data-tool="t3">Draft Room<span class="sr snew"></span></a></li><li><a href="#t4" data-tool="t4">Review Link<span class="sr snew"></span></a></li><li><a href="#t5" data-tool="t5">Rhythm Calendar<span class="sr snew"></span></a></li><li><a href="#t6" data-tool="t6">Launch Pad<span class="sr snew"></span></a></li></ul></nav>
+  <p class="sr" id="stopdesc">While on, scrolling past the last cut returns you to the first one with the next release note. Turn it off and the page ends at the Start a loop form.</p>
+  <p class="sr" id="live" role="status" aria-live="polite"></p>
+</header>
+<p class="toast" id="toast" aria-hidden="true"></p>
+
+<main id="top">
+
+  <section id="hero" class="hero" data-sc-act="flow" data-cut="hero" aria-labelledby="h1">
+    <div class="film">
+      <video id="film" muted loop playsinline preload="auto" poster="../../assets/domain-stills/loop-1.webp" aria-label="A ring of violet and coral cubes turning above a dark floor. Sample footage."><source src="../../assets/domain-heroes/loop-hero.mp4" type="video/mp4"></video>
+      <div class="plate">
+        <h1 id="h1" class="disp" tabindex="-1">Keep your best work in motion.</h1>
+        <p class="lede">One studio for makers: ideas, drafts and releases in a single place, so fewer tabs stand between you and shipping.</p>
+        <p class="fine">loop is a sample brand from <bdi dir="ltr">Landscape Lab</bdi>. Every release, figure and quote on this page is sample content.</p>
+      </div>
+      <div class="slip" aria-label="Release note in focus"><ol><li data-n="0"><p class="sflag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.8-6.1"/><path d="M20 4v5h-5"/></svg><span>New this lap</span></p><p class="swhen"><bdi dir="ltr">v2.0</bdi> · October</p><a class="stitle" href="#t2">Moodwall opens to collaborators</a><p class="snote">Invite up to ten people to a board, with a cursor for each.</p></li><li data-n="1"><p class="sflag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.8-6.1"/><path d="M20 4v5h-5"/></svg><span>New this lap</span></p><p class="swhen"><bdi dir="ltr">v2.1</bdi> · December</p><a class="stitle" href="#t1">Audio takes in Scratchpad</a><p class="snote">Hum a melody or read a line aloud and it lands transcribed next to the recording.</p></li><li data-n="2"><p class="sflag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.8-6.1"/><path d="M20 4v5h-5"/></svg><span>New this lap</span></p><p class="swhen"><bdi dir="ltr">v2.2</bdi> · January</p><a class="stitle" href="#t3">Draft Room compares any two versions</a><p class="snote">Changes are highlighted line by line for text and layer by layer for artwork.</p></li><li data-n="3"><p class="sflag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.8-6.1"/><path d="M20 4v5h-5"/></svg><span>New this lap</span></p><p class="swhen"><bdi dir="ltr">v2.3</bdi> · February</p><a class="stitle" href="#t4">Review Link adds timestamps</a><p class="snote">Reviewers can leave a note at 01:42 of your cut and you jump straight there.</p></li><li data-n="4"><p class="sflag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.8-6.1"/><path d="M20 4v5h-5"/></svg><span>New this lap</span></p><p class="swhen"><bdi dir="ltr">v2.4</bdi> · March</p><a class="stitle" href="#t6">Launch Pad schedules for you</a><p class="snote">Pick a day and it posts to every channel you connected, in the time zone of your audience.</p></li></ol></div>
+    </div>
+    <article id="t1" class="t1 g-co" aria-labelledby="h-t1"><h2 id="h-t1" class="disp name">Scratchpad</h2><div class="side"><p class="note">Catch a half-formed idea in two taps and file it against the project it belongs to.</p><ul class="tags"><li>Capture</li><li>Voice</li></ul></div><aside class="rel" data-rel="1" aria-label="Release note"><p class="rwhen"><bdi dir="ltr">v2.1</bdi> · December</p><h3 class="rt">Audio takes in Scratchpad</h3><p class="rn">Hum a melody or read a line aloud and it lands transcribed next to the recording.</p><p class="rflag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.8-6.1"/><path d="M20 4v5h-5"/></svg><span>New this lap</span></p></aside></article>
+  </section>
+
+<section id="t2" class="cut tool L-a g-line" data-sc-act="flow" data-cut="t2" aria-labelledby="h-t2"><h2 id="h-t2" class="disp name">Moodwall</h2><figure class="pic"><img src="../../assets/domain-stills/loop-2.webp" alt="A ring of violet and coral cubes around a glass circle. Sample image." width="960" height="540" loading="lazy" style="--op:50% 50%"></figure><div class="side"><p class="note">Pin references, palettes and clips on an infinite board that keeps its own history.</p><ul class="tags"><li>Reference</li></ul><aside class="rel" data-rel="0" aria-label="Release note"><p class="rwhen"><bdi dir="ltr">v2.0</bdi> · October</p><h3 class="rt">Moodwall opens to collaborators</h3><p class="rn">Invite up to ten people to a board, with a cursor for each.</p><p class="rflag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.8-6.1"/><path d="M20 4v5h-5"/></svg><span>New this lap</span></p></aside></div></section>
+
+<section id="t3" class="cut tool L-b g-ink" data-sc-act="flow" data-cut="t3" aria-labelledby="h-t3"><h2 id="h-t3" class="disp name">Draft Room</h2><figure class="pic"><img src="../../assets/domain-stills/loop-3.webp" alt="A ring of violet and coral cubes around a glass circle. Sample image." width="960" height="540" loading="lazy" style="--op:50% 50%"></figure><div class="side"><p class="note">Keep every version of a piece side by side and bring back the one you liked on Tuesday.</p><ul class="tags"><li>Versions</li><li>Writing</li></ul><aside class="rel" data-rel="2" aria-label="Release note"><p class="rwhen"><bdi dir="ltr">v2.2</bdi> · January</p><h3 class="rt">Draft Room compares any two versions</h3><p class="rn">Changes are highlighted line by line for text and layer by layer for artwork.</p><p class="rflag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.8-6.1"/><path d="M20 4v5h-5"/></svg><span>New this lap</span></p></aside></div></section>
+
+<section id="t4" class="cut tool L-c g-soft" data-sc-act="flow" data-cut="t4" aria-labelledby="h-t4"><h2 id="h-t4" class="disp name">Review Link</h2><figure class="pic"><img src="../../assets/domain-stills/loop-4.webp" alt="A ring of violet and coral cubes around a glass circle. Sample image." width="960" height="540" loading="lazy" style="--op:50% 40%"></figure><div class="side"><p class="note">Send a private link and collect notes pinned to the exact frame, bar or line.</p><ul class="tags"><li>Feedback</li></ul><aside class="rel" data-rel="3" aria-label="Release note"><p class="rwhen"><bdi dir="ltr">v2.3</bdi> · February</p><h3 class="rt">Review Link adds timestamps</h3><p class="rn">Reviewers can leave a note at 01:42 of your cut and you jump straight there.</p><p class="rflag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.8-6.1"/><path d="M20 4v5h-5"/></svg><span>New this lap</span></p></aside></div></section>
+
+<section id="t5" class="cut tool L-d g-paper" data-sc-act="flow" data-cut="t5" aria-labelledby="h-t5"><h2 id="h-t5" class="disp name">Rhythm Calendar</h2><figure class="pic"><img src="../../assets/domain-stills/loop-2.webp" alt="A ring of violet and coral cubes around a glass circle. Sample image." width="960" height="540" loading="lazy" style="--op:50% 45%"></figure><div class="side"><p class="note">Plan releases around your real energy, with gentle reminders instead of red deadlines.</p><ul class="tags"><li>Planning</li></ul></div></section>
+
+<section id="t6" class="cut tool L-e g-co" data-sc-act="flow" data-cut="t6" aria-labelledby="h-t6"><h2 id="h-t6" class="disp name">Launch Pad</h2><figure class="pic"><img src="../../assets/domain-stills/loop-1.webp" alt="A ring of violet and coral cubes around a glass circle. Sample image." width="960" height="540" loading="lazy" style="--op:50% 50%"></figure><div class="side"><p class="note">Export once and publish to your shop, newsletter and social feeds in the right sizes.</p><ul class="tags"><li>Publish</li><li>Shop</li></ul><aside class="rel" data-rel="4" aria-label="Release note"><p class="rwhen"><bdi dir="ltr">v2.4</bdi> · March</p><h3 class="rt">Launch Pad schedules for you</h3><p class="rn">Pick a day and it posts to every channel you connected, in the time zone of your audience.</p><p class="rflag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.8-6.1"/><path d="M20 4v5h-5"/></svg><span>New this lap</span></p></aside></div></section>
+
+  <section id="proof" class="cut proof g-ink" data-sc-act="flow" data-cut="proof" aria-labelledby="h-pr">
+    <div class="q"><h2 id="h-pr">What makers say after a season</h2><blockquote>I used to lose half a day just finding the right file. Now the album went from sketch to release in six weeks.</blockquote><p class="who">Dalia Moreno, songwriter and zine maker, Valencia</p></div>
+    <dl><div class="fact"><dt>Makers</dt><dd><bdi dir="ltr">18</bdi>k</dd></div><div class="fact"><dt>Ideas shipped</dt><dd><bdi dir="ltr">72</bdi>k</dd></div><div class="fact"><dt>More work in flow</dt><dd><bdi dir="ltr">2.6×</bdi></dd></div><div class="fact"><dt>Release cadence</dt><dd>Roughly monthly</dd></div></dl>
+  </section>
+
+  <section id="join" class="cut close g-co" data-sc-act="flow" data-cut="join" aria-labelledby="h-join">
+    <div class="ch"><h2 id="h-join" class="disp">Start a loop with your next piece.</h2><p class="lede">Free for solo makers. Tell us what you make and we will set up your studio before you log in.</p><p class="how">This page is a loop. Press the button and it starts again with the next release note. To stop it looping, turn off the Loop switch at the top, or press End to stop here.</p></div>
+    <form id="joinForm" novalidate>
+      <div><label class="fl" for="email">Email</label><input id="email" name="email" type="email" inputmode="email" autocomplete="email" required dir="ltr"></div>
+      <button type="submit">Start a loop</button>
+      <p id="reply" class="reply" role="status"></p>
+    </form>
+  </section>
+
+</main>
+
+<script src="../_engine/scrollcraft.js"></script>
+<script>ScrollCraft.mount(document.body);</script>
+<script>
+/* loop: a rhythmic cutlist whose last cut hands back to its first. After the Start a loop cut the page
+   carries an inert, aria-hidden copy of the first two cuts. When the reader scrolls into it, the page jumps
+   back by exactly the height of the real pass (same pixels, so there is no visible seam) and the next release
+   note takes the focus. Exits: the Loop switch in the bar turns it off (the page then ends at the form), End
+   stops at the form instead of entering the copy, the copy has no focusable or readable content, Tab leaves
+   the page after the button, and under reduced motion the loop starts off and only the button restarts it. */
+(function () {
+  "use strict";
+  var T = {"on": "on", "off": "off", "err": "Please add a valid email address.", "ok": "You're in. Check your inbox for the link to your new studio. This is a sample brand: nothing was sent.", "again": "Back at the start. Release note in focus: {v}, {m}, {t}.", "wrap": "The page started again. Release note in focus: {v}, {m}, {t}.", "newtab": ", has the release note in focus"};
+  var NOTES = [{"v": "v2.0", "m": "October", "t": "Moodwall opens to collaborators", "tool": "t2"}, {"v": "v2.1", "m": "December", "t": "Audio takes in Scratchpad", "tool": "t1"}, {"v": "v2.2", "m": "January", "t": "Draft Room compares any two versions", "tool": "t3"}, {"v": "v2.3", "m": "February", "t": "Review Link adds timestamps", "tool": "t4"}, {"v": "v2.4", "m": "March", "t": "Launch Pad schedules for you", "tool": "t6"}];
+  var N = NOTES.length;
+  var doc = document.documentElement;
+  var mq = matchMedia("(prefers-reduced-motion: reduce)");
+  var reduce = mq.matches;
+  var $ = function (id) { return document.getElementById(id); };
+  var main = $("top"), nav = $("tabs"), stop = $("stop"), live = $("live"), toast = $("toast"), chrome = $("chrome");
+  var h1 = $("h1"), form = $("joinForm"), email = $("email"), reply = $("reply"), film = $("film");
+  var links = Array.prototype.slice.call(nav.querySelectorAll("a"));
+  var tools = links.map(function (a) { return $(a.getAttribute("data-tool")); });
+  var cuts = ["hero", "t2", "t3", "t4", "t5", "t6", "proof", "join"].map(function (id) { return { id: id, el: $(id) }; });
+  var lap = 0, loopOn = false, again = null, cloneFilm = null, synced = false, jumping = false, curTab = -2, queued = false, toastTimer = 0;
+
+  function setNotes(scope, idx) {
+    Array.prototype.forEach.call(scope.querySelectorAll(".slip li"), function (li, k) { li.classList.toggle("on", k === idx); });
+    Array.prototype.forEach.call(scope.querySelectorAll("[data-rel]"), function (r) { r.classList.toggle("on", +r.getAttribute("data-rel") === idx); });
+  }
+  function applyNotes() {
+    var idx = lap % N;
+    setNotes(main, idx);
+    if (again) setNotes(again, (idx + 1) % N);
+    links.forEach(function (a) {
+      var on = NOTES[idx].tool === a.getAttribute("data-tool");
+      if (on) a.setAttribute("data-new", ""); else a.removeAttribute("data-new");
+      a.querySelector(".snew").textContent = on ? T.newtab : "";
+    });
+  }
+  function fmt(s) { var n = NOTES[lap % N]; return s.replace("{v}", n.v).replace("{m}", n.m).replace("{t}", n.t); }
+  function say(msg) { live.textContent = ""; setTimeout(function () { live.textContent = msg; }, 30); }
+  function stamp() {
+    if (reduce) return;
+    var s = main.querySelector(".slip");
+    s.classList.remove("fresh"); void s.offsetWidth; s.classList.add("fresh");
+  }
+
+  function buildAgain() {
+    if (again) return;
+    var wrap = document.createElement("div");
+    wrap.id = "again"; wrap.setAttribute("aria-hidden", "true"); wrap.setAttribute("inert", "");
+    ["hero", "t2"].forEach(function (id) {
+      var c = $(id).cloneNode(true);
+      [c].concat(Array.prototype.slice.call(c.querySelectorAll("[id],[data-sc-act],[data-cut],[data-sc-verify-state],[aria-labelledby],[tabindex]"))).forEach(function (e) {
+        ["id", "data-sc-act", "data-cut", "data-sc-verify-state", "aria-labelledby", "tabindex"].forEach(function (a) { e.removeAttribute(a); });
+      });
+      Array.prototype.forEach.call(c.querySelectorAll("a"), function (a) { a.setAttribute("tabindex", "-1"); });
+      wrap.appendChild(c);
+    });
+    main.appendChild(wrap);
+    again = wrap;
+    cloneFilm = wrap.querySelector("video");
+    if (cloneFilm) cloneFilm.muted = true;
+    applyNotes();
+  }
+  function playFilms() {
+    if (reduce) return;
+    [film, cloneFilm].forEach(function (v) { if (v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); } });
+  }
+  function setLoop(on, persist) {
+    loopOn = !!on;
+    doc.setAttribute("data-loop", loopOn ? "on" : "off");
+    stop.setAttribute("aria-pressed", loopOn ? "true" : "false");
+    stop.querySelector(".st").textContent = loopOn ? T.on : T.off;
+    if (loopOn) { buildAgain(); playFilms(); }
+    if (persist) { try { sessionStorage.setItem("loop-off", loopOn ? "" : "1"); } catch (e) {} }
+    synced = false;
+    schedule();
+  }
+  stop.addEventListener("click", function () { setLoop(!loopOn, true); });
+  mq.addEventListener && mq.addEventListener("change", function (e) { reduce = e.matches; if (reduce) { setLoop(false, false); if (film) film.pause(); } else { playFilms(); } });
+
+  function againTop() { return again.getBoundingClientRect().top + (window.scrollY || 0); }
+
+  function frame() {
+    queued = false;
+    var y = window.scrollY || 0, vh = window.innerHeight;
+    if (loopOn && again && !jumping) {
+      var top = againTop();
+      if (!synced && top - y < vh * 2.5 && film && cloneFilm && film.readyState > 1 && cloneFilm.readyState > 1) {
+        try { cloneFilm.currentTime = film.currentTime; } catch (e) {}
+        synced = true;
+      } else if (synced && top - y > vh * 3.5) { synced = false; }
+      if (y >= top - 1) {
+        jumping = true;
+        lap += 1;
+        applyNotes();
+        window.scrollTo(0, Math.max(0, y - top));
+        stamp();
+        say(fmt(T.wrap));
+        jumping = false;
+        y = window.scrollY || 0;
+      }
+    }
+    updateTabs(y, vh);
+    publish(vh);
+  }
+  function schedule() { if (!queued) { queued = true; requestAnimationFrame(frame); } }
+
+  function updateTabs(y, vh) {
+    var ch = chrome.offsetHeight, probe = ch + (vh - ch) * 0.4, cur = -1;
+    tools.forEach(function (el, i) { var r = el.getBoundingClientRect(); if (r.top <= probe && r.bottom > probe) cur = i; });
+    if (cur === curTab) return;
+    curTab = cur;
+    links.forEach(function (a, i) { if (i === cur) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current"); });
+    if (cur >= 0) {
+      var a = links[cur], ul = a.closest("ul");
+      if (ul.scrollWidth > ul.clientWidth + 1) a.scrollIntoView({ block: "nearest", inline: "nearest" });
+    }
+  }
+  function publish(vh) {
+    var step = vh / 6, parts = [];
+    cuts.forEach(function (c) { var r = c.el.getBoundingClientRect(); if (r.bottom > 0 && r.top < vh) parts.push(c.id + "@" + Math.round(r.top / step)); });
+    nav.setAttribute("data-sc-verify-state", (reduce ? "r" : "s") + (loopOn ? "L" : "-") + (lap % N) + "|" + parts.join(","));
+  }
+
+  function restart(msg) {
+    lap += 1;
+    applyNotes();
+    window.scrollTo(0, 0);
+    if (h1) h1.focus({ preventScroll: true });
+    stamp();
+    say(msg + " " + fmt(T.again));
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toast.classList.remove("show"); }, 14000);
+    schedule();
+  }
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!email.value || !email.checkValidity()) { reply.textContent = T.err; email.setAttribute("aria-invalid", "true"); email.focus(); return; }
+    email.removeAttribute("aria-invalid");
+    reply.textContent = "";
+    form.reset();
+    restart(T.ok);
+  });
+  var cta = document.querySelector(".cta");
+  cta.addEventListener("click", function () { setTimeout(function () { email.focus({ preventScroll: true }); }, 0); });
+
+  /* End goes to the form, not into the copy; the Loop switch is the other exit */
+  addEventListener("keydown", function (e) {
+    if (!loopOn || e.defaultPrevented || e.altKey || e.shiftKey) return;
+    var t = e.target;
+    if (t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
+    if (e.key === "End" || (e.key === "ArrowDown" && e.metaKey)) {
+      e.preventDefault();
+      window.scrollTo(0, Math.max(0, againTop() - window.innerHeight));
+    }
+  });
+
+  addEventListener("scroll", schedule, { passive: true });
+  addEventListener("resize", schedule);
+  addEventListener("load", schedule);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+
+  var off = false;
+  try { off = sessionStorage.getItem("loop-off") === "1"; } catch (e) {}
+  if (/[?&]loop=off\b/.test(location.search)) off = true;
+  applyNotes();
+  setLoop(!reduce && !off, false);
+  if (!reduce && film) { var p = film.play(); if (p && p.catch) p.catch(function () {}); }
+  schedule();
+})();
+
+</script>
+</body>
+</html>

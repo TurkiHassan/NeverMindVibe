@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>spark · Small sparks make a wider light (sample brand)</title>
+<meta name="description" content="A community movement of 48,000 people turning small local actions into something the whole city can see. A sample brand from Landscape Lab.">
+<link rel="alternate" hreflang="en" href="index.html">
+<link rel="alternate" hreflang="ar" href="ar/index.html">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%2323211f'/><circle cx='16' cy='16' r='5' fill='%23f9b44f'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One:wght@400&family=Albert+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_engine/scrollcraft.css">
+<style>
+  :root {
+    --sc-canvas: #fffaf0;
+    --sc-surface: #fff0cf;
+    --sc-ink: #23211f;
+    --sc-ink-soft: #5b554e;
+    --sc-accent: #f9b44f;
+    --sc-accent-ink: #23211f;
+    --paper: #fffaf0;
+    --cream: #fff0cf;
+    --line: #ebd8b1;
+    --ring: #23211f;
+    --pad: clamp(1.25rem, 4vw, 3.5rem);
+    --f-display: "Bowlby One", "Arial Black", system-ui, sans-serif;
+    --f-text: "Albert Sans", system-ui, sans-serif;
+    --sc-font-display: var(--f-display);
+    --sc-font-text: var(--f-text);
+    --t-s: 0.8125rem;
+    --t-b: 1rem;
+    --t-l: 1.125rem;
+  }
+  :root[lang="ar"] {
+    --f-display: "Almarai", "Segoe UI", system-ui, sans-serif;
+    --f-text: "Almarai", "Segoe UI", system-ui, sans-serif;
+    --t-s: 0.875rem;
+    --t-b: 1.0625rem;
+    --t-l: 1.1875rem;
+  }
+  html { background: var(--paper); }
+  body { font-family: var(--f-text); font-size: var(--t-b); line-height: 1.6; color: var(--sc-ink); background: var(--paper); }
+  :root[lang="ar"] body { line-height: 1.85; }
+  :focus-visible { outline: 3px solid var(--ring); outline-offset: 3px; border-radius: 4px; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  p, h1, h2, h3, figure, blockquote, ul, dl, dd { margin: 0; }
+  ul { padding: 0; list-style: none; }
+
+  /* grounds: opaque, hard cuts. Ink and soft ink are restated per ground. */
+  .g-paper { background: var(--paper); color: var(--sc-ink); }
+  .g-cream { background: var(--cream); color: var(--sc-ink); --sc-ink-soft: #5b554e; }
+  .g-ink { background: #23211f; color: #fffaf0; --sc-ink: #fffaf0; --sc-ink-soft: #d9d0bf; --ring: #f9b44f; }
+  .g-sun { background: var(--sc-accent); color: #23211f; --sc-ink: #23211f; --sc-ink-soft: #3d3833; }
+
+  /* display type: tight tracking, never letter-spaced in Arabic */
+  .disp { font-family: var(--f-display); font-weight: 400; letter-spacing: -0.03em; font-kerning: normal; text-transform: uppercase; }
+  :root[lang="ar"] .disp { font-weight: 800; letter-spacing: 0; text-transform: none; }
+
+  /* plain underlined link: the only kind of call to action on the page */
+  .uline {
+    display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 0.25rem; margin-inline-start: -0.25rem;
+    font: 600 var(--t-b)/1.2 var(--f-text); color: inherit; background: none; border: 0; cursor: pointer;
+    text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.28em;
+    transition: background-color 140ms var(--sc-ease-out), color 140ms var(--sc-ease-out), transform 120ms var(--sc-ease-out);
+  }
+  .uline:active { transform: translateY(1px); }
+  @media (hover: hover) and (pointer: fine) {
+    .uline:hover { background: #23211f; color: #fffaf0; text-decoration-color: transparent; }
+    .g-sun .uline:hover { background: #23211f; color: #f9b44f; }
+  }
+
+  /* the one small chrome item: language switch. Paper chip so it reads on every ground. */
+  .langchip {
+    position: fixed; z-index: 50; top: 0.75rem; inset-inline-end: 0.75rem;
+    display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1rem;
+    background: var(--paper); color: #23211f; border: 1px solid #23211f; border-radius: 6px;
+    font: 600 var(--t-s)/1 var(--f-text); text-decoration: none;
+    transition: background-color 140ms var(--sc-ease-out), color 140ms var(--sc-ease-out), transform 120ms var(--sc-ease-out);
+  }
+  .langchip:active { transform: translateY(1px); }
+  .langchip:focus-visible { outline-color: #23211f; box-shadow: 0 0 0 6px var(--sc-accent); }
+  @media (hover: hover) and (pointer: fine) { .langchip:hover { background: #23211f; color: #fffaf0; } }
+
+  /* ------------------------------------------------ 1. hero: SMALL SPARKS */
+  .hero { display: grid; grid-template-rows: auto 1fr auto; padding: var(--pad); gap: var(--sc-4); background: var(--paper); }
+  .mark { font: 400 clamp(1.75rem, 5.2vw, 5rem)/1 var(--f-display); letter-spacing: -0.03em; min-height: 2.75rem; padding-inline-end: 6rem; }
+  :root[lang="ar"] .mark { font-weight: 800; letter-spacing: 0; line-height: 1.3; }
+  .hero-h { align-self: center; font-size: 1rem; line-height: 1; }
+  .fit-line {
+    display: inline-block; white-space: nowrap; line-height: 0.9; padding-block: 0.04em;
+    transform: scale(calc(1 + var(--sc-p, 0) * 1.25)); transform-origin: 0% 55%;
+  }
+  :root[lang="ar"] .fit-line { line-height: 1.25; transform-origin: 100% 55%; }
+  .fit-line .w { display: inline; }
+  .hero-tail { display: block; margin-top: var(--sc-4); font: 500 var(--t-l)/1.4 var(--f-text); text-transform: none; letter-spacing: 0; }
+  .hero-foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sc-2) var(--sc-6); }
+  .note { font-size: var(--t-s); line-height: 1.5; color: var(--sc-ink-soft); max-width: 46ch; }
+
+  /* ------------------------------------------------ 2. three ways: 16px */
+  .a2 { min-height: 80vh; min-height: 80svh; display: grid; align-content: center; padding: var(--sc-9) var(--pad); }
+  .a2-in { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--sc-5); row-gap: var(--sc-7); }
+  .a2-head { grid-column: 1 / span 4; align-self: start; display: grid; gap: var(--sc-3); }
+  .a2-head h2 { font: 600 var(--t-l)/1.35 var(--f-text); text-wrap: balance; }
+  .a2-head p { color: var(--sc-ink-soft); max-width: 36ch; text-wrap: pretty; }
+  .acts { grid-column: 6 / span 7; display: grid; gap: var(--sc-7); }
+  .acts li { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); column-gap: var(--sc-5); padding-top: var(--sc-4); border-top: 1px solid var(--line); }
+  .acts .tm { font-size: var(--t-s); color: var(--sc-ink-soft); font-variant-numeric: tabular-nums; padding-top: 0.2em; }
+  .acts h3 { font: 600 var(--t-b)/1.4 var(--f-text); }
+  .acts p { color: var(--sc-ink-soft); margin-top: var(--sc-2); max-width: 52ch; text-wrap: pretty; }
+
+  /* ------------------------------------------------ 3. YES + stories */
+  .a3 { display: grid; grid-template-rows: auto 1fr auto; padding: calc(var(--pad) + 0.5rem) var(--pad) var(--pad); gap: var(--sc-4); background: var(--cream); }
+  .a3-h { font: 600 var(--t-b)/1.35 var(--f-text); max-width: 30ch; padding-inline-end: 6rem; }
+  .yes-wrap { align-self: center; overflow: visible; }
+  .yes {
+    display: inline-block; white-space: nowrap; line-height: 0.84; padding-block: 0.1em 0.06em;
+    --w: clamp(0, calc((var(--sc-p, 0) - 0.02) / 0.26), 1);
+    clip-path: inset(0 calc((1 - var(--w)) * 100%) 0 0);
+  }
+  :root[lang="ar"] .yes { line-height: 1.3; clip-path: inset(0 0 0 calc((1 - var(--w)) * 100%)); }
+  .quotes { display: grid; grid-template-columns: 1.1fr 1fr 1.3fr; gap: var(--sc-6); align-items: start; }
+  .q:nth-child(2) { margin-top: var(--sc-5); }
+  .q:nth-child(3) { margin-top: var(--sc-2); }
+  .q blockquote { font-size: var(--t-b); line-height: 1.5; text-wrap: pretty; }
+  :root[lang="ar"] .q blockquote { line-height: 1.75; }
+  .q figcaption { margin-top: var(--sc-3); font-size: var(--t-s); line-height: 1.45; color: var(--sc-ink-soft); }
+  .q figcaption b { display: block; color: var(--sc-ink); font-weight: 600; }
+
+  /* ------------------------------------------------ 4. the quiet quote */
+  .a4 { min-height: 70vh; min-height: 70svh; display: grid; align-content: center; padding: var(--sc-9) var(--pad); }
+  .a4-in { display: grid; gap: var(--sc-5); max-width: 40ch; margin-inline-start: clamp(0rem, 22vw, 24rem); }
+  .a4 h2 { font: 600 var(--t-b)/1.35 var(--f-text); color: var(--sc-ink-soft); }
+  .a4 blockquote { font-size: var(--t-l); line-height: 1.55; text-wrap: pretty; }
+  :root[lang="ar"] .a4 blockquote { line-height: 1.8; }
+  .a4 figcaption { font-size: var(--t-s); color: var(--sc-ink-soft); margin-top: var(--sc-3); }
+
+  /* ------------------------------------------------ 5. the peak: dots */
+  .a5 { display: grid; grid-template-rows: auto 1fr auto; padding: calc(var(--pad) + 0.5rem) var(--pad) var(--pad); gap: var(--sc-4); background: #23211f; color: #fffaf0; }
+  #dots { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  .a5 > *:not(canvas) { position: relative; z-index: 1; }
+  .a5-top { display: flex; flex-wrap: wrap; gap: var(--sc-1) var(--sc-6); font-size: var(--t-s); color: var(--sc-ink-soft); padding-inline-end: 6rem; }
+  .a5-top .cnt { font-variant-numeric: tabular-nums; }
+  .peak { align-self: center; display: grid; justify-items: start; gap: var(--sc-3); }
+  .peak-n { display: inline-block; white-space: nowrap; font: 400 4rem/1 var(--f-display); letter-spacing: -0.03em; padding-block: 0.06em; }
+  :root[lang="ar"] .peak-n { font-weight: 800; letter-spacing: 0; }
+  .dots-on .peak-n { color: transparent; }
+  .peak-label { font: 600 var(--t-b)/1.3 var(--f-text); color: #fffaf0; }
+  .a5-bot { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr); gap: var(--sc-6); align-items: end; }
+  .a5-bot .lede { max-width: 44ch; color: var(--sc-ink-soft); text-wrap: pretty; }
+  .facts { display: grid; grid-template-columns: repeat(3, auto); gap: var(--sc-5); justify-content: start; }
+  .facts div { display: grid; gap: var(--sc-1); }
+  .facts dt { font-size: var(--t-s); line-height: 1.35; color: var(--sc-ink-soft); max-width: 18ch; order: 2; }
+  .facts dd { font: 400 var(--t-l)/1.1 var(--f-display); color: #f9b44f; font-variant-numeric: tabular-nums; }
+  :root[lang="ar"] .facts dd { font-weight: 800; }
+
+  /* ------------------------------------------------ 6. the close: smallest type */
+  .a6 { min-height: 90vh; min-height: 90svh; display: grid; align-content: end; padding: var(--sc-9) var(--pad) var(--sc-6); }
+  .a6-in { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--sc-7) var(--sc-8); align-items: start; }
+  .a6-head { display: grid; gap: var(--sc-3); }
+  .a6-head h2 { font: 700 var(--t-b)/1.3 var(--f-text); }
+  .a6-head p { font-size: var(--t-s); line-height: 1.55; max-width: 38ch; }
+  .form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sc-4) var(--sc-5); }
+  .field { display: grid; gap: 0.15rem; font-size: var(--t-s); }
+  .field.wide { grid-column: 1 / -1; }
+  .field label { font-weight: 600; }
+  .field :is(input, select, textarea) {
+    width: 100%; min-height: 2.75rem; padding: 0.5rem 0; background: transparent; color: inherit;
+    border: 0; border-bottom: 2px solid #23211f; border-radius: 0; font: 400 1rem/1.4 var(--f-text);
+  }
+  :root[lang="ar"] .field :is(input, select, textarea) { font-size: 1.0625rem; }
+  .field textarea { min-height: 5.5rem; resize: vertical; }
+  .field select { appearance: none; background-image: none; }
+  .field input[type="email"] { text-align: start; }
+  :root[lang="ar"] .field input[type="email"] { text-align: right; }
+  .field :is(input, select, textarea):focus-visible { outline: 3px solid #23211f; outline-offset: 2px; border-radius: 2px; }
+  .field .err { color: #23211f; font-weight: 600; }
+  .form-act { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--sc-3) var(--sc-6); }
+  .reply { min-height: 1.5em; font-size: var(--t-s); font-weight: 600; }
+  .foot { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--sc-1) var(--sc-6); align-items: center; font-size: var(--t-s); padding-top: var(--sc-5); border-top: 1px solid #23211f; }
+  .foot a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+
+  /* ------------------------------------------------ phones: composed separately */
+  @media (max-width: 860px) {
+    .langchip { position: absolute; }
+    .hero { gap: var(--sc-3); padding-bottom: var(--sc-6); }
+    .fit-line { display: block; white-space: normal; transform: scale(calc(1 + var(--sc-p, 0) * 0.55)); transform-origin: 0% 45%; line-height: 1; }
+    :root[lang="ar"] .fit-line { transform-origin: 100% 45%; line-height: 1.3; }
+    .fit-line .w { display: block; white-space: nowrap; width: max-content; line-height: 0.92; }
+    :root[lang="ar"] .fit-line .w { line-height: 1.3; }
+    .hero-tail { margin-top: var(--sc-5); font-size: var(--t-b); }
+    .mark { padding-inline-end: 5.5rem; }
+    .a2 { min-height: 0; padding-block: var(--sc-8); }
+    .a2-in { grid-template-columns: 1fr; row-gap: var(--sc-6); }
+    .a2-head, .acts { grid-column: 1; }
+    .acts { gap: var(--sc-5); }
+    .acts li { grid-template-columns: 1fr; row-gap: var(--sc-1); }
+    .a3-h { padding-inline-end: 5rem; }
+    .quotes { display: grid; grid-template-columns: 1fr; gap: 0; }
+    .q { grid-area: 1 / 1; margin-top: 0 !important; }
+    .a4 { min-height: 0; padding-block: var(--sc-9); }
+    .a4-in { margin-inline-start: 0; }
+    .a5 { gap: var(--sc-3); }
+    .a5-bot { grid-template-columns: 1fr; gap: var(--sc-4); }
+    .a5-bot .lede { font-size: var(--t-s); line-height: 1.5; }
+    .facts { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sc-3); }
+    .facts dt { font-size: 0.75rem; max-width: none; }
+    .facts dd { font-size: var(--t-b); }
+    .a6 { min-height: 0; padding-top: var(--sc-9); }
+    .a6-in { grid-template-columns: 1fr; gap: var(--sc-6); }
+    .form { grid-template-columns: 1fr; }
+  }
+  @media (max-height: 640px) and (min-width: 861px) { .a5-bot .lede { display: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .fit-line { transform: none; }
+    .yes { clip-path: none !important; }
+    .uline, .langchip { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<a class="langchip" href="ar/index.html" hreflang="ar" lang="ar" rel="alternate">العربية</a>
+
+<main id="top">
+
+  <!-- 1 · WORD. Small sparks, one line fitted to the page. -->
+  <section id="hero" class="g-paper" data-sc-act="pin" data-sc-span="1.3" aria-labelledby="h1">
+    <div data-sc-stage class="hero" data-fit-box data-sc-verify-state="">
+      <p class="mark">spark</p>
+      <h1 id="h1" class="hero-h disp"><span class="fit-line"><span class="w">Small</span> <span class="w">sparks</span></span><span class="hero-tail">make a wider light.</span></h1>
+      <div class="hero-foot">
+        <a class="uline" href="#join">Join the spark</a>
+        <p class="note">spark is a sample brand from Landscape Lab. Its figures and stories are sample content.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · PARAGRAPH. Three small asks, nothing else. -->
+  <section id="actions" data-sc-act="flow" class="a2 g-paper" aria-labelledby="actionsH">
+    <div class="a2-in">
+      <div class="a2-head" data-sc-in data-sc-stagger="70">
+        <h2 id="actionsH">Three ways to help this week</h2>
+        <p>None of them needs experience. Pick the one that fits your evening and we will handle the rest.</p>
+      </div>
+      <ul class="acts" data-sc-in data-sc-stagger="90">
+        <li><span class="tm">45 minutes</span><div><h3>Cook a double batch for a neighbour</h3><p>We match you with a household on your street that has a new baby, a hospital stay or a hard month.</p></div></li>
+        <li><span class="tm">2 hours</span><div><h3>Staff a Saturday repair table</h3><p>Bring a screwdriver and patience. People bring toasters, bikes and school bags, and leave with them fixed.</p></div></li>
+        <li><span class="tm">10 minutes</span><div><h3>Call five voters before the council vote</h3><p>We give you a short script and a list from your own district. Most calls take under three minutes.</p></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 3 · WORD. Yes, wiped in across the letterforms; the stories take their turn beneath. -->
+  <section id="stories" class="g-cream" data-sc-act="pin" data-sc-span="1.4" aria-labelledby="storiesH">
+    <div data-sc-stage class="a3" data-fit-box data-sc-verify-state="">
+      <h2 id="storiesH" class="a3-h" data-sc-cue="0 1 0 0">What happened after someone said yes</h2>
+      <div class="yes-wrap" aria-hidden="true"><span class="yes disp">Yes</span></div>
+      <div class="quotes">
+        <figure class="q" data-cue-d="0.34 1 0.12 0" data-cue-m="0.30 0.54 0.12 0.1"><blockquote><p>I signed up to carry chairs at a food night. Eight months later I run the Thursday kitchen for sixty families.</p></blockquote><figcaption><b>Dalia Mensah</b>Volunteer, Eastfield Road kitchen</figcaption></figure>
+        <figure class="q" data-cue-d="0.54 1 0.12 0" data-cue-m="0.50 0.78 0.1 0.1"><blockquote><p>The landlord ignored three letters from me. Then forty of us stood in the lobby with the repair list, and the boiler was fixed in nine days.</p></blockquote><figcaption><b>Ibrahim Salvesen</b>Tenant, Barley Court</figcaption></figure>
+        <figure class="q" data-cue-d="0.74 1 0.12 0" data-cue-m="0.74 1 0.1 0"><blockquote><p>My daughter and I swept the whole canal path on a Sunday. Now she knows every neighbour who walks a dog there.</p></blockquote><figcaption><b>Priya Nandakumar</b>Neighbour, Canal Quarter</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · PARAGRAPH. The quiet before the peak: one voice, one paragraph, a lot of paper. -->
+  <section id="movement" data-sc-act="flow" class="a4 g-paper" aria-labelledby="moveH">
+    <div class="a4-in" data-sc-in data-sc-stagger="120">
+      <h2 id="moveH">The people already in motion</h2>
+      <figure><blockquote><p>Nobody asked me to change the city. They asked me to bring a ladder on Saturday. That was the easiest yes of my life.</p></blockquote><figcaption>Tomasz Brandt, volunteer team lead</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- 5 · WORD, the peak. 48,000 dots gather into the number. -->
+  <section id="peak" class="g-ink" data-sc-act="pin" data-sc-span="2.9" aria-labelledby="peakH">
+    <div data-sc-stage class="a5" data-fit-box data-sc-verify-state="">
+      <canvas id="dots" aria-hidden="true"></canvas>
+      <div class="a5-top">
+        <p data-sc-cue="0 1 0 0">One dot is one person.</p>
+        <p class="cnt" data-sc-cue="0 1 0 0" aria-hidden="true"><bdi dir="ltr" id="gathered">0</bdi> gathered</p>
+      </div>
+      <h2 id="peakH" class="peak">
+        <span class="peak-n"><bdi dir="ltr">48,000</bdi></span>
+        <span class="peak-label" data-sc-cue="0.8 1 0.08 0">People in the movement</span>
+      </h2>
+      <div class="a5-bot">
+        <p class="lede" data-sc-cue="0.84 1 0.08 0">A community movement of 48,000 people turning small local actions into something the whole city can see.</p>
+        <dl class="facts" data-sc-cue="0.88 1 0.08 0">
+          <div><dt>Neighbourhood chapters</dt><dd><bdi dir="ltr">212</bdi></dd></div>
+          <div><dt>Volunteer hours last year</dt><dd><bdi dir="ltr">390,000</bdi></dd></div>
+          <div><dt>Share of income spent on programmes</dt><dd><bdi dir="ltr">91%</bdi></dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · PARAGRAPH. The close: the smallest type on the page, a plain underlined link. -->
+  <section id="join" data-sc-act="flow" class="a6 g-sun" aria-labelledby="joinH">
+    <div class="a6-in">
+      <div class="a6-head">
+        <h2 id="joinH">Say yes to one small thing.</h2>
+        <p>Tell us where you live and how you would like to help. An organiser from your neighbourhood will call within two days.</p>
+      </div>
+      <form id="joinForm" class="form" novalidate data-ok="Thank you. Someone from your neighbourhood chapter will call you within two days. This is a sample brand: nothing was sent." data-err-name="Please add your name." data-err-email="Please add a valid email address.">
+        <div class="field"><label for="f-name">Your name</label><input id="f-name" name="name" type="text" autocomplete="name" required></div>
+        <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" dir="ltr" required></div>
+        <div class="field"><label for="f-neighbourhood">Your neighbourhood</label><input id="f-neighbourhood" name="neighbourhood" type="text" autocomplete="off"></div>
+        <div class="field"><label for="f-help">How you want to help</label><select id="f-help" name="help"><option>Cook or deliver meals</option><option>Fix and repair</option><option>Make calls and knock on doors</option><option>Give a few hours a month</option></select></div>
+        <div class="field wide"><label for="f-why">Anything we should know about you?</label><textarea id="f-why" name="why" rows="3"></textarea></div>
+        <div class="form-act">
+          <button class="uline" type="submit">Join the spark</button>
+          <p id="reply" class="reply" role="status"></p>
+        </div>
+      </form>
+      <div class="foot">
+        <span>spark is a sample brand from Landscape Lab. Its figures and stories are sample content.</span>
+        <a class="uline" href="ar/index.html" hreflang="ar" lang="ar" rel="alternate">العربية</a>
+        <a class="uline" href="/spark">Back to the spark page</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* Phones get their own cue windows: the three stories take turns in one slot
+   instead of standing in three columns. Set before the engine reads them. */
+(function () {
+  var phone = matchMedia("(max-width: 860px)").matches;
+  var nodes = document.querySelectorAll("[data-cue-d]");
+  for (var i = 0; i < nodes.length; i++) {
+    var v = phone ? nodes[i].getAttribute("data-cue-m") : nodes[i].getAttribute("data-cue-d");
+    nodes[i].setAttribute("data-sc-cue", v);
+  }
+})();
+</script>
+<script src="../_engine/scrollcraft.js"></script>
+<script>ScrollCraft.mount(document.body);</script>
+<script>
+/* spark: a typographic poster. Everything here is either a figure from the
+   sample content (48,000 people, 212 chapters, ...) or computed from one. The
+   48,000 specks are exactly 48,000: one dot per person. */
+(function () {
+  "use strict";
+  var doc = document.documentElement;
+  var rtl = doc.dir === "rtl";
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var phoneMQ = matchMedia("(max-width: 860px)");
+  var N = 48000;
+  var $ = function (id) { return document.getElementById(id); };
+  function clamp(x, a, b) { return Math.min(b, Math.max(a, x)); }
+
+  /* ---- fit a display word to the width of its stage ---------------------- */
+  function boxWidth(el) {
+    var box = el.closest("[data-fit-box]") || el.parentElement;
+    var cs = getComputedStyle(box);
+    return box.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  }
+  function fitOne(el, frac, capFrac) {
+    el.style.fontSize = "200px";
+    var w = el.offsetWidth || 1;
+    var size = 200 * (boxWidth(el) * frac) / w;
+    if (capFrac) size = Math.min(size, capFrac * innerHeight);
+    el.style.fontSize = size.toFixed(2) + "px";
+  }
+  function fitAll() {
+    var phone = phoneMQ.matches;
+    var line = document.querySelector(".fit-line");
+    var words = line ? line.querySelectorAll(".w") : [];
+    if (line) {
+      if (phone) {
+        line.style.fontSize = "";
+        for (var i = 0; i < words.length; i++) fitOne(words[i], 0.985, 0.2);
+      } else {
+        for (var j = 0; j < words.length; j++) words[j].style.fontSize = "";
+        fitOne(line, 0.985, 0.34);
+      }
+    }
+    var yes = document.querySelector(".yes");
+    if (yes) fitOne(yes, 0.985, phone ? 0.2 : 0.66);
+    var num = document.querySelector(".peak-n");
+    if (num) fitOne(num, 0.985, 0.5);
+  }
+
+  /* ---- scroll progress of a pinned act, from its own box ----------------- */
+  function progress(act) {
+    var r = act.getBoundingClientRect();
+    var travel = act.offsetHeight - innerHeight;
+    return travel > 0 ? clamp(-r.top / travel, 0, 1) : 0;
+  }
+
+  /* ---- the signature move: 48,000 dots gather into the number ------------ */
+  var act5 = $("peak"), stage5 = act5 && act5.querySelector("[data-sc-stage]");
+  var cv = $("dots"), ctx = cv && cv.getContext("2d");
+  var numEl = document.querySelector(".peak-n");
+  var cntEl = $("gathered");
+  var sx, sy, tx, ty, dl, sw;
+  var yTop = 0, yBot = 0, dotSize = 2, W = 0, H = 0, R = 1, built = false, lastKey = "";
+  var gatheredNow = 0;
+
+  function rng(seed) {
+    return function () {
+      seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function build() {
+    if (!ctx || !stage5) return;
+    var sr = stage5.getBoundingClientRect();
+    W = Math.max(1, Math.round(sr.width)); H = Math.max(1, Math.round(sr.height));
+    R = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.round(W * R); cv.height = Math.round(H * R);
+    // mask: the number drawn in its real face at its fitted size
+    var nr = numEl.getBoundingClientRect();
+    var cs = getComputedStyle(numEl);
+    var off = document.createElement("canvas"); off.width = W; off.height = H;
+    var o = off.getContext("2d", { willReadFrequently: true });
+    o.font = cs.fontWeight + " " + cs.fontSize + " " + cs.fontFamily;
+    o.textBaseline = "alphabetic"; o.fillStyle = "#000";
+    var txt = numEl.textContent.trim();
+    var m = o.measureText(txt);
+    var asc = m.actualBoundingBoxAscent, desc = m.actualBoundingBoxDescent;
+    var left = nr.left - sr.left + (nr.width - m.width) / 2;
+    var base = nr.top - sr.top + nr.height / 2 + (asc - desc) / 2;
+    o.fillText(txt, left, base);
+    var data = o.getImageData(0, 0, W, H).data;
+    var pix = [];
+    for (var y = 0; y < H; y++) for (var x = 0; x < W; x++) if (data[(y * W + x) * 4 + 3] > 127) pix.push(y * W + x);
+    var M = pix.length, rnd = rng(48000);
+    var topEl = stage5.querySelector(".a5-top"), botEl = stage5.querySelector(".a5-bot");
+    // measure the band with the widest count showing, so wrapping can never move it later
+    var keep = cntEl ? cntEl.textContent : "";
+    if (cntEl) cntEl.textContent = fmt(N);
+    yTop = topEl.getBoundingClientRect().bottom - sr.top + 16;
+    if (cntEl) cntEl.textContent = keep;
+    yBot = Math.max(yTop + 40, botEl.getBoundingClientRect().top - sr.top - 10);
+    sx = new Float32Array(N); sy = new Float32Array(N); tx = new Float32Array(N); ty = new Float32Array(N);
+    dl = new Float32Array(N); sw = new Float32Array(N);
+    // partial shuffle: N distinct mask pixels when there are enough, repeats with jitter otherwise
+    var idx = new Int32Array(M); for (var k = 0; k < M; k++) idx[k] = pix[k];
+    var take = Math.min(N, M);
+    for (var a = 0; a < take; a++) { var b = a + Math.floor(rnd() * (M - a)); var t = idx[a]; idx[a] = idx[b]; idx[b] = t; }
+    for (var i = 0; i < N; i++) {
+      var p = M ? idx[i < take ? i : Math.floor(rnd() * M)] : 0;
+      tx[i] = (p % W) + rnd(); ty[i] = Math.floor(p / W) + rnd();
+      // scatter evenly across the free field between the two text bands
+      sx[i] = rnd() * W; sy[i] = yTop + rnd() * (yBot - yTop);
+      var xn = tx[i] / W; if (rtl) xn = 1 - xn;
+      dl[i] = rnd() * 0.45 + xn * 0.15;
+      sw[i] = (rnd() - 0.5) * 0.5;
+    }
+    dotSize = clamp(Math.sqrt(2.3 * Math.max(M, 1) / N), 1.2, 4);
+    built = true; lastKey = "";
+  }
+
+  function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+
+  function drawDots(p) {
+    var q = clamp((p - 0.04) / 0.74, 0, 1);
+    var fade = reduce ? 0.3 + 0.7 * clamp((p - 0.04) / 0.3, 0, 1) : 1;
+    var key = q.toFixed(4) + "|" + fade.toFixed(3);
+    if (key === lastKey) return;
+    lastKey = key;
+    ctx.setTransform(R, 0, 0, R, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.globalAlpha = fade;
+    ctx.fillStyle = "#f9b44f";
+    var s = dotSize, got = 0, i, t, e, x, y, k;
+    for (i = 0; i < N; i++) {
+      if (reduce) { x = tx[i]; y = ty[i]; got++; }
+      else {
+        t = clamp((q - dl[i]) / 0.4, 0, 1);
+        if (t >= 1) { x = tx[i]; y = ty[i]; got++; }
+        else {
+          e = ease(t); k = Math.sin(Math.PI * t) * sw[i];
+          x = sx[i] + (tx[i] - sx[i]) * e - (ty[i] - sy[i]) * k;
+          y = sy[i] + (ty[i] - sy[i]) * e; // the curve bends sideways only, so no dot ever crosses the text bands
+        }
+      }
+      ctx.fillRect(Math.round(x * R) / R, Math.round(y * R) / R, s, s);
+    }
+    ctx.globalAlpha = 1;
+    gatheredNow = reduce ? Math.round(N * fade) : got;
+  }
+
+  /* ---- one frame of state per rAF; only touches the DOM when it changed --- */
+  var hero = $("hero"), a3 = $("stories");
+  var heroStage = hero && hero.querySelector("[data-sc-stage]");
+  var a3Stage = a3 && a3.querySelector("[data-sc-stage]");
+  var fmt = function (n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); };
+  var cache = {};
+  function setAttr(el, k, v) { if (el && cache[k] !== v) { cache[k] = v; el.setAttribute("data-sc-verify-state", v); } }
+
+  function tick() {
+    if (hero) {
+      var ph = progress(hero);
+      setAttr(heroStage, "hero", reduce ? "still" : "scale" + (1 + ph * (phoneMQ.matches ? 0.55 : 1.25)).toFixed(2));
+    }
+    if (a3) {
+      var p3 = progress(a3);
+      var wipe = clamp((p3 - 0.02) / 0.26, 0, 1);
+      var qs = [p3 >= 0.38, p3 >= 0.58, p3 >= 0.78].join("");
+      setAttr(a3Stage, "a3", "wipe" + wipe.toFixed(2) + "|" + qs);
+    }
+    if (act5 && built) {
+      var p5 = progress(act5);
+      drawDots(p5);
+      var shown = fmt(gatheredNow);
+      if (cache.cnt !== shown && cntEl) { cache.cnt = shown; cntEl.textContent = shown; }
+      var done = gatheredNow >= N;
+      if (done) stage5.setAttribute("data-sc-verify-hold", "true"); else stage5.removeAttribute("data-sc-verify-hold");
+      setAttr(stage5, "a5", "dots" + Math.round(gatheredNow / N * 100));
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function init() {
+    fitAll();
+    if (ctx && numEl) { doc.classList.add("dots-on"); build(); }
+    requestAnimationFrame(tick);
+  }
+  var rt;
+  window.addEventListener("resize", function () {
+    clearTimeout(rt);
+    rt = setTimeout(function () { fitAll(); if (ctx && numEl) build(); }, 120);
+  });
+  var fontsReady = document.fonts && document.fonts.load
+    ? Promise.all([
+        document.fonts.load("400 100px " + getComputedStyle(doc).getPropertyValue("--f-display")),
+        document.fonts.load("800 100px " + getComputedStyle(doc).getPropertyValue("--f-display")),
+        document.fonts.ready
+      ]).catch(function () {})
+    : Promise.resolve();
+  fontsReady.then(init);
+
+  /* ---- the close: a real form, nothing leaves the browser ---------------- */
+  var form = $("joinForm");
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var reply = $("reply");
+      var name = form.elements.name, email = form.elements.email;
+      var okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
+      if (!name.value.trim()) { reply.textContent = form.getAttribute("data-err-name"); name.focus(); return; }
+      if (!okEmail) { reply.textContent = form.getAttribute("data-err-email"); email.focus(); return; }
+      reply.textContent = form.getAttribute("data-ok");
+      form.reset();
+    });
+  }
+})();
+</script>
+</body>
+</html>

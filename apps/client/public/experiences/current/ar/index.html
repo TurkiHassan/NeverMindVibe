@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>تيار · اجعل للتيار أثرًا (علامة تجريبية)</title>
+<meta name="description" content="طاقة نظيفة على نطاق الشبكة: 3.1 جيجاواط تنتقل من الوقود الأحفوري إلى مصادر نظيفة، تحت المراقبة على مدار الساعة. علامة تجريبية من Landscape Lab.">
+<link rel="alternate" hreflang="ar" href="index.html">
+<link rel="alternate" hreflang="en" href="../index.html">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%2310150e'/><rect x='5' y='13' width='22' height='6' fill='%23c4ff3d'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Chivo:wght@400;500;600&family=Changa:wght@400;500;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_engine/scrollcraft.css">
+<style>
+  :root {
+    --sc-canvas: #10150e; --sc-surface: #182012; --sc-ink: #eff9e7; --sc-ink-soft: #a9b99a;
+    --sc-accent: #c4ff3d; --sc-accent-ink: #10150e;
+    --black: #10150e; --volt: #c4ff3d; --pale: #eff9e7; --plan: #7d9a5a; --line: #33461e;
+    --soft: #a9b99a; --ring: #c4ff3d;
+    --pad: clamp(1.25rem, 3.4vw, 3rem);
+    --strip: clamp(4rem, 9.5vw, 9.5rem);
+    --f-display: "Big Shoulders Display", "Arial Narrow", system-ui, sans-serif;
+    --f-text: "Chivo", system-ui, sans-serif;
+    --sc-font-display: var(--f-display); --sc-font-text: var(--f-text);
+    --t-s: 0.8125rem; --t-b: 1rem; --t-l: 1.125rem;
+    --lh-d: 0.95; --gws: 2.3;
+  }
+  :root[lang="ar"] {
+    --f-display: "Changa", "Segoe UI", system-ui, sans-serif;
+    --f-text: "Changa", "Segoe UI", system-ui, sans-serif;
+    --t-s: 0.875rem; --t-b: 1.0625rem; --t-l: 1.1875rem;
+    --lh-d: 1.4; --gws: 0.78;
+  }
+  html { background: var(--black); }
+  body { font-family: var(--f-text); font-size: var(--t-b); line-height: 1.6; color: var(--sc-ink); background: var(--black); }
+  :root[lang="ar"] body { line-height: 1.85; }
+  :focus-visible { outline: 3px solid var(--ring); outline-offset: 3px; border-radius: 3px; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  p, h1, h2, h3, figure, blockquote, ul, ol, dl, dd { margin: 0; }
+  ul, ol { padding: 0; list-style: none; }
+
+  .g-black { background: var(--black); color: #eff9e7; --sc-ink: #eff9e7; --soft: #a9b99a; --sc-ink-soft: #a9b99a; --ring: #c4ff3d; }
+  .g-volt { background: var(--volt); color: #10150e; --sc-ink: #10150e; --soft: #2d3a1a; --sc-ink-soft: #2d3a1a; --ring: #10150e; }
+  .g-pale { background: var(--pale); color: #10150e; --sc-ink: #10150e; --soft: #3f4d33; --sc-ink-soft: #3f4d33; --ring: #10150e; }
+
+  .disp { font-family: var(--f-display); font-weight: 800; letter-spacing: -0.01em; text-transform: uppercase; font-kerning: normal; }
+  :root[lang="ar"] .disp { letter-spacing: 0; text-transform: none; }
+
+  .uline {
+    display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 0.25rem; margin-inline-start: -0.25rem;
+    font: 600 var(--t-b)/1.2 var(--f-text); color: inherit; background: none; border: 0; cursor: pointer;
+    text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.28em;
+    transition: background-color 140ms var(--sc-ease-out), color 140ms var(--sc-ease-out), transform 120ms var(--sc-ease-out);
+  }
+  .uline:active { transform: translateY(1px); }
+  @media (hover: hover) and (pointer: fine) {
+    .g-black .uline:hover { background: #c4ff3d; color: #10150e; text-decoration-color: transparent; }
+    .g-pale .uline:hover { background: #10150e; color: #eff9e7; text-decoration-color: transparent; }
+  }
+
+  .langchip {
+    position: fixed; z-index: 60; top: 0.75rem; inset-inline-end: 0.75rem;
+    display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1rem;
+    background: #eff9e7; color: #10150e; border: 1px solid #10150e; border-radius: 4px;
+    font: 600 var(--t-s)/1 var(--f-text); text-decoration: none;
+    transition: background-color 140ms var(--sc-ease-out), color 140ms var(--sc-ease-out);
+  }
+  .langchip:focus-visible { outline-color: #c4ff3d; box-shadow: 0 0 0 2px #10150e; }
+  @media (hover: hover) and (pointer: fine) { .langchip:hover { background: #c4ff3d; } }
+
+  /* ---- the one chrome item: a unit readout riding the inline-start edge */
+  .gw {
+    position: fixed; z-index: 40; top: 0; bottom: 0; inset-inline-start: calc(var(--gwo, 1) * var(--strip) * -1);
+    width: var(--strip); display: flex; flex-direction: column; align-items: center; overflow: hidden;
+    border-inline-end: 1px solid currentColor; background: var(--black); color: #eff9e7; pointer-events: none;
+  }
+  .gw[data-ground="volt"] { background: var(--volt); color: #10150e; }
+  .gw[data-ground="pale"] { background: var(--pale); color: #10150e; }
+  .gw-n { margin-top: 3.4rem; font: 800 calc(var(--strip) * 0.4)/1 var(--f-display); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+  .gw-u {
+    flex: 1; display: grid; place-items: center; min-height: 0; font: 800 calc(var(--strip) * 0.95)/1 var(--f-display);
+    writing-mode: vertical-rl; transform: rotate(180deg) scale(1, var(--gws)); transform-origin: 50% 50%; color: var(--volt); letter-spacing: -0.01em;
+  }
+  :root[lang="ar"] .gw-u { font-size: calc(var(--strip) * 0.62); transform: none; }
+  .gw[data-ground="volt"] .gw-u, .gw[data-ground="pale"] .gw-u { color: #10150e; }
+
+  /* ---- 1 hero */
+  .hero { display: grid; grid-template-rows: auto 1fr auto; padding: var(--pad); gap: var(--pad); }
+  .mark { font: 800 clamp(1.5rem, 2.6vw, 2.5rem)/1 var(--f-display); text-transform: none; min-height: 2.75rem; padding-inline-end: 6rem; letter-spacing: 0; }
+  .fig { align-self: center; margin: 0; font-size: 40vw; line-height: 0.8; white-space: nowrap; display: inline-block; justify-self: start; transform-origin: 100% 50%; transform: scale(calc(1 - var(--hs, 0))); padding-block: 0.06em; color: var(--volt); }
+  :root[lang="ar"] .fig { line-height: 1.1; transform-origin: 0% 50%; }
+  .fig-u { display: inline-block; }
+  :root[lang="ar"] .fig-u { font-size: 0.42em; }
+  .hero-foot { display: grid; grid-template-columns: minmax(0, 1.4fr) auto minmax(0, 1fr); gap: var(--sc-3) var(--sc-7); align-items: end; }
+  .hero-foot .lede { font-size: var(--t-l); line-height: 1.45; max-width: 40ch; text-wrap: pretty; }
+  .note { font-size: var(--t-s); line-height: 1.5; color: var(--soft); max-width: 40ch; }
+
+  /* ---- 2 signals: loud ground, quiet type */
+  .a2 { min-height: 90vh; min-height: 90svh; display: grid; align-content: center; padding-block: var(--sc-9); padding-inline: calc(var(--strip) + var(--pad)) var(--pad); }
+  .a2-in { display: grid; gap: var(--sc-7); }
+  .a2-head { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: var(--sc-3) var(--sc-7); align-items: baseline; }
+  .a2-head h2 { font: 600 var(--t-l)/1.35 var(--f-text); text-wrap: balance; }
+  .a2-head p { max-width: 52ch; text-wrap: pretty; }
+  .sig li { display: grid; grid-template-columns: 9rem minmax(0, 5fr) minmax(0, 6fr); gap: var(--sc-1) var(--sc-7); padding-block: var(--sc-4); border-top: 2px solid currentColor; }
+  .sig .tm { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .sig h3 { font: 600 var(--t-b)/1.4 var(--f-text); }
+  .sig p { max-width: 54ch; text-wrap: pretty; }
+
+  /* ---- 3 the quiet */
+  .a3 { min-height: 85vh; min-height: 85svh; display: grid; align-content: center; padding-block: var(--sc-9); padding-inline: calc(var(--strip) + var(--pad)) var(--pad); }
+  .a3-in { display: grid; gap: var(--sc-6); margin-inline-start: clamp(0rem, 14vw, 16rem); max-width: 56ch; }
+  .a3 h2 { font: 600 var(--t-s)/1.4 var(--f-text); color: var(--soft); }
+  .a3 blockquote { font-size: var(--t-l); line-height: 1.55; text-wrap: pretty; }
+  :root[lang="ar"] .a3 blockquote { line-height: 1.85; }
+  .a3 figcaption { font-size: var(--t-s); color: var(--soft); margin-top: var(--sc-3); }
+  .facts { display: grid; grid-template-columns: repeat(4, auto); gap: var(--sc-5); justify-content: start; padding-top: var(--sc-5); border-top: 1px solid var(--line); }
+  .facts div { display: grid; gap: var(--sc-1); }
+  .facts dt { order: 2; font-size: var(--t-s); line-height: 1.35; color: var(--soft); max-width: 16ch; }
+  .facts dd { font: 800 var(--t-l)/1.1 var(--f-display); color: var(--volt); font-variant-numeric: tabular-nums; text-transform: none; }
+
+  /* ---- 4 the peak: names stretched to their megawatts */
+  .a4 { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr auto; padding-block: calc(var(--pad) + 2.5rem) var(--pad); padding-inline: calc(var(--strip) + var(--pad)) var(--pad); gap: var(--sc-4); }
+  .a4-top { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: var(--sc-2) var(--sc-7); align-items: baseline; padding-inline-end: 6rem; }
+  .a4-top h2 { font: 600 var(--t-l)/1.3 var(--f-text); text-wrap: balance; }
+  .a4-top p { font-size: var(--t-s); line-height: 1.5; color: var(--soft); max-width: 60ch; }
+  .bars { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: repeat(5, minmax(0, 1fr)); gap: var(--sc-2); min-height: 0; }
+  .row { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; min-height: 0; }
+  .bar { position: relative; display: flex; align-items: flex-end; min-height: 0; }
+  .word { position: relative; display: inline-block; white-space: nowrap; font: 800 60px/var(--lh-d) var(--f-display); text-transform: uppercase; letter-spacing: -0.005em; transform-origin: 0% 50%; will-change: transform; }
+  :root[lang="ar"] .word { text-transform: none; letter-spacing: 0; transform-origin: 100% 50%; }
+  .w-plan { color: var(--plan); }
+  .w-live { position: absolute; inset: 0; color: var(--volt); clip-path: inset(0 100% 0 0); }
+  :root[lang="ar"] .w-live { clip-path: inset(0 0 0 100%); }
+  .meta { display: flex; flex-wrap: wrap; gap: 0 var(--sc-4); font-size: var(--t-s); line-height: 1.4; padding-block-start: 0.25rem; }
+  .meta b { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .meta span { color: var(--soft); }
+  .sum { font-size: var(--t-s); line-height: 1.5; color: var(--soft); }
+  .sum bdi { color: #eff9e7; font-weight: 600; }
+  .bars.vert { grid-template-rows: none; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--sc-1); }
+  .bars.vert .row { grid-template-rows: minmax(0, 1fr) auto; }
+  .bars.vert .bar { display: block; }
+  .bars.vert .word { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+  .bars.vert .meta { display: grid; gap: 0; justify-items: center; text-align: center; font-size: 0.8125rem; }
+  .bars.vert .meta span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+
+  /* ---- 5 the close: pale, small, quiet */
+  .a5 { min-height: 100vh; min-height: 100svh; display: grid; align-content: end; padding-block: var(--sc-9) var(--sc-6); padding-inline: calc(var(--strip) + var(--pad)) var(--pad); }
+  .a5-in { display: grid; gap: var(--sc-6); max-width: 46rem; margin-inline-start: clamp(0rem, 8vw, 10rem); }
+  .a5-head { display: grid; gap: var(--sc-2); }
+  .a5-head h2 { font: 600 var(--t-b)/1.3 var(--f-text); }
+  .a5-head p { font-size: var(--t-s); line-height: 1.55; max-width: 44ch; color: var(--soft); }
+  .form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sc-4) var(--sc-5); }
+  .field { display: grid; gap: 0.15rem; font-size: var(--t-s); }
+  .field.wide { grid-column: 1 / -1; }
+  .field label { font-weight: 600; }
+  .field :is(input, select, textarea) { width: 100%; min-height: 2.75rem; padding: 0.5rem 0; background: transparent; color: inherit; border: 0; border-bottom: 2px solid #10150e; border-radius: 0; font: 400 1rem/1.4 var(--f-text); }
+  .field textarea { min-height: 5rem; resize: vertical; }
+  .field select { appearance: none; background-image: none; }
+  .field :is(input, select, textarea):focus-visible { outline: 3px solid #10150e; outline-offset: 2px; border-radius: 2px; }
+  :root[lang="ar"] .field input[type="email"] { text-align: right; }
+  .form-act { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--sc-3) var(--sc-6); }
+  .reply { min-height: 1.5em; font-size: var(--t-s); font-weight: 600; }
+  .foot { display: flex; flex-wrap: wrap; gap: var(--sc-1) var(--sc-6); align-items: center; font-size: var(--t-s); padding-top: var(--sc-4); border-top: 1px solid #10150e; }
+  .foot a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+
+  @media (max-width: 860px) {
+    :root { --strip: 3.25rem; --pad: 1.25rem; --gws: 1.6; }
+    :root[lang="ar"] { --gws: 0.8; }
+    .gw-n { margin-top: 3.4rem; font-size: 1.15rem; }
+    .gw-u { font-size: 2.6rem; }
+    :root[lang="ar"] .gw-u { font-size: 1.6rem; }
+    .langchip { position: absolute; }
+    .hero { gap: var(--sc-3); }
+    .fig { font-size: 40vw; white-space: normal; display: block; line-height: 0.82; }
+    :root[lang="ar"] .fig { line-height: 1.15; }
+    .fig-n, .fig-u { display: block; white-space: nowrap; width: max-content; }
+    :root[lang="ar"] .fig-u { font-size: 0.5em; }
+    .hero-foot { grid-template-columns: 1fr; gap: var(--sc-2); }
+    .a2 { min-height: 0; padding-block: var(--sc-8); }
+    .a2-head { grid-template-columns: 1fr; }
+    .sig li { grid-template-columns: 1fr; }
+    .a3 { min-height: 0; }
+    .a3-in { margin-inline-start: 0; }
+    .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .a4 { padding-top: calc(var(--pad) + 3.25rem); gap: var(--sc-3); }
+    .a4-top { grid-template-columns: 1fr; padding-inline-end: 0; gap: var(--sc-1); }
+    .a4-top p { font-size: 0.8125rem; line-height: 1.45; }
+    .a5 { min-height: 0; padding-top: var(--sc-9); }
+    .a5-in { margin-inline-start: 0; }
+    .form { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fig { transform: none; }
+    .uline, .langchip { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<a class="langchip" href="../index.html" hreflang="en" lang="en" rel="alternate">English</a>
+
+<aside id="gw" class="gw" data-ground="black" aria-hidden="true"><span class="gw-n"><bdi dir="ltr" id="gwN">3.1</bdi></span><span class="gw-u disp">جيجاواط</span></aside>
+
+<main id="top">
+
+  <!-- 1 · WORD. The figure at 40vw. -->
+  <section id="hero" class="g-black" data-ground="black" data-sc-act="pin" data-sc-span="1.4" aria-labelledby="h1">
+    <div data-sc-stage class="hero" data-sc-verify-state="">
+      <p class="mark">تيار</p>
+      <h1 id="h1" class="fig disp"><span class="fig-n"><bdi dir="ltr">3.1</bdi></span> <span class="fig-u">جيجاواط</span></h1>
+      <div class="hero-foot">
+        <p class="lede" data-sc-cue="0 1 0 0">طاقة نظيفة على نطاق الشبكة: <bdi dir="ltr">3.1</bdi> جيجاواط تنتقل من الوقود الأحفوري إلى مصادر نظيفة، تحت المراقبة على مدار الساعة.</p>
+        <a class="uline" href="#connect">اربط موقعك القادم</a>
+        <p class="note">تيار علامة تجريبية من Landscape Lab. مشاريعها وأرقامها محتوى تجريبي.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · PARAGRAPH. Loud ground, small type. -->
+  <section id="signals" class="a2 g-volt" data-ground="volt" data-sc-act="flow" aria-labelledby="sigH">
+    <div class="a2-in">
+      <div class="a2-head" data-sc-in data-sc-stagger="70"><h2 id="sigH">محطات الشبكة بترتيب حدوثها</h2><p>ما أنجزته الشبكة ربعًا بعد ربع. الأرقام من القراءات المقيسة لا من التوقعات.</p></div>
+      <ol class="sig" data-sc-in data-sc-stagger="90">
+        <li><span class="tm">الربع الثاني <bdi dir="ltr">2025</bdi></span><h3>كالدر مور يبلغ <bdi dir="ltr">720</bdi> ميجاواط</h3><p>رُبطت التوربينة السادسة والتسعون من أصل <bdi dir="ltr">120</bdi> بالشبكة في ليلة بلغ فيها الطلب أعلى مستوياته في الشمال.</p></li>
+        <li><span class="tm">الربع الثالث <bdi dir="ltr">2025</bdi></span><h3>هارو كواي يغطي ذروة المساء</h3><p>أول كتلة بطاريات بقدرة <bdi dir="ltr">120</bdi> ميجاواط غطت ذروة المنطقة ساعتين دون تشغيل محطة غاز.</p></li>
+        <li><span class="tm">الربع الرابع <bdi dir="ltr">2025</bdi></span><h3>نورثلاين يكمل أول شهر كامل</h3><p>عمل الكابل بقدرة <bdi dir="ltr">450</bdi> ميجاواط على مدى <bdi dir="ltr">31</bdi> يومًا متواصلة، وبفاقد <bdi dir="ltr">1.9</bdi> في المئة في المقطع البحري.</p></li>
+        <li><span class="tm">الربع الأول <bdi dir="ltr">2026</bdi></span><h3>سهول سيبل تتجاوز <bdi dir="ltr">400</bdi> ميجاواط</h3><p>حافظت الألواح المتتبعة للشمس على إنتاج فوق <bdi dir="ltr">80</bdi> في المئة من القدرة الاسمية خلال ظهيرة صافية في يناير.</p></li>
+        <li><span class="tm">الربع الثاني <bdi dir="ltr">2026</bdi></span><h3>أوسترافا ريدج يتصل بالشبكة</h3><p>أول <bdi dir="ltr">160</bdi> ميجاواط من خط التلال تعمل الآن، والمرحلة الثانية حصلت على إذن البناء.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 3 · PARAGRAPH. The quiet before the peak. -->
+  <section id="people" class="a3 g-black" data-ground="black" data-sc-act="flow" aria-labelledby="pplH">
+    <div class="a3-in" data-sc-in data-sc-stagger="120">
+      <h2 id="pplH">ما يقوله من يشغّلون الشبكة</h2>
+      <figure><blockquote><p>حين انفصل الكابل عن الخدمة في الثالثة فجرًا، اتصلت بنا غرفة التحكم لديهم قبل أن يدوّي إنذارنا. هذه هي العلاقة كلها.</p></blockquote><figcaption>د. روث إليسون، رئيسة العمليات، شبكة وادي تاين</figcaption></figure>
+      <dl class="facts">
+          <div><dt>القدرة المخططة</dt><dd><bdi dir="ltr">3.1</bdi> جيجاواط</dd></div>
+          <div><dt>مواقع عاملة</dt><dd><bdi dir="ltr">5</bdi></dd></div>
+          <div><dt>غرفة التحكم</dt><dd>مأهولة على مدار الساعة</dd></div>
+          <div><dt>التوافر، <bdi dir="ltr">2025</bdi></dt><dd><bdi dir="ltr">98.7%</bdi></dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 4 · WORD, the peak. Five names stretch to their capacity and add up to 3.1 GW. -->
+  <section id="projects" class="g-black" data-ground="black" data-sc-act="pin" data-sc-span="3.4" aria-labelledby="peakH">
+    <div data-sc-stage class="a4" data-sc-verify-state="">
+      <div class="a4-top"><h2 id="peakH"><bdi dir="ltr">3.1</bdi> جيجاواط مخططة، وكم منها يعمل</h2><p>خمسة مواقع في الرياح والشمس والتخزين والنقل. يعرض كل شريط الميجاواط العاملة مقابل المخططة، ويُحدَّث في نهاية كل ربع سنة.</p></div>
+      <ul id="bars" class="bars">
+      <li class="row" data-max="900" data-val="720">
+        <div class="bar"><span class="word disp"><span class="w-plan">مزرعة رياح كالدر مور</span><span class="w-live" aria-hidden="true">مزرعة رياح كالدر مور</span></span></div>
+        <p class="meta"><b><bdi dir="ltr">720</bdi> من <bdi dir="ltr">900</bdi> ميجاواط</b> <span>نورثمبرلاند، المملكة المتحدة · <bdi dir="ltr">2023</bdi></span></p>
+      </li>
+      <li class="row" data-max="600" data-val="410">
+        <div class="bar"><span class="word disp"><span class="w-plan">محطة سهول سيبل الشمسية</span><span class="w-live" aria-hidden="true">محطة سهول سيبل الشمسية</span></span></div>
+        <p class="meta"><b><bdi dir="ltr">410</bdi> من <bdi dir="ltr">600</bdi> ميجاواط</b> <span>الأندلس، إسبانيا · <bdi dir="ltr">2024</bdi></span></p>
+      </li>
+      <li class="row" data-max="400" data-val="240">
+        <div class="bar"><span class="word disp"><span class="w-plan">محطة تخزين هارو كواي</span><span class="w-live" aria-hidden="true">محطة تخزين هارو كواي</span></span></div>
+        <p class="meta"><b><bdi dir="ltr">240</bdi> من <bdi dir="ltr">400</bdi> ميجاواط</b> <span>تيسايد، المملكة المتحدة · <bdi dir="ltr">2025</bdi></span></p>
+      </li>
+      <li class="row" data-max="800" data-val="450">
+        <div class="bar"><span class="word disp"><span class="w-plan">خط نورثلاين للربط الكهربائي</span><span class="w-live" aria-hidden="true">خط نورثلاين للربط الكهربائي</span></span></div>
+        <p class="meta"><b><bdi dir="ltr">450</bdi> من <bdi dir="ltr">800</bdi> ميجاواط</b> <span>يوتلاند إلى لينكولنشاير · <bdi dir="ltr">2024</bdi></span></p>
+      </li>
+      <li class="row" data-max="400" data-val="160">
+        <div class="bar"><span class="word disp"><span class="w-plan">مزرعة رياح أوسترافا ريدج</span><span class="w-live" aria-hidden="true">مزرعة رياح أوسترافا ريدج</span></span></div>
+        <p class="meta"><b><bdi dir="ltr">160</bdi> من <bdi dir="ltr">400</bdi> ميجاواط</b> <span>مورافيا، التشيك · <bdi dir="ltr">2025</bdi></span></p>
+      </li>
+      </ul>
+      <p class="sum" data-sc-cue="0.8 1 0.06 0">يُمدَّد كل اسم بنسبة ميجاواطه المخططة. <bdi dir="ltr">720 + 410 + 240 + 450 + 160 = 1,980</bdi> ميجاواط عاملة، من أصل <bdi dir="ltr">900 + 600 + 400 + 800 + 400 = 3,100</bdi> ميجاواط مخططة: <bdi dir="ltr">3.1</bdi> جيجاواط.</p>
+    </div>
+  </section>
+
+  <!-- 5 · PARAGRAPH. The close: pale, small, a plain underlined line. -->
+  <section id="connect" class="a5 g-pale" data-ground="pale" data-sc-act="flow" aria-labelledby="conH">
+    <div class="a5-in">
+      <div class="a5-head"><h2 id="conH">أخبرنا ما الذي تريد ربطه.</h2><p>صف الموقع والحمل. يردّ مهندس خلال خمسة أيام عمل بخيارات الربط لا بكتيّب دعائي.</p></div>
+      <form id="connectForm" class="form" novalidate data-ok="وصلتنا رسالتك. سيكتب لك مهندس شبكات خلال خمسة أيام عمل. هذه علامة تجريبية: لم يُرسل شيء." data-err-name="أضف اسمك." data-err-email="أضف بريدًا إلكترونيًا صحيحًا.">
+        <div class="field"><label for="f-name">اسمك</label><input id="f-name" name="name" type="text" autocomplete="name" required></div>
+        <div class="field"><label for="f-email">بريد العمل</label><input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" dir="ltr" required></div>
+        <div class="field"><label for="f-org">الجهة</label><input id="f-org" name="organisation" type="text" autocomplete="organization"></div>
+        <div class="field"><label for="f-site">نوع الموقع</label><select id="f-site" name="site"><option>منتج للطاقة</option><option>شركة مرافق</option><option>منشأة صناعية</option><option>بلدية</option></select></div>
+        <div class="field wide"><label for="f-brief">أين يقع، وكم ميجاواط؟</label><textarea id="f-brief" name="brief" rows="3"></textarea></div>
+        <div class="form-act">
+          <button class="uline" type="submit">اربط موقعك القادم</button>
+          <p id="reply" class="reply" role="status"></p>
+        </div>
+      </form>
+      <div class="foot">
+        <span>تيار علامة تجريبية من Landscape Lab. مشاريعها وأرقامها محتوى تجريبي.</span>
+        <a class="uline" href="../index.html" hreflang="en" lang="en" rel="alternate">English</a>
+        <a class="uline" href="/current">العودة إلى صفحة تيار</a>
+        <span>اجعل للتيار أثرًا.</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="../../_engine/scrollcraft.js"></script>
+<script>ScrollCraft.mount(document.body);</script>
+<script>
+(function () {
+  "use strict";
+  var doc = document.documentElement, rtl = doc.dir === "rtl";
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var phoneMQ = matchMedia("(max-width: 860px)");
+  var $ = function (id) { return document.getElementById(id); };
+  var clamp = function (x, a, b) { return Math.min(b, Math.max(a, x)); };
+  var ease = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+  var cache = {};
+  function setAttr(el, k, v) { if (el && cache[k] !== v) { cache[k] = v; el.setAttribute("data-sc-verify-state", v); } }
+  function progress(act) {
+    var r = act.getBoundingClientRect(), travel = act.offsetHeight - innerHeight;
+    return travel > 0 ? clamp(-r.top / travel, 0, 1) : 0;
+  }
+
+  var hero = $("hero"), heroStage = hero.querySelector("[data-sc-stage]");
+  var fig = hero.querySelector(".fig");
+  var peak = $("projects"), peakStage = peak.querySelector("[data-sc-stage]");
+  var barsEl = $("bars"), strip = $("gw"), gwN = $("gwN");
+  var grounds = [].slice.call(document.querySelectorAll("[data-ground]")).filter(function (n) { return n !== strip; });
+  var LEAD = 0.18, rows = [];
+  var VMAX = 900, TOTAL = 0;
+  [].forEach.call(barsEl.children, function (li, i) {
+    var max = +li.getAttribute("data-max"), val = +li.getAttribute("data-val");
+    TOTAL += max;
+    rows.push({ li: li, word: li.querySelector(".word"), live: li.querySelector(".w-live"), max: max, val: val, a: 0.04 + i * 0.075, fa: 0.54 + i * 0.045, n1: 1, s1: 1 });
+  });
+  var phone = false, fs = 60, H = 0, colW = 0;
+
+  /* ---- hero: the figure at 40vw, fitted only if the face runs wide */
+  function fitHero() {
+    phone = phoneMQ.matches;
+    var box = heroStage, cs = getComputedStyle(box);
+    var avail = box.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    var n = fig.querySelector(".fig-n"), u = fig.querySelector(".fig-u");
+    fig.style.fontSize = ""; n.style.fontSize = ""; u.style.fontSize = "";
+    if (phone) {
+      [n, u].forEach(function (el) {
+        el.style.fontSize = "200px";
+        var w = el.offsetWidth || 1, size = 200 * avail * 0.98 / w;
+        el.style.fontSize = Math.min(size, innerHeight * 0.2).toFixed(1) + "px";
+      });
+    } else {
+      var w = fig.offsetWidth;
+      if (w > avail * 0.99) fig.style.fontSize = (parseFloat(getComputedStyle(fig).fontSize) * avail * 0.99 / w).toFixed(1) + "px";
+    }
+  }
+
+  /* ---- peak: measure each name once at 100px, then size so the narrowest
+     capacity still fits its name at natural width. Everything else lengthens. */
+  function layoutBars() {
+    phone = phoneMQ.matches;
+    barsEl.classList.toggle("vert", phone);
+    var lh = rtl ? 1.4 : 0.95;
+    rows.forEach(function (r) { r.word.style.transform = "none"; r.word.style.fontSize = "100px"; r.n1 = r.word.offsetWidth / 100; });
+    var L, cap;
+    if (phone) {
+      H = Math.min.apply(null, rows.map(function (r) { return r.li.querySelector(".bar").clientHeight; })) - 4;
+      colW = rows[0].li.querySelector(".bar").clientWidth;
+      L = H; cap = colW * (rtl ? 0.7 : 0.82) / lh;
+    } else {
+      L = barsEl.clientWidth;
+      var r0 = rows[0].li, metaH = r0.querySelector(".meta").offsetHeight;
+      cap = (barsEl.clientHeight / 5 - metaH - 10) / lh;
+    }
+    var fit = Infinity;
+    rows.forEach(function (r) { r.T = L * r.max / VMAX; fit = Math.min(fit, r.T / r.n1); });
+    fs = Math.max(10, Math.min(fit, cap));
+    for (var pass = 0; pass < 2; pass++) {
+      /* glyph advances are not exactly linear in font size, so re-measure at the real size */
+      var f2 = Infinity;
+      rows.forEach(function (r) { r.word.style.fontSize = fs.toFixed(2) + "px"; r.w = r.word.offsetWidth; f2 = Math.min(f2, r.T / r.w * fs); });
+      if (pass === 0) fs = Math.max(10, Math.min(f2, cap));
+    }
+    rows.forEach(function (r) { r.h = r.word.offsetHeight; r.s1 = Math.max(1, r.T / r.w); });
+    lastKey = "";
+  }
+  var lastKey = "";
+  function drawBars(p, done) {
+    var sum = 0, key = [];
+    rows.forEach(function (r) {
+      var e = done ? 1 : ease(clamp((p - r.a) / 0.18, 0, 1));
+      var f = done ? 1 : ease(clamp((p - r.fa) / 0.11, 0, 1));
+      var s = 1 + (r.s1 - 1) * e;
+      sum += r.max * e;
+      var x = (1 - (r.val / r.max) * f) * 100;
+      r.live.style.clipPath = rtl ? "inset(0 0 0 " + x.toFixed(2) + "%)" : "inset(0 " + x.toFixed(2) + "% 0 0)";
+      if (phone) {
+        var tx, ty;
+        if (rtl) { tx = (colW + r.h) / 2; ty = H - s * r.w; r.word.style.transform = "translate(" + tx.toFixed(1) + "px," + ty.toFixed(1) + "px) rotate(90deg) scale(" + s.toFixed(4) + ",1)"; }
+        else { tx = (colW - r.h) / 2; ty = H; r.word.style.transform = "translate(" + tx.toFixed(1) + "px," + ty.toFixed(1) + "px) rotate(-90deg) scale(" + s.toFixed(4) + ",1)"; }
+      } else r.word.style.transform = "scaleX(" + s.toFixed(4) + ")";
+      key.push(Math.round(e * 100) + "." + Math.round(f * 100));
+    });
+    return { sum: sum, key: key.join("|") };
+  }
+
+  var gwShown = "";
+  function tick() {
+    var hp = progress(hero), dock = reduce ? (hero.getBoundingClientRect().bottom < innerHeight * 0.5 ? 1 : 0) : clamp((hp - 0.5) / 0.4, 0, 1);
+    var hrect = hero.getBoundingClientRect();
+    if (hrect.bottom <= innerHeight + 1 && !reduce) dock = 1;
+    strip.style.setProperty("--gwo", (1 - dock).toFixed(3));
+    if (!reduce) heroStage.style.setProperty("--hs", (dock * (parseFloat(getComputedStyle(strip).width) / heroStage.clientWidth)).toFixed(4));
+    setAttr(heroStage, "hero", reduce ? "still" : "p" + Math.round(hp * 20) + "d" + dock.toFixed(2));
+    if (hp > 0.2 && hp < 0.5 && !reduce) heroStage.setAttribute("data-sc-verify-hold", "true"); else heroStage.removeAttribute("data-sc-verify-hold");
+
+    var pr = peak.getBoundingClientRect(), p5 = progress(peak), counting = pr.top <= 0 && pr.bottom > innerHeight * 0.5;
+    var res = reduce ? drawBars(1, true) : drawBars(pr.top > 0 ? 0 : p5, false);
+    var shown = (counting && !reduce ? res.sum / 1000 : TOTAL / 1000).toFixed(1);
+    if (shown !== gwShown) { gwShown = shown; gwN.textContent = shown; }
+    setAttr(peakStage, "peak", reduce ? "final" : res.key);
+    if (p5 >= 0.86 || pr.top > 0) peakStage.setAttribute("data-sc-verify-hold", "true"); else peakStage.removeAttribute("data-sc-verify-hold");
+
+    var mid = innerHeight / 2, g = "black";
+    for (var i = 0; i < grounds.length; i++) { var r = grounds[i].getBoundingClientRect(); if (r.top <= mid && r.bottom > mid) { g = grounds[i].getAttribute("data-ground"); break; } }
+    if (strip.getAttribute("data-ground") !== g) strip.setAttribute("data-ground", g);
+    requestAnimationFrame(tick);
+  }
+
+  function relayout() { fitHero(); layoutBars(); }
+  var rt; addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(relayout, 120); });
+  var fam = getComputedStyle(doc).getPropertyValue("--f-display");
+  var ready = document.fonts && document.fonts.load
+    ? Promise.all([document.fonts.load("800 100px " + fam), document.fonts.load("600 16px " + getComputedStyle(doc).getPropertyValue("--f-text")), document.fonts.ready]).catch(function () {})
+    : Promise.resolve();
+  ready.then(function () { relayout(); requestAnimationFrame(tick); });
+
+  var form = $("connectForm");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var reply = $("reply"), name = form.elements.name, email = form.elements.email;
+    if (!name.value.trim()) { reply.textContent = form.getAttribute("data-err-name"); name.focus(); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) { reply.textContent = form.getAttribute("data-err-email"); email.focus(); return; }
+    reply.textContent = form.getAttribute("data-ok");
+    form.reset();
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+[
+  {
+    "slug": "orbit", "status": "built",
+    "grammar": "Live surface",
+    "nav": "App chrome: status bar plus a clickable bottom trace rail",
+    "hero": "Console already running at T-minus 04:00, no title stage",
+    "seq": "One 11vh pinned console act (6 phases) then one 1.3vh pinned close; 12.3vh",
+    "close": "Command-line email input",
+    "sig": "Scroll playhead over a persistent trace rail that stamps each phase and jumps on click",
+    "peak": "You fly a telescope to 1.5 million km under your own scroll and watch the signal delay reach five seconds."
+  },
+  {
+    "slug": "arc", "grammar": "Gallery / catalog",
+    "nav": "Left-edge index of the five projects (names, jumps to the object)",
+    "hero": "Object one (Harbour Reading Room) already in view with its museum label, no title treatment",
+    "seq": "One lateral pan spine of five objects, 6.5vh, plus a 1vh inquiry plate; 8.5vh, 2 acts",
+    "close": "Inquiry plate typeset exactly like an object label (Site, Brief, Reply within three working days) holding the form",
+    "sig": "A section drawing that draws itself under each object as it crosses the centre (SVG stroke driven by --sc-p), dimension callouts arriving after the line",
+    "peak": "Court of Seven Stairs is the widest panel with the longest dwell; the seven stairs draw themselves under the light."
+  },
+  {
+    "slug": "tactile", "grammar": "Gallery / catalog",
+    "nav": "Fixed bottom strip of the six materials; choosing one jumps to the next object made of it",
+    "hero": "Object one (Low Table) already framed, labelled with the same schema as every object, no pitch",
+    "seq": "Vertical museum wall: flow acts with staggered reveal and tilt per object, no pan, no pin; 9vh, 8 short flow acts",
+    "close": "Final object plate where a material picker re-sorts which objects are listed, then the inquiry line",
+    "sig": "A material temperature control: the swatch under the pointer regrades the whole wall (warm for wood and rust, cool for stone and steel) all at once",
+    "peak": "The wall changes temperature under your hand as you move across the materials."
+  },
+  {
+    "slug": "field", "grammar": "Gallery / catalog",
+    "nav": "Fixed 12-month calendar bar across the top; months jump to the crop that is in the ground then",
+    "hero": "First crop story (faba beans) already in view, labelled with sow and harvest months",
+    "seq": "Season-driven pan (Jan to Dec is the scroll axis) 5.5vh, then a pinned rotation board 2vh, then one flow row; 9vh, 3 acts",
+    "close": "A sowing-plan form where choosing a crop rewrites its calendar bar live, then the contact line",
+    "sig": "The season sweep: one vertical line travels the calendar as you scroll and each crop card changes stage (sow, grow, harvest) as it is crossed, with the still graded to match",
+    "peak": "A whole farming year passes under one line and the rye is the last thing left standing."
+  },
+  {
+    "slug": "moss", "grammar": "Chaptered editorial",
+    "nav": "Margin folio: chapter number and title updating in the left margin",
+    "hero": "Title page: the statement set in type on paper, no media above the fold",
+    "seq": "Five chapters on hard-cut grounds, 9vh total, flow plus parallax column, one scrub chapter allowed",
+    "close": "Colophon: small type, the CTA set as a line of running text",
+    "sig": "A soil-core strip in the margin that grows downward as you read, each chapter adding a labelled layer with a real measured value from the content",
+    "peak": "The margin grows a soil core that gets deeper with every chapter you read."
+  },
+  {
+    "slug": "drift", "grammar": "Chaptered editorial",
+    "nav": "A thin route line down the right edge with a stop per journey chapter (clickable)",
+    "hero": "Title page set as a ticket stub, type only, no media",
+    "seq": "Seven journey chapters, 11vh, flow only with a reveal wipe between chapters, no scrub",
+    "close": "A running-text sentence with fill-in blanks (when, who) that is also the form",
+    "sig": "The route line fills in as chapters pass and a day-counter sums the days of the journeys you have read, using the days stated in the content",
+    "peak": "You read a travel year and the route line along the edge draws the whole slow trip."
+  },
+  {
+    "slug": "frame", "grammar": "Chaptered editorial",
+    "nav": "Film-edge frame counter in the margin (No. 07 style) that jumps between series",
+    "hero": "Title page with one line of type and one empty frame rectangle, no image yet",
+    "seq": "Six chapters (one per series), 10.5vh, hard-cut dark grounds, media in a captioned column, one scrub allowed",
+    "close": "A print-order plate set like a caption under a photograph",
+    "sig": "A light meter: scroll sets the exposure so the stills lift and fall in grade while a readout shows an f-stop and a shutter time",
+    "peak": "You scroll and the exposure of the whole page opens until the light holds a little longer."
+  },
+  {
+    "slug": "pulse", "grammar": "Split stage",
+    "nav": "The divider is the chrome: labels For people and For clinicians plus argument progress",
+    "hero": "50/50 first screen, both headlines readable at once",
+    "seq": "One long pin (9vh, four beats) with the divider driven from --sc-p",
+    "close": "The collapse: the divider travels to the left edge and the clinician column takes the full width holding the CTA",
+    "sig": "One heartbeat trace that crosses the divider and speeds up with scroll speed, linking both columns' content",
+    "peak": "The divider slides away and one waveform ends up carrying both sides of care."
+  },
+  {
+    "slug": "root", "grammar": "Split stage",
+    "nav": "The divider carries Question and Answer labels and a typed-question field",
+    "hero": "50/50 with a question typing out on the left and a mentor's answer arriving on the right",
+    "seq": "Four short pins (1.8vh each) per question, then a flow beat; 9vh, 5 acts",
+    "close": "The answer column collapses to full width and the CTA is a typed question input",
+    "sig": "Type any question and the page returns the nearest cohort or mentor from the real content by keyword match",
+    "peak": "You type a question into the page and it answers with a cohort that starts soon."
+  },
+  {
+    "slug": "civic", "grammar": "Split stage",
+    "nav": "Divider labels Today and With the toolkit, with a per-neighbourhood tab on the divider",
+    "hero": "A city map cut down the middle, left in the old state, right in the improved state",
+    "seq": "Three short pins, one per neighbourhood (5vh) plus a final pin (2vh); 7vh, 4 acts",
+    "close": "The divider collapses to the right edge and the improved column holds the CTA",
+    "sig": "A draggable divider you can pull to compare minutes-to-find-a-service before and after, from the real bar values; scroll moves it too",
+    "peak": "You drag the line across the city and the wait times fall under your finger."
+  },
+  {
+    "slug": "ledger", "grammar": "Live surface",
+    "nav": "App chrome: top account tabs (Cash positions, Risk radar, Playbooks) and a status line",
+    "hero": "The reconcile table already populated with unmatched lines flagged",
+    "seq": "One 8vh pinned surface cycling three tabs, then a 1.2vh pinned first-run close; 9.2vh",
+    "close": "A first-run stepper (connect a bank, pick entities, confirm) with a real field at step one",
+    "sig": "A running reconcile: the unreconciled total ticks to 0.00 as you scroll, one line clearing at a time, computed from the table data",
+    "peak": "The unmatched total counts down to exactly zero while you scroll."
+  },
+  {
+    "slug": "kernel", "grammar": "Live surface",
+    "nav": "App chrome: left sidebar of the five workflow steps (Ingest, Retrieve, Reason, Review, Ship), clickable",
+    "hero": "A code editor already executing the invoice-triage workflow with a live log",
+    "seq": "One 7vh pinned editor stepping through the five steps, then a 1.2vh pinned run console; 8.2vh",
+    "close": "A real Run button that executes the workflow on pasted invoice text in the browser (labelled sample logic)",
+    "sig": "Scroll is the debugger: it steps execution line by line, the current line highlights, variables fill in, and the log trace grows",
+    "peak": "You scroll and a workflow runs one line at a time until the bill is booked."
+  },
+  {
+    "slug": "atelier", "grammar": "Rhythmic cutlist",
+    "nav": "Loud full-width bar with a marquee of the look names and the waitlist CTA at the same weight as the wordmark",
+    "hero": "One screen that cuts to look two in under a viewport",
+    "seq": "Fourteen hard-cut acts, none over 1.3vh, no pin; 13vh",
+    "close": "Abrupt full-bleed waitlist: the last cut is the email field and nothing else",
+    "sig": "A tape measure that runs along the top and stamps each look with its measurement from the real sizing table as it cuts past",
+    "peak": "The whole collection cuts past in thirteen screens and a tape measure stamps every look."
+  },
+  {
+    "slug": "pantry", "grammar": "Rhythmic cutlist",
+    "nav": "Loud bar with a basket counter that adds each recipe as its cut passes",
+    "hero": "One screen of the promise that hard-cuts to the first recipe",
+    "seq": "Twelve cuts at 0.8 to 1.2vh, no pin, tiles shaped as recipe cards; 10vh",
+    "close": "Abrupt full-bleed 'Stock the good stuff' with a household-size input",
+    "sig": "A kitchen timer that jumps to each cut's cooking time and keeps a running receipt of the minutes of every recipe you pass, from the real recipe times",
+    "peak": "You scroll past a week of dinners and the timer totals how long they all take."
+  },
+  {
+    "slug": "loop", "grammar": "Rhythmic cutlist",
+    "nav": "Loud toolbar of the six tools as tabs that jump to their cut",
+    "hero": "Cut one: the tagline on the looped film, cutting to the first tool inside one viewport",
+    "seq": "Eight cuts that return to cut one, 9vh, circular structure, no pin",
+    "close": "Abrupt CTA cut whose button restarts the loop, with an email field",
+    "sig": "The page is a loop: scrolling past the last cut re-enters the first with the next release note in focus, so it never hits a footer",
+    "peak": "You scroll past the end and the page starts again with a new release note."
+  },
+  {
+    "slug": "signal", "grammar": "Filmic one-shot",
+    "nav": "Fixed minimal bar at the bottom centre carrying the now-playing track title and one CTA",
+    "hero": "Full-bleed scrub of the ripple film with a corner-anchored greet headline",
+    "seq": "scrub, pin (track list), flow (room specs), scrub, pinned close; 5 acts, 10.4vh",
+    "close": "Pinned spotlight close with a date input for Book a session",
+    "sig": "Spatial mixer: the pointer position pans the track list across a stereo field that is drawn and audible-less (a visual meter), moving each track's level meter",
+    "peak": "The room opens around you as the ripple film scrubs under your hand."
+  },
+  {
+    "slug": "haven", "grammar": "Filmic one-shot",
+    "nav": "Fixed minimal bar at the top with a live time-of-day dial instead of a menu and one CTA",
+    "hero": "Slow poster-first scrub of the candle film, greet headline lower-left",
+    "seq": "scrub, flow (rooms rail), pin (ritual day), pinned close; 4 acts, 9.4vh",
+    "close": "Pinned close with a stay-dates input and a magnetic CTA",
+    "sig": "A time-of-day handle: one control that regrades every image, ground and accent from dawn to night together",
+    "peak": "You turn the day to dusk and the whole house lights its stoves."
+  },
+  {
+    "slug": "spark", "grammar": "Typographic poster",
+    "nav": "No persistent nav; the wordmark is set at composition scale",
+    "hero": "One line at extreme scale (SMALL SPARKS) filling the viewport, real h1 behind",
+    "seq": "Six poster acts alternating 40vw words with 16px paragraphs; 8vh",
+    "close": "Inverts the page: the smallest type on the site, the CTA a plain underlined link",
+    "sig": "The 48,000 (real, from content) is assembled from tiny dots that gather on screen as you scroll until the number resolves",
+    "peak": "Forty-eight thousand sparks gather into one number."
+  },
+  {
+    "slug": "current", "grammar": "Typographic poster",
+    "nav": "None; a single huge unit readout (GW) rides the left edge",
+    "hero": "The figure 3.1 GW set at 40vw",
+    "seq": "Five acts, 7.5vh, type that lengthens: project names stretched to their capacity",
+    "close": "Page inverts to its quietest setting; CTA a plain underlined line",
+    "sig": "Type as chart: each project name is stretched in width to its real MW so the bars are made of the words themselves",
+    "peak": "Five project names stretch until together they add up to 3.1 gigawatts."
+  },
+  {
+    "slug": "cinder", "grammar": "Typographic poster",
+    "nav": "None; the wordmark is huge and distorts with scroll speed",
+    "hero": "One cropped word (WEIRD) at 45vw with the real h1 behind it",
+    "seq": "Six acts, 9vh, faction names at 30vw with archive facts as small print between",
+    "close": "The ground inverts at 03:17 and the CTA is an underlined wishlist link",
+    "sig": "A 03:17 clock: scroll maps to the clock, and when it hits 03:17 the ground flips and a faction name changes",
+    "peak": "The clock reaches 03:17 and the whole page flips."
+  }
+]

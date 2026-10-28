@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ملمس: أثاث من ست خامات (علامة تجريبية)</title>
+<meta name="description" content="موقع تجريبي لـ«ملمس»، أثاث يُصنع على دفعات صغيرة حول ست خامات. ست قطع من الدفعة الحالية، والخامات الست، وسطر واحد للكتابة إلى أحد الصنّاع. كل الأسماء والأسعار والأرقام محتوى تجريبي.">
+<link rel="alternate" hreflang="ar" href="./">
+<link rel="alternate" hreflang="en" href="../">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%232b211b'/><rect x='6' y='19' width='20' height='4' fill='%23b96d4f'/><rect x='8' y='13' width='16' height='4' fill='%23f2eadf'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_engine/scrollcraft.css">
+<style>
+:root { --f-display: "Amiri", "Times New Roman", serif; --f-text: "Amiri", "Times New Roman", serif; }
+@property --t { syntax: "<number>"; inherits: true; initial-value: 0.18; }
+:root {
+  /* t = the wall's temperature: 0 warm (walnut) .. 1 cool (stoneware). Everything below grades off it. */
+  --t: 0.18;
+  --warm-ground: #f2eadf;  --cool-ground: #e3e8ea;
+  --warm-panel: #f8f2e9;   --cool-panel: #eef2f3;
+  --warm-ink: #2b211b;     --cool-ink: #1b252b;
+  --warm-soft: #66584c;    --cool-soft: #4d5a63;
+  --warm-rule: #ddcbbb;    --cool-rule: #c3ccd1;
+  --ground: color-mix(in oklab, var(--cool-ground) calc(var(--t) * 100%), var(--warm-ground));
+  --panel: color-mix(in oklab, var(--cool-panel) calc(var(--t) * 100%), var(--warm-panel));
+  --ink: color-mix(in oklab, var(--cool-ink) calc(var(--t) * 100%), var(--warm-ink));
+  --soft: color-mix(in oklab, var(--cool-soft) calc(var(--t) * 100%), var(--warm-soft));
+  --rule: color-mix(in oklab, var(--cool-rule) calc(var(--t) * 100%), var(--warm-rule));
+  --rule-strong: color-mix(in oklab, var(--ink) 58%, var(--panel));
+  /* one accent: rust. --accent for marks and rings, --deep is the same hue pulled darker for text and fills (4.5:1). */
+  --accent: #b96d4f;  --deep: #8a4a30;  --on-deep: #fbf6ee;
+  --pad: clamp(1.25rem, 4vw, 3.5rem);
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --sc-canvas: var(--ground); --sc-surface: var(--panel); --sc-ink: var(--ink); --sc-ink-soft: var(--soft);
+  --sc-accent: var(--accent); --sc-accent-ink: var(--on-deep);
+  --sc-font-display: var(--f-display); --sc-font-text: var(--f-text);
+  transition: --t 240ms var(--ease);
+}
+html { background: var(--ground); }
+body { background: var(--ground); color: var(--ink); font: 400 1rem/1.6 var(--f-text); padding-block-end: 0; }
+.is-ar body, body.is-ar { font-size: 1.12rem; line-height: 1.85; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+:focus-visible { outline: 2px solid var(--deep); outline-offset: 3px; border-radius: 2px; }
+::selection { background: var(--deep); color: var(--on-deep); }
+button { cursor: pointer; }
+
+/* header */
+.bar { position: absolute; inset-inline: 0; top: 0; z-index: 40; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.85rem var(--pad); }
+.brand { margin: 0; font: 400 2rem/1 var(--f-display); letter-spacing: -0.01em; }
+.is-ar .brand { font-weight: 700; font-size: 2.1rem; }
+.bar__end { display: flex; align-items: center; gap: 0.5rem; }
+.bar__lang { min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; padding-inline: 0.75rem; color: var(--ink); font: 500 0.92rem/1 var(--f-text); text-decoration: underline; text-underline-offset: 0.25em; text-decoration-color: var(--rule-strong); }
+.btn { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; padding: 0 1.15rem; background: var(--deep); color: var(--on-deep); font: 600 0.95rem/1 var(--f-text); text-decoration: none; border: 0; border-radius: 2px; transition: transform 160ms var(--ease); }
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn--lg { min-height: 52px; padding-inline: 1.6rem; font-size: 1.02rem; }
+.btn:focus-visible { outline-color: var(--ink); outline-offset: 3px; }
+.is-ar .btn, .is-ar .bar__lang { font-family: var(--f-text); font-weight: 700; font-size: 1.05rem; }
+
+/* the wall */
+main { display: block; }
+.obj { min-height: 110svh; display: grid; align-items: center; padding-block: 4.75rem 2.25rem; }
+.obj:first-of-type { padding-block-start: 5.5rem; }
+.obj__in { width: 100%; max-width: 1380px; margin-inline: auto; padding-inline: var(--pad); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: clamp(1rem, 2.4vw, 2.5rem); align-items: end; }
+.obj__fig { grid-row: 1; grid-column: 1 / span var(--span); min-width: 0; }
+.obj__plate { grid-row: 1; grid-column: span 4 / -1; min-width: 0; max-width: 31rem; padding-block-end: 0.5rem; }
+.obj--b .obj__fig { grid-column: calc(13 - var(--span)) / -1; }
+.obj--b .obj__plate { grid-column: 1 / span 4; justify-self: start; }
+.obj:nth-of-type(3n) .obj__plate { align-self: start; padding-block-start: 1.5rem; }
+.obj__tilt { }
+.obj__frame { margin: 0; background: var(--panel); padding: clamp(10px, 1.5vw, 20px); border: 1px solid var(--rule);
+  box-shadow: 0 22px 28px -24px color-mix(in oklab, var(--ink) 55%, transparent);
+  transform: perspective(1500px) rotateY(calc((var(--sc-p, 0.5) - 0.5) * var(--lean, 8deg))) rotateX(calc((0.5 - var(--sc-p, 0.5)) * 3deg)); }
+.obj__ph { position: relative; overflow: hidden; aspect-ratio: var(--ar); background: var(--rule); }
+.obj__ph img { position: absolute; inset-inline: 0; top: -8%; width: 100%; height: 116%; object-fit: cover; object-position: var(--pos);
+  transform: translateY(calc((var(--sc-p, 0.5) - 0.5) * -7%));
+  filter: saturate(calc(1 - var(--t) * 0.55)) brightness(calc(1 - var(--t) * 0.05)); }
+.obj__ph::after { content: ""; position: absolute; inset: 0; pointer-events: none; mix-blend-mode: multiply;
+  background: color-mix(in oklab, #c2d4e4 calc(var(--t) * 100%), #ffe3c6); }
+.obj__cap { margin: 0.7rem 0 0; font: 400 0.8rem/1.4 var(--f-text); color: var(--soft); }
+.is-ar .obj__cap { font-size: 0.9rem; }
+.obj__plate[data-sc-in] { opacity: 1; transform: none; }
+.obj__name { margin: 0 0 1.1rem; font: 400 clamp(2.4rem, 1.5rem + 3.2vw, 4.5rem)/1.02 var(--f-display); letter-spacing: -0.012em; text-wrap: balance; }
+.is-ar .obj__name { font-weight: 700; line-height: 1.25; letter-spacing: 0; }
+.obj__name:focus-visible { outline-offset: 6px; }
+.label { margin: 0; border-top: 1px solid var(--rule-strong); }
+.label > div { display: grid; grid-template-columns: 7.25rem 1fr; gap: 0.75rem; padding-block: 0.6rem; border-bottom: 1px solid var(--rule); align-items: baseline; }
+.label dt { font: 500 0.76rem/1.5 var(--f-text); text-transform: uppercase; letter-spacing: 0.09em; color: var(--soft); }
+.is-ar .label dt { text-transform: none; letter-spacing: 0; font-size: 0.95rem; }
+.label dd { margin: 0; font: 500 0.97rem/1.5 var(--f-text); }
+.is-ar .label dd { font-size: 1.08rem; font-weight: 400; }
+.obj__note { margin: 1rem 0 0; color: var(--soft); max-width: 34ch; text-wrap: pretty; }
+
+/* materials */
+.mats { min-height: 118svh; display: grid; align-items: center; padding-block: 5rem 4rem; border-top: 1px solid var(--rule); }
+.mats__in { width: 100%; max-width: 1380px; margin-inline: auto; padding-inline: var(--pad); display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: clamp(2rem, 7vw, 7rem); align-items: start; }
+.mats__title { margin: 0 0 1rem; font: 400 clamp(2.4rem, 1.5rem + 3.4vw, 4.6rem)/1.04 var(--f-display); letter-spacing: -0.012em; text-wrap: balance; }
+.is-ar .mats__title { font-weight: 700; line-height: 1.25; letter-spacing: 0; }
+.mats__lede { margin: 0; color: var(--soft); max-width: 36ch; }
+.quote { margin: 2.25rem 0 0; padding-inline-start: 1.1rem; border-inline-start: 3px solid var(--accent); }
+.quote p { margin: 0; font: 400 1.35rem/1.4 var(--f-display); max-width: 30ch; text-wrap: pretty; }
+.is-ar .quote p { font-size: 1.4rem; }
+.quote figcaption { margin-top: 0.6rem; color: var(--soft); font-size: 0.9rem; }
+.facts { margin: 2rem 0 0; display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--rule-strong); }
+.facts > div { padding-block: 0.7rem; border-bottom: 1px solid var(--rule); padding-inline-end: 1rem; }
+.facts dt { font: 500 0.74rem/1.4 var(--f-text); text-transform: uppercase; letter-spacing: 0.09em; color: var(--soft); }
+.is-ar .facts dt { text-transform: none; letter-spacing: 0; font-size: 0.92rem; }
+.facts dd { margin: 0.15rem 0 0; font: 400 1.5rem/1.2 var(--f-display); }
+.is-ar .facts dd { font-size: 1.35rem; font-weight: 700; }
+.mat { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule-strong); }
+.mat li { display: grid; grid-template-columns: auto 1fr; gap: 1.1rem; padding-block: 1.05rem; border-bottom: 1px solid var(--rule); align-items: start; transition: background-color 200ms var(--ease); }
+.mat h3 { margin: 0; font: 400 1.7rem/1.15 var(--f-display); }
+.is-ar .mat h3 { font-weight: 700; font-size: 1.5rem; }
+.mat p { margin: 0.25rem 0 0; color: var(--soft); max-width: 44ch; }
+.mat__sw { width: 22px; height: 22px; margin-top: 0.3rem; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ink) 45%, transparent); }
+.mat li.is-sel { background: color-mix(in oklab, var(--accent) 12%, transparent); }
+.mat li.is-sel .mat__sw { box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ink) 45%, transparent), 0 0 0 3px var(--ground), 0 0 0 5px var(--deep); }
+
+/* the close: one last plate, set like a label */
+.close { min-height: 118svh; padding-block: 5rem 0; display: grid; align-items: start; border-top: 1px solid var(--rule); }
+.close__in { width: 100%; max-width: 1380px; margin-inline: auto; padding: clamp(1.5rem, 3.5vw, 3rem) var(--pad) 0; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); column-gap: clamp(2rem, 6vw, 6rem); align-items: start; }
+.plate__title { margin: 0 0 1.25rem; font: 400 clamp(2.1rem, 1.4rem + 2.6vw, 3.6rem)/1.05 var(--f-display); letter-spacing: -0.01em; text-wrap: balance; }
+.is-ar .plate__title { font-weight: 700; line-height: 1.3; letter-spacing: 0; }
+.pick__l { margin: 0 0 0.5rem; font: 500 0.76rem/1.5 var(--f-text); text-transform: uppercase; letter-spacing: 0.09em; color: var(--soft); }
+.is-ar .pick__l { text-transform: none; letter-spacing: 0; font-size: 0.95rem; }
+.pick__row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chip { min-height: 44px; display: inline-flex; align-items: center; gap: 0.5rem; padding: 0 0.95rem; background: var(--panel); color: var(--ink); border: 1px solid var(--rule-strong); border-radius: 999px; font: 500 0.92rem/1 var(--f-text); transition: background-color 160ms var(--ease), color 160ms var(--ease); }
+.chip[aria-pressed="true"] { background: var(--deep); color: var(--on-deep); border-color: var(--deep); }
+.chip:focus-visible { outline-color: var(--ink); }
+.sw__dot { display: block; width: 18px; height: 18px; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ink) 50%, transparent); }
+.chip[aria-pressed="true"] .sw__dot { box-shadow: inset 0 0 0 1px var(--on-deep); }
+.count { margin: 1.1rem 0 0.4rem; color: var(--soft); font-size: 0.9rem; }
+.list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule-strong); }
+.list li { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.2fr) auto auto; column-gap: 1rem; align-items: center; min-height: 56px; border-bottom: 1px solid var(--rule); }
+.list a { min-height: 44px; display: inline-flex; align-items: center; color: var(--deep); font: 600 1rem/1.3 var(--f-text); text-underline-offset: 0.2em; }
+.is-ar .list a { font-weight: 700; }
+.list__m, .list__p, .list__w { color: var(--soft); font-size: 0.9rem; }
+.list__w { min-width: 5.2rem; text-align: end; }
+.inq { padding: clamp(1.25rem, 2.4vw, 2rem); background: var(--panel); border: 1px solid var(--rule); }
+.inq__lede { margin: 0 0 1.4rem; color: var(--soft); max-width: 40ch; }
+form { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem 1rem; }
+.fld { display: grid; gap: 0.3rem; min-width: 0; align-content: start; }
+.fld--wide { grid-column: 1 / -1; }
+.fld label { font: 500 0.78rem/1.4 var(--f-text); text-transform: uppercase; letter-spacing: 0.08em; color: var(--soft); }
+.is-ar .fld label { text-transform: none; letter-spacing: 0; font-size: 0.98rem; }
+input, select, textarea { width: 100%; min-height: 46px; padding: 0.6rem 0.75rem; background: var(--ground); color: var(--ink); border: 1px solid var(--rule-strong); border-radius: 2px; font: 400 1rem/1.4 var(--f-text); }
+textarea { resize: vertical; min-height: 110px; }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline-offset: 1px; }
+.inq__ok { grid-column: 1 / -1; margin: 0; padding: 0.8rem 1rem; border-inline-start: 3px solid var(--deep); background: var(--ground); font-weight: 500; }
+.inq__ok[hidden] { display: none; }
+.foot { grid-column: 1 / -1; margin-top: clamp(2.5rem, 6vw, 5rem); padding-block: 1.5rem 7rem; border-top: 1px solid var(--rule-strong); display: grid; grid-template-columns: auto 1fr; gap: 0.35rem 2rem; align-items: baseline; }
+.foot p { margin: 0; color: var(--soft); font-size: 0.9rem; }
+.foot__brand { font: 400 1.6rem/1 var(--f-display) !important; color: var(--ink) !important; grid-row: span 2; }
+.is-ar .foot__brand { font-weight: 700 !important; }
+.foot__s { grid-column: 2; max-width: 70ch; }
+
+/* the index strip: six materials, the signature control */
+.strip { position: fixed; inset-inline: 0; bottom: 0; z-index: 60; background: var(--panel); border-top: 1px solid var(--rule-strong); padding-bottom: env(safe-area-inset-bottom);
+  transition: transform 420ms var(--ease), visibility 0s linear 0s; }
+.at-close .strip { transform: translateY(100%); visibility: hidden; transition: transform 420ms var(--ease), visibility 0s linear 420ms; }
+.strip__row { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); max-width: 920px; margin-inline: auto; }
+.sw { position: relative; min-height: 58px; min-width: 44px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; background: none; border: 0; color: var(--ink); font: 500 0.74rem/1 var(--f-text); padding: 6px 2px; }
+.is-ar .sw { font-size: 0.86rem; font-weight: 700; }
+.sw[aria-pressed="true"] .sw__t { font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: var(--accent); }
+.sw[data-here]::before { content: ""; position: absolute; top: 5px; width: 6px; height: 6px; background: var(--ink); transform: rotate(45deg); }
+.sw .sw__dot { margin-top: 6px; transition: transform 200ms var(--ease); }
+.sw:hover .sw__dot { transform: scale(1.18); }
+.sw:focus-visible { outline-offset: -3px; }
+.strip__mark { position: absolute; left: 0; top: -1px; width: 36px; height: 3px; margin-left: -18px; background: var(--accent); opacity: 0; pointer-events: none; transition: opacity 200ms var(--ease); }
+.strip.is-live .strip__mark { opacity: 1; }
+
+/* phone */
+@media (max-width: 860px) {
+  .obj { min-height: 0; padding-block: 3.25rem 1.5rem; }
+  .obj:first-of-type { padding-block-start: 4.5rem; }
+  .obj__in { grid-template-columns: 1fr; row-gap: 1.25rem; }
+  .obj__fig, .obj--b .obj__fig { grid-column: 1; grid-row: 1; --span: 12; }
+  .obj__plate, .obj--b .obj__plate { grid-column: 1; grid-row: 2; max-width: none; }
+  .obj:nth-of-type(3n) .obj__plate { padding-block-start: 0; }
+  .obj__ph { aspect-ratio: 4 / 3 !important; }
+  .obj__frame { transform: none; }
+  .obj__name { margin-bottom: 0.8rem; }
+  .mats { min-height: 0; padding-block: 3.5rem 3rem; }
+  .mats__in, .close__in { grid-template-columns: 1fr; row-gap: 2.5rem; }
+  .close { min-height: 0; padding-block-start: 3.5rem; }
+  .list li { grid-template-columns: 1fr auto; row-gap: 0; padding-block: 0.2rem; }
+  .list a { grid-column: 1; }
+  .list__p { grid-column: 2; grid-row: 1; justify-self: end; }
+  .list__m { grid-column: 1; }
+  .list__w { grid-column: 2; min-width: 0; }
+  form { grid-template-columns: 1fr; }
+  .foot { grid-template-columns: 1fr; }
+  .foot__brand { grid-row: auto; }
+  .foot__s { grid-column: 1; }
+  .bar { padding-block: 0.5rem; }
+  .brand { font-size: 1.7rem; }
+}
+@media (max-width: 400px) {
+  .btn { padding-inline: 0.85rem; font-size: 0.88rem; }
+  .bar__lang { padding-inline: 0.4rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { transition: none; }
+  .obj__frame, .obj__ph img { transform: none !important; }
+  .btn, .sw .sw__dot, .chip, .mat li { transition: none; }
+  .btn:hover { transform: none; }
+}
+
+</style>
+</head>
+<body class="is-ar">
+<span data-sc-progress></span>
+
+<header class="bar">
+  <h1 class="brand">ملمس<span class="sr-only">: أثاث يُصنع على دفعات صغيرة، قوامه ست خامات نعرفها باللمس.</span></h1>
+  <div class="bar__end">
+    <a class="bar__lang" href="../" hreflang="en" lang="en" aria-label="اقرأ هذه الصفحة بالإنجليزية">English</a>
+    <a class="btn" href="#find">اكتب إلى أحد الصنّاع</a>
+  </div>
+</header>
+
+<nav class="strip" aria-label="الخامات">
+  <div class="strip__row"><button type="button" class="sw" data-m="walnut" style="--c:#6b4a34" aria-pressed="false"><span class="sw__dot" aria-hidden="true"></span><span class="sw__t">جوز</span><span class="sr-only">، القطعة التالية منها</span></button><button type="button" class="sw" data-m="oak" style="--c:#c39a62" aria-pressed="true"><span class="sw__dot" aria-hidden="true"></span><span class="sw__t">بلوط</span><span class="sr-only">، القطعة التالية منها</span></button><button type="button" class="sw" data-m="ash" style="--c:#d6bf9a" aria-pressed="false"><span class="sw__dot" aria-hidden="true"></span><span class="sw__t">دردار</span><span class="sr-only">، القطعة التالية منها</span></button><button type="button" class="sw" data-m="wool" style="--c:#e9e2d3" aria-pressed="false"><span class="sw__dot" aria-hidden="true"></span><span class="sw__t">صوف</span><span class="sr-only">، القطعة التالية منها</span></button><button type="button" class="sw" data-m="steel" style="--c:#6f7c85" aria-pressed="false"><span class="sw__dot" aria-hidden="true"></span><span class="sw__t">فولاذ</span><span class="sr-only">، القطعة التالية منها</span></button><button type="button" class="sw" data-m="stone" style="--c:#a3b0b5" aria-pressed="false"><span class="sw__dot" aria-hidden="true"></span><span class="sw__t">فخار حجري</span><span class="sr-only">، القطعة التالية منها</span></button><span class="strip__mark" aria-hidden="true"></span></div>
+</nav>
+
+<main id="top" data-lang="ar">
+
+  <section class="obj obj--a" id="o-low-table" data-sc-act="flow" data-mats="oak steel" aria-labelledby="o-low-table-h">
+    <div class="obj__in" style="--span:8;--ar:16/10;--pos:50% 62%;--lean:7deg">
+      <div class="obj__fig">
+        <div class="obj__tilt" data-sc-tilt="3.5">
+          <div class="obj__frame"><div class="obj__ph"><img src="../../../assets/domain-stills/tactile-2.webp" width="960" height="540" alt="شرائح مكدّسة من البلوط وفخار بلون الطين، دراسة خامة تجريبية"></div></div>
+        </div>
+        <p class="obj__cap">دراسة خامة تجريبية</p>
+      </div>
+      <div class="obj__plate">
+        <h2 class="obj__name" id="o-low-table-h" tabindex="-1">الطاولة المنخفضة رقم 4</h2>
+        <dl class="label">
+          <div><dt>مصنوعة من</dt><dd>بلوط، فولاذ</dd></div>
+          <div><dt>السعر</dt><dd>من <bdi dir="ltr">1,240 £</bdi></dd></div>
+          <div><dt>مدة التصنيع</dt><dd><bdi dir="ltr">8</bdi> أسابيع</dd></div>
+          <div><dt>الصنع في</dt><dd>بورتو، وتُوقَّع من الأسفل</dd></div>
+        </dl>
+        <p class="obj__note">لوح سميك من البلوط على قاعدة فولاذية بصدأ مصطنع، مدهونة بالزيت حتى تبدو دافئة.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="obj obj--b" id="o-haru" data-sc-act="flow" data-mats="ash" aria-labelledby="o-haru-h">
+    <div class="obj__in" style="--span:5;--ar:5/4;--pos:8% 88%;--lean:-9deg">
+      <div class="obj__fig" data-sc-in>
+        <div class="obj__tilt" data-sc-tilt="3.5">
+          <div class="obj__frame"><div class="obj__ph"><img src="../../../assets/domain-stills/tactile-1.webp" width="960" height="540" alt="شرائح مكدّسة من البلوط وفخار بلون الطين، دراسة خامة تجريبية"></div></div>
+        </div>
+        <p class="obj__cap">دراسة خامة تجريبية</p>
+      </div>
+      <div class="obj__plate" data-sc-in data-sc-stagger="90">
+        <h2 class="obj__name" id="o-haru-h" tabindex="-1">كرسي هارو للطعام</h2>
+        <dl class="label">
+          <div><dt>مصنوعة من</dt><dd>دردار، حبل ورقي</dd></div>
+          <div><dt>السعر</dt><dd>من <bdi dir="ltr">640 £</bdi></dd></div>
+          <div><dt>مدة التصنيع</dt><dd><bdi dir="ltr">6</bdi> أسابيع</dd></div>
+          <div><dt>الصنع في</dt><dd>بورتو، وتُوقَّع من الأسفل</dd></div>
+        </dl>
+        <p class="obj__note">هيكل من الدردار المنحني بالبخار ومقعد من حبل ورقي منسوج يشتدّ مع الاستعمال.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="obj obj--a" id="o-salt" data-sc-act="flow" data-mats="walnut" aria-labelledby="o-salt-h">
+    <div class="obj__in" style="--span:8;--ar:21/9;--pos:50% 58%;--lean:8deg">
+      <div class="obj__fig" data-sc-in>
+        <div class="obj__tilt" data-sc-tilt="3.5">
+          <div class="obj__frame"><div class="obj__ph"><img src="../../../assets/domain-stills/tactile-3.webp" width="960" height="540" alt="شرائح مكدّسة من البلوط وفخار بلون الطين، دراسة خامة تجريبية" loading="lazy"></div></div>
+        </div>
+        <p class="obj__cap">دراسة خامة تجريبية</p>
+      </div>
+      <div class="obj__plate" data-sc-in data-sc-stagger="90">
+        <h2 class="obj__name" id="o-salt-h" tabindex="-1">مقعد الملح</h2>
+        <dl class="label">
+          <div><dt>مصنوعة من</dt><dd>جوز</dd></div>
+          <div><dt>السعر</dt><dd>من <bdi dir="ltr">980 £</bdi></dd></div>
+          <div><dt>مدة التصنيع</dt><dd><bdi dir="ltr">7</bdi> أسابيع</dd></div>
+          <div><dt>الصنع في</dt><dd>بورتو، وتُوقَّع من الأسفل</dd></div>
+        </dl>
+        <p class="obj__note">متران من خشب الجوز الصلب بمقعد مقعّر برفق، يتسع لثلاثة أشخاص إلى المائدة.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="obj obj--b" id="o-dune" data-sc-act="flow" data-mats="wool" aria-labelledby="o-dune-h">
+    <div class="obj__in" style="--span:5;--ar:1/1;--pos:60% 62%;--lean:-8deg">
+      <div class="obj__fig" data-sc-in>
+        <div class="obj__tilt" data-sc-tilt="3.5">
+          <div class="obj__frame"><div class="obj__ph"><img src="../../../assets/domain-stills/tactile-4.webp" width="960" height="540" alt="شرائح مكدّسة من البلوط وفخار بلون الطين، دراسة خامة تجريبية" loading="lazy"></div></div>
+        </div>
+        <p class="obj__cap">دراسة خامة تجريبية</p>
+      </div>
+      <div class="obj__plate" data-sc-in data-sc-stagger="90">
+        <h2 class="obj__name" id="o-dune-h" tabindex="-1">كرسي الكثيب</h2>
+        <dl class="label">
+          <div><dt>مصنوعة من</dt><dd>صوف، ألياف جوز الهند</dd></div>
+          <div><dt>السعر</dt><dd>من <bdi dir="ltr">2,150 £</bdi></dd></div>
+          <div><dt>مدة التصنيع</dt><dd><bdi dir="ltr">10</bdi> أسابيع</dd></div>
+          <div><dt>الصنع في</dt><dd>بورتو، وتُوقَّع من الأسفل</dd></div>
+        </dl>
+        <p class="obj__note">عميق ومنخفض، مكسوّ بصوف بوكليه غير مصبوغ فوق حشوة من شعر الخيل وألياف جوز الهند.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="obj obj--a" id="o-kiln" data-sc-act="flow" data-mats="stone" aria-labelledby="o-kiln-h">
+    <div class="obj__in" style="--span:5;--ar:4/5;--pos:66% 58%;--lean:9deg">
+      <div class="obj__fig" data-sc-in>
+        <div class="obj__tilt" data-sc-tilt="3.5">
+          <div class="obj__frame"><div class="obj__ph"><img src="../../../assets/domain-stills/tactile-2.webp" width="960" height="540" alt="شرائح مكدّسة من البلوط وفخار بلون الطين، دراسة خامة تجريبية" loading="lazy"></div></div>
+        </div>
+        <p class="obj__cap">دراسة خامة تجريبية</p>
+      </div>
+      <div class="obj__plate" data-sc-in data-sc-stagger="90">
+        <h2 class="obj__name" id="o-kiln-h" tabindex="-1">مقعد فرن الفخار</h2>
+        <dl class="label">
+          <div><dt>مصنوعة من</dt><dd>فخار حجري</dd></div>
+          <div><dt>السعر</dt><dd>من <bdi dir="ltr">320 £</bdi></dd></div>
+          <div><dt>مدة التصنيع</dt><dd><bdi dir="ltr">4</bdi> أسابيع</dd></div>
+          <div><dt>الصنع في</dt><dd>بورتو، وتُوقَّع من الأسفل</dd></div>
+        </dl>
+        <p class="obj__note">مشكّل من الفخار الحجري ومطلي بأكسيد الحديد ومحروق مرتين، فلا يتطابق لونان منهما.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="obj obj--b" id="o-reed" data-sc-act="flow" data-mats="oak" aria-labelledby="o-reed-h">
+    <div class="obj__in" style="--span:8;--ar:16/9;--pos:84% 52%;--lean:-7deg">
+      <div class="obj__fig" data-sc-in>
+        <div class="obj__tilt" data-sc-tilt="3.5">
+          <div class="obj__frame"><div class="obj__ph"><img src="../../../assets/domain-stills/tactile-1.webp" width="960" height="540" alt="شرائح مكدّسة من البلوط وفخار بلون الطين، دراسة خامة تجريبية" loading="lazy"></div></div>
+        </div>
+        <p class="obj__cap">دراسة خامة تجريبية</p>
+      </div>
+      <div class="obj__plate" data-sc-in data-sc-stagger="90">
+        <h2 class="obj__name" id="o-reed-h" tabindex="-1">خزانة القصب</h2>
+        <dl class="label">
+          <div><dt>مصنوعة من</dt><dd>بلوط، روطان</dd></div>
+          <div><dt>السعر</dt><dd>من <bdi dir="ltr">2,780 £</bdi></dd></div>
+          <div><dt>مدة التصنيع</dt><dd><bdi dir="ltr">12</bdi> أسبوعًا</dd></div>
+          <div><dt>الصنع في</dt><dd>بورتو، وتُوقَّع من الأسفل</dd></div>
+        </dl>
+        <p class="obj__note">أبواب من الروطان المنسوج يدويًا على هيكل من البلوط الصلب، بمقابض من النحاس الأصفر صُبّت في بورتو.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="mats" id="materials" data-sc-act="flow" aria-labelledby="mats-h">
+    <div class="mats__in">
+      <div class="mats__lead" data-sc-in data-sc-stagger="90">
+        <h2 class="mats__title" id="mats-h">ست خامات نعرفها عن ظهر قلب</h2>
+        <p class="mats__lede">نشتري من المورّدين القلّة أنفسهم كل عام، ونستطيع أن نخبرك بأي غابة وأي قطيع وأي فرن.</p>
+        <figure class="quote"><blockquote><p>اشترينا المقعد للممر، وبعد عام صار المكان الذي يجتمع عنده الجميع في كل فصل.</p></blockquote><figcaption>أنيكه فوس، هارلم</figcaption></figure>
+        <dl class="facts"><div><dt>قطع في المجموعة</dt><dd><bdi dir="ltr">31</bdi></dd></div><div><dt>أكبر دفعة</dt><dd><bdi dir="ltr">40</bdi> قطعة</dd></div><div><dt>صنّاع في الورشة</dt><dd><bdi dir="ltr">9</bdi></dd></div><div><dt>الإصلاح</dt><dd>مجاني لمدة <bdi dir="ltr">20</bdi> عامًا</dd></div></dl>
+      </div>
+      <ul class="mat" data-sc-in data-sc-stagger="70"><li data-m="oak"><span class="mat__sw" style="--c:#c39a62" aria-hidden="true"></span><div><h3>البلوط الأوروبي</h3><p>ينمو ببطء في مورفان بفرنسا. زيت شمعي صلب بلمسة مطفية.</p></div></li><li data-m="walnut"><span class="mat__sw" style="--c:#6b4a34" aria-hidden="true"></span><div><h3>الجوز الأمريكي</h3><p>يُنشر في بنسلفانيا ويُجفَّف في بورتو. زيت طبيعي.</p></div></li><li data-m="ash"><span class="mat__sw" style="--c:#d6bf9a" aria-hidden="true"></span><div><h3>الدردار</h3><p>يُقطع من غابة مُدارة في ديفون ويُحنى بالبخار يدويًا. ورنيش شفاف نصف لامع.</p></div></li><li data-m="wool"><span class="mat__sw" style="--c:#e9e2d3" aria-hidden="true"></span><div><h3>الصوف غير المصبوغ</h3><p>يُغزل في بييلا بإيطاليا من قطيع واحد. دون معالجة.</p></div></li><li data-m="steel"><span class="mat__sw" style="--c:#6f7c85" aria-hidden="true"></span><div><h3>الفولاذ المُصدَّأ</h3><p>يُقطع في براغا ويُصدَّأ يدويًا خلال ثلاثة أيام. يُحمى بطبقة شمع.</p></div></li><li data-m="stone"><span class="mat__sw" style="--c:#a3b0b5" aria-hidden="true"></span><div><h3>الفخار الحجري</h3><p>يُستخرج من أفيرو ويُحرق عند 1,240 درجة مئوية. طلاء من أكسيد الحديد.</p></div></li></ul>
+    </div>
+  </section>
+
+  <section class="close" id="find" data-sc-act="flow" aria-labelledby="find-h">
+    <div class="close__in plate">
+      <div class="find" data-sc-in data-sc-stagger="90">
+        <h2 class="plate__title" id="find-h">اعثر على قطعتك</h2>
+        <div class="pick" role="group" aria-labelledby="pick-l">
+          <p class="pick__l" id="pick-l">مصنوعة من</p>
+          <div class="pick__row"><button type="button" class="chip" data-m="walnut" aria-pressed="false"><span class="sw__dot" style="--c:#6b4a34" aria-hidden="true"></span>جوز</button><button type="button" class="chip" data-m="oak" aria-pressed="false"><span class="sw__dot" style="--c:#c39a62" aria-hidden="true"></span>بلوط</button><button type="button" class="chip" data-m="ash" aria-pressed="false"><span class="sw__dot" style="--c:#d6bf9a" aria-hidden="true"></span>دردار</button><button type="button" class="chip" data-m="wool" aria-pressed="false"><span class="sw__dot" style="--c:#e9e2d3" aria-hidden="true"></span>صوف</button><button type="button" class="chip" data-m="steel" aria-pressed="false"><span class="sw__dot" style="--c:#6f7c85" aria-hidden="true"></span>فولاذ</button><button type="button" class="chip" data-m="stone" aria-pressed="false"><span class="sw__dot" style="--c:#a3b0b5" aria-hidden="true"></span>فخار حجري</button></div>
+        </div>
+        <p class="count" id="count" role="status" aria-live="polite" data-tpl="يعرض <bdi dir=&quot;ltr&quot;>{n}</bdi> من <bdi dir=&quot;ltr&quot;>6</bdi>">يعرض <bdi dir="ltr">6</bdi> من <bdi dir="ltr">6</bdi></p>
+        <ul class="list" id="list"><li data-mats="oak steel"><a href="#o-low-table">الطاولة المنخفضة رقم 4</a><span class="list__m">بلوط، فولاذ</span><span class="list__p">من <bdi dir="ltr">1,240 £</bdi></span><span class="list__w"><bdi dir="ltr">8</bdi> أسابيع</span></li><li data-mats="ash"><a href="#o-haru">كرسي هارو للطعام</a><span class="list__m">دردار، حبل ورقي</span><span class="list__p">من <bdi dir="ltr">640 £</bdi></span><span class="list__w"><bdi dir="ltr">6</bdi> أسابيع</span></li><li data-mats="walnut"><a href="#o-salt">مقعد الملح</a><span class="list__m">جوز</span><span class="list__p">من <bdi dir="ltr">980 £</bdi></span><span class="list__w"><bdi dir="ltr">7</bdi> أسابيع</span></li><li data-mats="wool"><a href="#o-dune">كرسي الكثيب</a><span class="list__m">صوف، ألياف جوز الهند</span><span class="list__p">من <bdi dir="ltr">2,150 £</bdi></span><span class="list__w"><bdi dir="ltr">10</bdi> أسابيع</span></li><li data-mats="stone"><a href="#o-kiln">مقعد فرن الفخار</a><span class="list__m">فخار حجري</span><span class="list__p">من <bdi dir="ltr">320 £</bdi></span><span class="list__w"><bdi dir="ltr">4</bdi> أسابيع</span></li><li data-mats="oak"><a href="#o-reed">خزانة القصب</a><span class="list__m">بلوط، روطان</span><span class="list__p">من <bdi dir="ltr">2,780 £</bdi></span><span class="list__w"><bdi dir="ltr">12</bdi> أسبوعًا</span></li></ul>
+      </div>
+      <div class="inq" data-sc-in data-sc-stagger="90">
+        <h2 class="plate__title" id="inq-h">حدّثنا عن الغرفة.</h2>
+        <p class="inq__lede">تكفي بضعة أسطر عن المكان. سيردّ عليك أحد الصنّاع خلال يومي عمل بقطع تناسبه.</p>
+        <form id="inq" novalidate aria-labelledby="inq-h">
+          <div class="fld"><label for="f-name">اسمك</label><input id="f-name" name="name" type="text" autocomplete="name" required></div>
+          <div class="fld"><label for="f-email">البريد الإلكتروني</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
+          <div class="fld"><label for="f-room">أي غرفة؟</label><select id="f-room" name="room"><option>غرفة المعيشة</option><option>غرفة الطعام</option><option>غرفة النوم</option><option>الممر</option><option>استوديو أو مكتب</option></select></div>
+          <div class="fld"><label for="f-mat">الخامة المفضلة</label><select id="f-mat" name="material"><option value="oak">بلوط</option><option value="walnut">جوز</option><option value="ash">دردار</option><option value="wool">صوف</option><option value="">لم أحسم بعد</option></select></div>
+          <div class="fld fld--wide"><label for="f-space">كيف تبدو الغرفة ومن يستخدمها؟</label><textarea id="f-space" name="space" rows="4"></textarea></div>
+          <div class="fld fld--wide"><button class="btn btn--lg" type="submit">اكتب إلى أحد الصنّاع</button></div>
+          <p class="inq__ok" id="ok" role="status" hidden>شكرًا لك. سيكتب لك أحد صنّاعنا خلال يومي عمل.</p>
+        </form>
+      </div>
+      <footer class="foot"><p class="foot__brand">ملمس</p><p>أثاث يُصنع على دفعات صغيرة، قوامه ست خامات نعرفها باللمس.</p><p class="foot__s">«ملمس» علامة تجريبية. الأسماء والأسعار والأرقام والاقتباس في هذه الصفحة محتوى تجريبي، والصور دراسات خامات تجريبية وليست صور القطع.</p></footer>
+    </div>
+  </section>
+</main>
+
+<script src="../../_engine/scrollcraft.js"></script>
+<script>ScrollCraft.mount(document.body);</script>
+<script>
+(function () {
+  'use strict';
+  /* The signature: a material temperature control. The strip holds six
+     materials ordered warm to cool. Moving a pointer across it regrades the
+     whole wall (ground, ink, rules, every photograph) through one number, --t.
+     Click or tap sets the grade and jumps to the next object made of that
+     material. Nothing here talks to a server. */
+  var root = document.documentElement;
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var T = { walnut: 0, oak: 0.18, ash: 0.36, wool: 0.52, steel: 0.76, stone: 1 };
+  var sel = 'oak', filter = null, cur = -1;
+
+  var strip = document.querySelector('.strip');
+  var sws = [].slice.call(strip.querySelectorAll('.sw'));
+  var mark = strip.querySelector('.strip__mark');
+  var row = strip.querySelector('.strip__row');
+  var objs = [].slice.call(document.querySelectorAll('.obj'));
+  var matRows = [].slice.call(document.querySelectorAll('.mat li'));
+  var chips = [].slice.call(document.querySelectorAll('.chip'));
+  var items = [].slice.call(document.querySelectorAll('#list li'));
+  var count = document.getElementById('count');
+  var tpl = count.getAttribute('data-tpl');
+  var fMat = document.getElementById('f-mat');
+
+  function setT(t) {
+    if (Math.abs(t - cur) < 0.0005) return;
+    cur = t;
+    root.style.setProperty('--t', t.toFixed(3));
+  }
+  function paintSel() {
+    sws.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.m === sel ? 'true' : 'false'); });
+    matRows.forEach(function (li) { li.classList.toggle('is-sel', li.dataset.m === sel); });
+  }
+  function rest() { setT(T[sel]); }
+
+  // ---- pointer across the strip: continuous temperature --------------------
+  function stops() {
+    return sws.map(function (b) {
+      var r = b.getBoundingClientRect();
+      return { x: r.left + r.width / 2, t: T[b.dataset.m] };
+    }).sort(function (a, b) { return a.x - b.x; });
+  }
+  function tAt(x, pts) {
+    if (x <= pts[0].x) return pts[0].t;
+    for (var i = 0; i < pts.length - 1; i++) {
+      if (x <= pts[i + 1].x) return pts[i].t + (x - pts[i].x) / (pts[i + 1].x - pts[i].x) * (pts[i + 1].t - pts[i].t);
+    }
+    return pts[pts.length - 1].t;
+  }
+  strip.addEventListener('pointermove', function (e) {
+    if (e.pointerType === 'touch') return;
+    var pts = stops();
+    var x = Math.max(pts[0].x, Math.min(pts[pts.length - 1].x, e.clientX));
+    setT(tAt(x, pts));
+    var rr = row.getBoundingClientRect();
+    mark.style.transform = 'translateX(' + (x - rr.left) + 'px)';
+    strip.classList.add('is-live');
+  });
+  strip.addEventListener('pointerleave', function () { strip.classList.remove('is-live'); rest(); });
+  sws.forEach(function (b) {
+    b.addEventListener('focus', function () { setT(T[b.dataset.m]); });
+    b.addEventListener('blur', rest);
+    b.addEventListener('click', function () {
+      sel = b.dataset.m; paintSel(); rest(); jump(sel);
+    });
+  });
+
+  // ---- jump to the next object made of the material ------------------------
+  function here() {
+    var mid = innerHeight * 0.45, idx = 0;
+    objs.forEach(function (o, i) { if (o.getBoundingClientRect().top <= mid) idx = i; });
+    return idx;
+  }
+  function jump(m) {
+    var from = here();
+    for (var k = 1; k <= objs.length; k++) {
+      var o = objs[(from + k) % objs.length];
+      if (o.dataset.mats.split(' ').indexOf(m) > -1) {
+        o.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+        var h = o.querySelector('.obj__name');
+        if (h) h.focus({ preventScroll: true });
+        return;
+      }
+    }
+  }
+
+  // ---- which materials the object in view is made of -----------------------
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var ms = e.target.dataset.mats.split(' ');
+        sws.forEach(function (b) { if (ms.indexOf(b.dataset.m) > -1) b.setAttribute('data-here', ''); else b.removeAttribute('data-here'); });
+      });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    objs.forEach(function (o) { io.observe(o); });
+    var closeEl = document.getElementById('find');
+    new IntersectionObserver(function (es) {
+      document.body.classList.toggle('at-close', es[0].isIntersecting);
+    }, { rootMargin: '0px 0px -35% 0px' }).observe(closeEl);
+  }
+
+  // ---- the plate: the picker lists only objects made of the material -------
+  function applyFilter(animate) {
+    var firsts = {};
+    if (animate && !reduce) items.forEach(function (li, i) { if (!li.hidden) firsts[i] = li.getBoundingClientRect().top; });
+    var n = 0;
+    items.forEach(function (li) {
+      var on = !filter || li.dataset.mats.split(' ').indexOf(filter) > -1;
+      li.hidden = !on; if (on) n++;
+    });
+    count.innerHTML = tpl.replace('{n}', n);
+    chips.forEach(function (c) { c.setAttribute('aria-pressed', c.dataset.m === filter ? 'true' : 'false'); });
+    if (animate && !reduce) {
+      items.forEach(function (li, i) {
+        if (li.hidden) return;
+        if (firsts[i] === undefined) { li.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 240, easing: 'ease-out' }); return; }
+        var d = firsts[i] - li.getBoundingClientRect().top;
+        if (Math.abs(d) > 1) li.animate([{ transform: 'translateY(' + d + 'px)' }, { transform: 'none' }], { duration: 280, easing: 'cubic-bezier(0.23,1,0.32,1)' });
+      });
+    }
+  }
+  chips.forEach(function (c) {
+    c.addEventListener('click', function () {
+      var m = c.dataset.m;
+      filter = (filter === m) ? null : m;
+      if (filter) {
+        sel = filter; paintSel(); rest();
+        for (var i = 0; i < fMat.options.length; i++) if (fMat.options[i].value === filter) fMat.selectedIndex = i;
+      }
+      applyFilter(true);
+    });
+  });
+
+  // ---- the inquiry line: local only, nothing is sent -----------------------
+  var form = document.getElementById('inq'), ok = document.getElementById('ok');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    ok.hidden = false;
+  });
+
+  paintSel(); rest();
+})();
+
+</script>
+</body>
+</html>

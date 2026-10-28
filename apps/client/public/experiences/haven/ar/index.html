@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ملاذ: تعالَ إلى مكان أكثر رقّة (علامة تجريبية لإقامة صغيرة)</title>
+<meta name="description" content="موقع تجريبي لإقامة من تسع غرف قرب البحر: أربع غرف، ويوم في البيت، وقرص يقلب الصفحة كلها من الفجر إلى الليل. اجعلها لك.">
+<link rel="alternate" hreflang="en" href="../">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%231f1a17'/><path d='M16 6c4 4 6 7 6 11a6 6 0 0 1-12 0c0-4 2-7 6-11z' fill='%23eabf7a'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_engine/scrollcraft.css">
+<style>
+  :root { --sc-font-display: "Aref Ruqaa", "Noto Naskh Arabic", serif; --sc-font-text: "Noto Naskh Arabic", Tahoma, serif; --lh: 1.95; --trk: 0; --sc-canvas: #202a33; --sc-surface: #2b3742; --sc-ink-soft: #b9c6d2; --sc-accent: #f0b8a0; }
+  :root {
+    --sc-ink:        #fff5e3;
+    --sc-accent-ink: #1a130e;
+    --sky: #5d7384; --house: #232a31; --sea: #4a5d6b; --disc: #f7d7b8;
+    --tint: #8fa7bf; --tint-a: 0.3; --grade: none;
+    --line: color-mix(in oklab, var(--sc-ink) 22%, transparent);
+    --bar-h: 4rem;
+    --h1: clamp(2.8rem, 1.4rem + 5vw, 6rem);
+    --h2: clamp(2rem, 1.3rem + 2.8vw, 3.6rem);
+  }
+  html { scroll-padding-top: var(--bar-h); }
+  body { font-family: var(--sc-font-text); line-height: var(--lh); }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  bdi { unicode-bidi: isolate; }
+  :focus-visible { outline: 2px solid var(--sc-ink); outline-offset: 3px; }
+  h1, h2, h3, p, dl, dd, figure, ol, ul, blockquote { margin: 0; padding: 0; }
+  ul, ol { list-style: none; }
+  h1, h2 { font-family: var(--sc-font-display); font-weight: 400; letter-spacing: var(--trk); line-height: 1.04; text-wrap: balance; }
+  h2 { font-size: var(--h2); }
+  h3 { font: 400 var(--sc-t-lg)/1.2 var(--sc-font-display); letter-spacing: var(--trk); }
+  .note { color: var(--sc-ink-soft); font-size: var(--sc-t-sm); text-wrap: pretty; max-width: 44ch; }
+  .grade { filter: var(--grade); }
+  .tint { position: absolute; inset: 0; z-index: 5; background: var(--tint); opacity: var(--tint-a); mix-blend-mode: screen; pointer-events: none; }
+
+  /* ---- top bar: the dial replaces the menu; one CTA ---- */
+  .bar {
+    position: fixed; z-index: var(--sc-z-chrome); inset-block-start: 0; inset-inline: 0; height: var(--bar-h); box-sizing: border-box;
+    display: flex; align-items: center; gap: var(--sc-5); padding-inline: var(--sc-gutter);
+    background: color-mix(in oklab, var(--sc-canvas) 94%, transparent); border-block-end: 1px solid var(--line);
+  }
+  .brand { flex: none; min-width: 2.75rem; display: inline-flex; align-items: center; min-height: 2.75rem; color: var(--sc-ink); text-decoration: none; font: 400 var(--sc-t-lg)/1 var(--sc-font-display); letter-spacing: var(--trk); }
+  .dial { flex: 1; min-width: 0; display: flex; align-items: center; gap: var(--sc-4); }
+  .clock { flex: none; width: 3.4rem; font: 500 var(--sc-t-base)/1 var(--sc-font-text); font-variant-numeric: tabular-nums; color: var(--sc-ink); direction: ltr; text-align: center; }
+  .dial-track { position: relative; flex: 1 1 8rem; max-width: 26rem; height: 2.75rem; direction: ltr; }
+  .dial-in { position: absolute; inset: 0 1.375rem; }
+  .dial-axis { position: absolute; inset-inline: -1rem; top: 50%; height: 1px; background: var(--line); }
+  .dial-tick { position: absolute; top: 50%; width: 1px; height: 0.7rem; margin-top: -0.35rem; background: var(--sc-ink-soft); }
+  .dial input { position: absolute; inset: 0; width: 100%; height: 2.75rem; margin: 0; padding: 0; background: transparent; cursor: ew-resize; touch-action: pan-y; -webkit-appearance: none; appearance: none; }
+  .dial input::-webkit-slider-runnable-track { height: 2.75rem; background: transparent; }
+  .dial input::-moz-range-track { height: 2.75rem; background: transparent; }
+  .dial input::-webkit-slider-thumb { -webkit-appearance: none; width: 2.75rem; height: 2.75rem; box-sizing: border-box; border-radius: 50%; border: 0.8rem solid var(--sc-accent); background: var(--sc-canvas); }
+  .dial input::-moz-range-thumb { width: 2.75rem; height: 2.75rem; box-sizing: border-box; border-radius: 50%; border: 0.8rem solid var(--sc-accent); background: var(--sc-canvas); }
+  .dial input:focus-visible { outline: 2px solid var(--sc-ink); outline-offset: 2px; border-radius: 999px; }
+  .dial-name { flex: 0 1 15rem; min-width: 0; font-size: var(--sc-t-xs); color: var(--sc-ink-soft); line-height: 1.25; text-wrap: balance; }
+  .cta {
+    flex: none; display: inline-flex; align-items: center; justify-content: center; min-height: 2.75rem; padding-inline: var(--sc-5); box-sizing: border-box;
+    background: var(--sc-accent); color: var(--sc-accent-ink); font: 600 var(--sc-t-sm)/1 var(--sc-font-text); text-decoration: none; border: 0; border-radius: var(--sc-r-sm); cursor: pointer;
+    transition: transform var(--sc-d-fast) var(--sc-ease-out);
+  }
+  .cta:active { transform: scale(0.97); }
+  @media (hover: hover) and (pointer: fine) { a.cta:hover { transform: translateY(-1px); } }
+  .link { display: inline-flex; align-items: center; min-height: 2.75rem; color: var(--sc-ink); text-underline-offset: 0.25em; }
+
+  /* ---- 1. hero: poster first, the candle film scrubs; greet headline lower start ---- */
+  .hero-copy { position: absolute; z-index: 20; inset-inline-start: var(--sc-gutter); bottom: clamp(1.5rem, 7svh, 4.5rem); width: fit-content; max-width: min(46rem, calc(100% - 2 * var(--sc-gutter))); box-sizing: border-box; padding: var(--sc-5) var(--sc-6) var(--sc-4); background: color-mix(in oklab, var(--sc-canvas) 88%, transparent); border-radius: var(--sc-r-md); opacity: clamp(0, calc((0.7 - var(--sc-p, 0)) * 14.3), 1); }
+  .hero-copy h1 { font-size: var(--h1); }
+  .hero-copy h1 span { display: block; width: fit-content; }
+  .hero-copy h1 .brand-h { color: var(--sc-accent); }
+  .hero-copy .lede { margin-top: var(--sc-3); max-width: 34rem; font-size: var(--sc-t-base); text-wrap: pretty; }
+  .hero-copy .sample { margin-top: var(--sc-2); color: var(--sc-ink); font-size: var(--sc-t-xs); }
+  .hero-copy .go { margin-top: var(--sc-2); }
+  [data-sc-stage] video, [data-sc-stage] .sc-stage__poster { object-position: 50% 62%; }
+
+  /* ---- 2. the rooms: a flow act with a native rail ---- */
+  .rooms { background: var(--sc-canvas); min-height: 100svh; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; gap: var(--sc-6); padding-block: calc(var(--bar-h) + 2rem) 3rem; }
+  .rooms-head { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--sc-5); padding-inline: var(--sc-gutter); }
+  .rooms-head > div { display: grid; gap: var(--sc-3); max-width: 40rem; }
+  .rail-ctl { display: flex; gap: var(--sc-2); flex: none; }
+  .rail-b { width: 2.75rem; height: 2.75rem; display: inline-flex; align-items: center; justify-content: center; padding: 0; background: transparent; color: var(--sc-ink); border: 1px solid var(--sc-ink-soft); border-radius: 50%; cursor: pointer; }
+  .rail-b svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  [dir="rtl"] .rail-b svg { transform: scaleX(-1); }
+  .rail { display: flex; gap: 1.5rem; overflow-x: auto; padding-inline: var(--sc-gutter); padding-block: 0.25rem 0.5rem; scroll-snap-type: x proximity; scroll-padding-inline: var(--sc-gutter); scrollbar-width: thin; scrollbar-color: var(--sc-ink-soft) transparent; }
+  .rail:focus-visible { outline-offset: -3px; }
+  .card { flex: 0 0 min(23rem, 78vw); scroll-snap-align: start; display: grid; align-content: start; gap: var(--sc-3); }
+  .card figure { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: var(--sc-surface); border-radius: var(--sc-r-md); }
+  .card figure img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .card .meta { color: var(--sc-accent); font-size: var(--sc-t-sm); font-weight: 500; }
+  .card .txt { color: var(--sc-ink-soft); font-size: var(--sc-t-sm); text-wrap: pretty; }
+  .tags { display: flex; flex-wrap: wrap; gap: var(--sc-2); }
+  .tags li { padding: 0.15rem 0.6rem; border: 1px solid var(--sc-ink-soft); border-radius: 999px; font-size: var(--sc-t-xs); color: var(--sc-ink); }
+  .facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sc-5); padding-inline: var(--sc-gutter); }
+  .facts div { display: grid; gap: 0.15rem; border-block-start: 1px solid var(--line); padding-block-start: var(--sc-3); }
+  .facts dt { order: 2; font-size: var(--sc-t-xs); color: var(--sc-ink-soft); }
+  .facts dd { order: 1; font: 400 var(--sc-t-xl)/1.1 var(--sc-font-display); color: var(--sc-accent); }
+  .imgnote { padding-inline: var(--sc-gutter); color: var(--sc-ink-soft); font-size: var(--sc-t-xs); }
+
+  /* ---- 3. the ritual: one pinned day, the dial turns it to dusk ---- */
+  .rt-stage { background: var(--sc-canvas); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(1.5rem, 5vw, 6rem); align-items: center; padding: calc(var(--bar-h) + 1.5rem) var(--sc-gutter) 1.5rem; box-sizing: border-box; }
+  .rt-text { display: grid; gap: var(--sc-4); align-content: center; min-width: 0; }
+  .day { border-block-start: 1px solid var(--line); }
+  .day li { border-block-end: 1px solid var(--line); position: relative; }
+  .day li::before { content: ""; position: absolute; inset-block: 0.5rem; inset-inline-start: -0.9rem; width: 3px; background: var(--sc-accent); transform: scaleY(0); transition: transform var(--sc-d-base) var(--sc-ease-out); }
+  .day li.is-on::before { transform: scaleY(1); }
+  .day-b { width: 100%; min-height: 2.75rem; display: flex; align-items: center; gap: var(--sc-4); padding: 0.25rem 0; background: transparent; border: 0; cursor: pointer; text-align: start; color: var(--sc-ink-soft); font: 400 var(--sc-t-base)/1.25 var(--sc-font-text); }
+  .day-b bdi { flex: none; width: 3.4rem; font-variant-numeric: tabular-nums; }
+  .day li.is-on .day-b { color: var(--sc-ink); }
+  .now { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: var(--sc-4); min-height: 5.5rem; }
+  .now-clock { font: 400 var(--sc-t-2xl)/1 var(--sc-font-display); color: var(--sc-accent); direction: ltr; font-variant-numeric: tabular-nums; }
+  .nts { display: grid; }
+  .nt { grid-area: 1 / 1; font-size: var(--sc-t-base); text-wrap: pretty; opacity: 0; transition: opacity var(--sc-d-base) var(--sc-ease-out); }
+  .nt.is-on { opacity: 1; }
+  .house { margin: 0; display: grid; gap: var(--sc-2); min-width: 0; align-content: center; }
+  .house svg { display: block; width: 100%; height: auto; max-height: calc(100svh - var(--bar-h) - 7rem); border-radius: var(--sc-r-md); }
+  .house figcaption { font-size: var(--sc-t-xs); color: var(--sc-ink-soft); max-width: 60ch; }
+  .house .sky { fill: var(--sky); } .house .sea { fill: var(--sea); } .house .hs { fill: var(--house); }
+  .house .disc { fill: var(--disc); }
+  .house .win { fill: var(--sc-surface); stroke: var(--house); stroke-width: 2; }
+  .house .glow { fill: var(--sc-accent); opacity: var(--lit, 0); }
+  .house .stove { fill: var(--house); }
+  .house .fl { fill: var(--sc-accent); opacity: var(--lit, 0); }
+
+  /* ---- 4. the close: stay dates first, a magnetic CTA ---- */
+  .cl-stage { background: var(--sc-canvas); display: grid; align-content: center; padding: calc(var(--bar-h) + 1.5rem) var(--sc-gutter) 4.5rem; box-sizing: border-box; }
+  .cl-in { width: min(100%, var(--sc-maxw)); margin-inline: auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: clamp(2rem, 6vw, 6rem); align-items: center; }
+  .cl-lead { display: grid; gap: var(--sc-4); }
+  .cl-lead p.lede { max-width: 34ch; text-wrap: pretty; }
+  .q { margin-block-start: var(--sc-4); padding-inline-start: var(--sc-4); border-inline-start: 2px solid var(--sc-accent); display: grid; gap: var(--sc-2); }
+  .q blockquote { font-size: var(--sc-t-sm); color: var(--sc-ink); text-wrap: pretty; }
+  .q figcaption { font-size: var(--sc-t-xs); color: var(--sc-ink-soft); }
+  form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sc-4); padding: var(--sc-5); background: var(--sc-surface); border-radius: var(--sc-r-md); }
+  .f { display: grid; gap: 0.35rem; min-width: 0; }
+  .f.wide { grid-column: 1 / -1; }
+  .f label { font-size: var(--sc-t-sm); color: var(--sc-ink); }
+  .f input, .f select, .f textarea { box-sizing: border-box; width: 100%; min-height: 2.75rem; padding: 0.55rem 0.75rem; font: 400 var(--sc-t-base)/1.3 var(--sc-font-text); color: var(--sc-ink); color-scheme: dark; background: var(--sc-canvas); border: 1px solid var(--sc-ink-soft); border-radius: var(--sc-r-sm); }
+  .f textarea { min-height: 4.5rem; resize: vertical; }
+  .f input:focus-visible, .f select:focus-visible, .f textarea:focus-visible { outline: 2px solid var(--sc-ink); outline-offset: 2px; }
+  form .cta { grid-column: 1 / -1; justify-self: start; min-height: 3rem; padding-inline: var(--sc-6); }
+  .reply { grid-column: 1 / -1; min-height: 1.4em; color: var(--sc-ink); font-size: var(--sc-t-sm); }
+  .foot { position: absolute; inset-inline: var(--sc-gutter); bottom: 0.75rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--sc-5); font-size: var(--sc-t-xs); color: var(--sc-ink-soft); }
+  .foot a { color: var(--sc-ink); min-height: 2.75rem; min-width: 2.75rem; padding-inline: 0.4rem; margin-inline: -0.4rem; box-sizing: border-box; justify-content: center; display: inline-flex; align-items: center; text-underline-offset: 0.2em; }
+
+  @media (max-width: 860px) {
+    :root { --bar-h: 3.5rem; }
+    .bar { gap: var(--sc-3); padding-inline: var(--sc-4); }
+    .brand { font-size: var(--sc-t-base); }
+    .dial { gap: var(--sc-2); }
+    .clock { width: 2.9rem; font-size: var(--sc-t-sm); }
+    .dial-name { display: none; }
+    .cta { padding-inline: var(--sc-3); font-size: var(--sc-t-xs); }
+    .hero-copy { padding: var(--sc-4); bottom: 1.25rem; }
+    .hero-copy h1 { font-size: clamp(2.2rem, 11vw, 2.9rem); }
+    .hero-copy .lede { font-size: var(--sc-t-sm); }
+    .rooms-head { flex-direction: column; align-items: flex-start; }
+    .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sc-4); }
+    .rt-stage { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); gap: var(--sc-3); align-items: start; padding-block-start: calc(var(--bar-h) + 0.75rem); }
+    .rt-text { gap: var(--sc-2); }
+    .rt-text .note { display: none; }
+    .rt-text h2 { font-size: var(--sc-t-xl); }
+    .day-b { min-height: 2.75rem; font-size: var(--sc-t-sm); }
+    .now { min-height: 4.5rem; gap: var(--sc-3); }
+    .nt { font-size: var(--sc-t-sm); }
+    .house svg { max-height: 30svh; }
+    .house figcaption { display: none; }
+    .cl-in { grid-template-columns: 1fr; gap: var(--sc-3); }
+    .cl-lead p.lede, .q { display: none; }
+    .cl-lead h2 { font-size: var(--sc-t-xl); }
+    form { gap: var(--sc-3); padding: var(--sc-4); }
+    .f.t { display: none; }
+    .f.m-wide { grid-column: 1 / -1; }
+    .foot { bottom: 0.25rem; }
+  }
+  @media (max-height: 760px) and (min-width: 861px) {
+    .rt-text .note, .q { display: none; }
+    .house figcaption { display: none; }
+    .rooms { justify-content: flex-start; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .day li::before, .nt, .cta { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <a class="brand" href="#top">ملاذ</a>
+  <div class="dial">
+    <output class="clock" id="clock" for="dial">06:30</output>
+    <div class="dial-track"><div class="dial-in" aria-hidden="true"><span class="dial-axis"></span><i class="dial-tick" style="inset-inline-start:8.82%"></i><i class="dial-tick" style="inset-inline-start:23.53%"></i><i class="dial-tick" style="inset-inline-start:41.18%"></i><i class="dial-tick" style="inset-inline-start:73.53%"></i><i class="dial-tick" style="inset-inline-start:88.24%"></i></div><input id="dial" type="range" min="6" max="23" step="0.25" value="6.5" aria-label="وقت اليوم"></div>
+    <p class="dial-name" id="dialName" aria-hidden="true"></p>
+  </div>
+  <a class="cta" href="#stay">اجعلها لك</a>
+</header>
+
+<main id="top">
+
+  <!-- 1. HERO: poster first, the candle film scrubs slowly. Greet headline lower start. -->
+  <section id="hero" data-sc-act="scrub" data-sc-span="2" data-sc-dwell="0.35" aria-label="ملاذ: شمعة على وعاء ماء">
+    <div data-sc-stage>
+      <img class="sc-stage__poster grade" src="../../haven/assets/hero-poster.webp" alt="" width="1280" height="720">
+      <video class="grade" data-sc-scrub data-sc-lerp="0.1" data-sc-src="../../haven/assets/hero.mp4" data-sc-src-mobile="../../haven/assets/hero-m.mp4" muted playsinline aria-hidden="true"></video>
+      <div class="tint" aria-hidden="true"></div>
+      <div class="hero-copy"><div data-sc-cue="0 0.7 0 0.1">
+        <h1><span class="brand-h">ملاذ</span><span>تعالَ إلى مكان أكثر رقّة.</span></h1>
+        <p class="lede">تسع غرف قرب البحر، بإيقاع بطيء مقصود: ملاذ لا فندق.</p>
+        <p class="go"><a class="link" href="#rooms">شاهد الغرف</a></p>
+        <p class="sample">ملاذ علامة تجريبية. كل الأسماء والأرقام في هذه الصفحة محتوى تجريبي.</p>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- 2. THE ROOMS: flow. A native rail, four cards. -->
+  <section id="rooms" class="rooms" data-sc-act="flow" aria-labelledby="roomsH">
+    <div class="rooms-head" data-sc-in>
+      <div><h2 id="roomsH">تسع غرف، لكل منها طقسها</h2><p class="note">أربع منها أدناه. تُدفَّأ كلها بالخشب أو بحجر ساخن، ولا تلفاز في أي منها.</p></div>
+      <div class="rail-ctl"><button class="rail-b" type="button" data-rail="prev" aria-label="الغرفة السابقة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><button class="rail-b" type="button" data-rail="next" aria-label="الغرفة التالية"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></div>
+    </div>
+    <ul class="rail" id="rail" tabindex="0" role="group" aria-label="الغرف"><li class="card"><figure><img class="grade" src="../../../assets/domain-stills/haven-1.webp" alt="" width="960" height="540" loading="lazy" style="transform:scale(2.1);transform-origin:96% 6%"><div class="tint" aria-hidden="true"></div></figure><h3>المطلّ</h3><p class="meta">تتسع لشخصين · من <bdi dir="ltr">210</bdi> جنيهات إسترلينية للّيلة</p><p class="txt">تحت السقف المائل، بمقعد عند النافذة يطل على سور الميناء وأولى القوارب.</p><ul class="tags"><li>إطلالة بحرية</li><li>موقد خشب</li></ul></li><li class="card"><figure><img class="grade" src="../../../assets/domain-stills/haven-2.webp" alt="" width="960" height="540" loading="lazy" style="transform:scale(2);transform-origin:50% 48%"><div class="tint" aria-hidden="true"></div></figure><h3>غرفة الملح</h3><p class="meta">تتسع لشخصين · من <bdi dir="ltr">175</bdi> جنيهًا إسترلينيًا للّيلة</p><p class="txt">سرير منخفض وجدران مطلية بالكلس وحوض استحمام عميق يكفي للقراءة فيه.</p><ul class="tags"><li>حوض عميق</li></ul></li><li class="card"><figure><img class="grade" src="../../../assets/domain-stills/haven-3.webp" alt="" width="960" height="540" loading="lazy" style="transform:scale(1.7);transform-origin:4% 78%"><div class="tint" aria-hidden="true"></div></figure><h3>علّية الشباك</h3><p class="meta">تتسع لأربعة · من <bdi dir="ltr">290</bdi> جنيهًا إسترلينيًا للّيلة</p><p class="txt">علّية الصيد القديمة، بسريرين في الأعلى عبر سلّم وطاولة طويلة في الأسفل للعشاء.</p><ul class="tags"><li>عائلية</li><li>طاولة طويلة</li></ul></li><li class="card"><figure><img class="grade" src="../../../assets/domain-stills/haven-4.webp" alt="" width="960" height="540" loading="lazy" style="transform:scale(1.6);transform-origin:84% 92%"><div class="tint" aria-hidden="true"></div></figure><h3>خلوة الحديقة</h3><p class="meta">تتسع لشخص · من <bdi dir="ltr">120</bdi> جنيهًا إسترلينيًا للّيلة</p><p class="txt">غرفة صغيرة لشخص واحد، تفتح على أحواض الأعشاب ورائحة خبز الصباح.</p><ul class="tags"><li>حديقة</li><li>هادئة</li></ul></li></ul>
+    <dl class="facts"><div><dt>الغرف</dt><dd><bdi dir="ltr">9</bdi></dd></div><div><dt>خطوات إلى البحر</dt><dd><bdi dir="ltr">27</bdi></dd></div><div><dt>الوصول</dt><dd>من الرابعة عصرًا</dd></div><div><dt>أقرب محطة</dt><dd><bdi dir="ltr">20</bdi> دقيقة بالسيارة</dd></div></dl>
+    <p class="imgnote">الصور لقطات تجريبية لشمعة واحدة ووعاء واحد، مؤطرة بأربع طرق. وهي ليست صورًا لهذه الغرف.</p>
+  </section>
+
+  <!-- 3. THE RITUAL: pin. The day, and the dial that turns it to dusk. The peak. -->
+  <section id="ritual" data-sc-act="pin" data-sc-span="4.9" aria-label="يوم في البيت">
+    <div data-sc-stage class="rt-stage" id="rtStage" data-sc-verify-state="">
+      <div class="rt-text">
+        <h2>يوم في البيت، بلا استعجال</h2>
+        <p class="note">لا شيء هنا إلزامي. هذا فقط ما اعتاد البيت أن يسير عليه.</p>
+        <ol class="day"><li><button class="day-b" type="button" data-t="7.5" data-title="خبز وإبريق شاي عند بابك"><bdi dir="ltr">07:30</bdi><span>خبز وإبريق شاي عند بابك</span></button></li><li><button class="day-b" type="button" data-t="10" data-title="جدول المدّ والجزر على جدار المطبخ"><bdi dir="ltr">10:00</bdi><span>جدول المدّ والجزر على جدار المطبخ</span></button></li><li><button class="day-b" type="button" data-t="13" data-title="غداء من رف الأمانة"><bdi dir="ltr">13:00</bdi><span>غداء من رف الأمانة</span></button></li><li><button class="day-b" type="button" data-t="18.5" data-title="إشعال المواقد وخفض المصابيح"><bdi dir="ltr">18:30</bdi><span>إشعال المواقد وخفض المصابيح</span></button></li><li><button class="day-b" type="button" data-t="21" data-title="عشاء واحد على طاولة واحدة"><bdi dir="ltr">21:00</bdi><span>عشاء واحد على طاولة واحدة</span></button></li></ol>
+        <div class="now"><p class="now-clock" id="nowClock">08:00</p><div class="nts"><p class="nt" aria-hidden="true">تظهر صينية عند البسطة فيها خبز دافئ من فرن القرية وإبريق شاي.</p><p class="nt" aria-hidden="true">يُكتب بالطباشير كل صباح مع أفضل ساعة للشاطئ والطريق الآمن للعودة.</p><p class="nt" aria-hidden="true">حساء وجبن ومخللات في برطمانات. ضع في العلبة ما تراه مناسبًا.</p><p class="nt" aria-hidden="true">الحطب مرصوص والمواقد مشتعلة عند الغسق. وتحل الشموع محل أضواء السقف.</p><p class="nt" aria-hidden="true">قائمة ثابتة واحدة لمن يقيمون في البيت، تُقدَّم على طاولة المطبخ الطويلة.</p></div></div>
+      </div>
+      <figure class="house"><svg viewBox="0 0 480 400" role="img" aria-labelledby="houseT" dir="ltr"><title id="houseT">البيت بتسع نوافذ وتسعة مواقد</title><rect class="sky" width="480" height="400"/><circle class="disc" id="disc" cx="50" cy="150" r="22"/><rect class="sea" y="336" width="480" height="64"/><path class="hs" d="M56 152 240 66 424 152z"/><rect class="hs" x="80" y="150" width="320" height="186"/><rect class="hs" x="330" y="86" width="22" height="48"/><g class="rm" style="--lit:0"><rect class="win" x="112" y="164" width="56" height="42" rx="2"/><rect class="glow" x="112" y="164" width="56" height="42" rx="2"/><rect class="stove" x="131" y="186" width="18" height="20"/><path class="fl" d="M140 189c3 3 4 5 4 7a4 4 0 0 1-8 0c0-2 1-3 2-4c.5 1 1 1.5 2 1.5c0-1.5-.5-3 0-4.5z"/></g><g class="rm" style="--lit:0"><rect class="win" x="212" y="164" width="56" height="42" rx="2"/><rect class="glow" x="212" y="164" width="56" height="42" rx="2"/><rect class="stove" x="231" y="186" width="18" height="20"/><path class="fl" d="M240 189c3 3 4 5 4 7a4 4 0 0 1-8 0c0-2 1-3 2-4c.5 1 1 1.5 2 1.5c0-1.5-.5-3 0-4.5z"/></g><g class="rm" style="--lit:0"><rect class="win" x="312" y="164" width="56" height="42" rx="2"/><rect class="glow" x="312" y="164" width="56" height="42" rx="2"/><rect class="stove" x="331" y="186" width="18" height="20"/><path class="fl" d="M340 189c3 3 4 5 4 7a4 4 0 0 1-8 0c0-2 1-3 2-4c.5 1 1 1.5 2 1.5c0-1.5-.5-3 0-4.5z"/></g><g class="rm" style="--lit:0"><rect class="win" x="112" y="222" width="56" height="42" rx="2"/><rect class="glow" x="112" y="222" width="56" height="42" rx="2"/><rect class="stove" x="131" y="244" width="18" height="20"/><path class="fl" d="M140 247c3 3 4 5 4 7a4 4 0 0 1-8 0c0-2 1-3 2-4c.5 1 1 1.5 2 1.5c0-1.5-.5-3 0-4.5z"/></g><g class="rm" style="--lit:0"><rect class="win" x="212" y="222" width="56" height="42" rx="2"/><rect class="glow" x="212" y="222" width="56" height="42" rx="2"/><rect class="stove" x="231" y="244" width="18" height="20"/><path class="fl" d="M240 247c3 3 4 5 4 7a4 4 0 0 1-8 0c0-2 1-3 2-4c.5 1 1 1.5 2 1.5c0-1.5-.5-3 0-4.5z"/></g><g class="rm" style="--lit:0"><rect class="win" x="312" y="222" width="56" height="42" rx="2"/><rect class="glow" x="312" y="222" width="56" height="42" rx="2"/><rect class="stove" x="331" y="244" width="18" height="20"/><path class="fl" d="M340 247c3 3 4 5 4 7a4 4 0 0 1-8 0c0-2 1-3 2-4c.5 1 1 1.5 2 1.5c0-1.5-.5-3 0-4.5z"/></g><g class="rm" style="--lit:0"><rect class="win" x="112" y="280" width="56" height="42" rx="2"/><rect class="glow" x="112" y="280" width="56" height="42" rx="2"/><rect class="stove" x="131" y="302" width="18" height="20"/><path class="fl" d="M140 305c3 3 4 5 4 7a4 4 0 0 1-8 0c0-2 1-3 2-4c.5 1 1 1.5 2 1.5c0-1.5-.5-3 0-4.5z"/></g><g class="rm" style="--lit:0"><rect class="win" x="212" y="280" width="56" height="42" rx="2"/><rect class="glow" x="212" y="280" width="56" height="42" rx="2"/><rect class="stove" x="231" y="302" width="18" height="20"/><path class="fl" d="M240 305c3 3 4 5 4 7a4 4 0 0 1-8 0c0-2 1-3 2-4c.5 1 1 1.5 2 1.5c0-1.5-.5-3 0-4.5z"/></g><g class="rm" style="--lit:0"><rect class="win" x="312" y="280" width="56" height="42" rx="2"/><rect class="glow" x="312" y="280" width="56" height="42" rx="2"/><rect class="stove" x="331" y="302" width="18" height="20"/><path class="fl" d="M340 305c3 3 4 5 4 7a4 4 0 0 1-8 0c0-2 1-3 2-4c.5 1 1 1.5 2 1.5c0-1.5-.5-3 0-4.5z"/></g><rect class="hs" x="226" y="300" width="28" height="36"/></svg><figcaption>مخطط تخطيطي للغرف التسع. يشتعل كل موقد مع انقلاب النهار إلى غسق. رسم تجريبي وليس مخطط بناء.</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- 4. THE CLOSE: pinned. Stay dates first, a magnetic CTA. -->
+  <section id="stay" data-sc-act="pin" data-sc-span="1.4" aria-labelledby="stayH">
+    <div data-sc-stage class="cl-stage">
+      <div class="cl-in">
+        <div class="cl-lead">
+          <h2 id="stayH">أخبرنا متى تودّ الوصول.</h2>
+          <p class="lede">نُبقي البيت صغيرًا عمدًا. أرسل تواريخك وسنرد عليك خلال يوم.</p>
+          <figure class="q"><blockquote>جئنا لعطلة نهاية أسبوع ونمنا تسع ساعات في الليلة الأولى. فعل صوت البحر ما عجز عنه الطبيب.</blockquote><figcaption>هانا وروان بايك، أقاما في غرفة الملح، نوفمبر</figcaption></figure>
+        </div>
+        <form id="form" novalidate data-ok="شكرًا لك. وصلتنا تواريخك وسنرد عليك خلال يوم. هذا بيت تجريبي، لذا لم يُرسل شيء.">
+          <div class="f"><label for="f-arr">تاريخ الوصول</label><input id="f-arr" name="arrival" type="date" required></div>
+          <div class="f"><label for="f-nights">عدد الليالي</label><select id="f-nights" name="nights"><option>ليلتان</option><option>3 ليالٍ</option><option>من 4 إلى 6 ليالٍ</option><option>أسبوع أو أكثر</option></select></div>
+          <div class="f"><label for="f-guests">عدد الضيوف</label><select id="f-guests" name="guests"><option>ضيف واحد</option><option>ضيفان</option><option>من 3 إلى 4 ضيوف</option></select></div>
+          <div class="f"><label for="f-name">اسمك</label><input id="f-name" name="name" type="text" autocomplete="name" required></div>
+          <div class="f wide"><label for="f-email">البريد الإلكتروني</label><input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" required></div>
+          <div class="f wide t"><label for="f-note">هل من شيء نعرفه؟ عيد ميلاد، قطار مبكر، أو كلب.</label><textarea id="f-note" name="note" rows="2"></textarea></div>
+          <button class="cta" type="submit" data-sc-magnet="0.3">اجعلها لك</button>
+          <p class="reply" id="reply" role="status"></p>
+        </form>
+      </div>
+      <p class="foot"><span>ملاذ علامة تجريبية من Landscape Lab. الصور لقطات تجريبية والنموذج لا يرسل شيئًا.</span><a href="/haven">العودة إلى صفحة ملاذ</a><a href="../" hreflang="en" lang="en">English</a></p>
+    </div>
+  </section>
+
+</main>
+
+<script src="../../_engine/scrollcraft.js"></script>
+<script>ScrollCraft.mount(document.body);</script>
+<script>
+/* The time-of-day handle. One number, T (hours, 6 to 23), regrades the film, the
+   stills, the ground, the soft ink and the accent together. Scroll writes T along
+   the journey; the dial overrides it until the reader scrolls away from where they
+   left it. The ritual act reads T to pick the entry and to light the nine stoves,
+   so the dial, the list and the house can never disagree. */
+(function () {
+  "use strict";
+  var STOPS = [{"t":6,"canvas":"#202a33","surface":"#2b3742","soft":"#b9c6d2","accent":"#f0b8a0","sky":"#5d7384","house":"#232a31","sea":"#4a5d6b","disc":"#f7d7b8","tint":"#8fa7bf","tintA":0.46,"bri":1.25,"sat":0.6,"sep":0},{"t":8,"canvas":"#27302f","surface":"#333d3b","soft":"#c0ccc5","accent":"#f1d28a","sky":"#8aa0a4","house":"#2a3130","sea":"#62797c","disc":"#fff0c8","tint":"#bfc9b8","tintA":0.44,"bri":1.3,"sat":0.6,"sep":0},{"t":13,"canvas":"#3a3832","surface":"#47443c","soft":"#d2ccbd","accent":"#f4dc8e","sky":"#a9bcc0","house":"#34362f","sea":"#6f8a8f","disc":"#fff6d0","tint":"#d9d2b8","tintA":0.5,"bri":1.35,"sat":0.55,"sep":0},{"t":18.5,"canvas":"#2a1c1a","surface":"#3a2622","soft":"#d6b9a8","accent":"#f0a35e","sky":"#5a2f2a","house":"#1d1210","sea":"#3b2420","disc":"#f0a35e","tint":"#7a3a24","tintA":0.3,"bri":1,"sat":1,"sep":0.15},{"t":21,"canvas":"#1f1a17","surface":"#2b231e","soft":"#c9b8a3","accent":"#eabf7a","sky":"#1a1512","house":"#0f0b0a","sea":"#14100e","disc":"#fff5e3","tint":"#000000","tintA":0,"bri":1,"sat":1.05,"sep":0},{"t":23,"canvas":"#151110","surface":"#201a17","soft":"#c4b29c","accent":"#eabf7a","sky":"#100d0c","house":"#080606","sea":"#0d0a09","disc":"#fff5e3","tint":"#000000","tintA":0,"bri":0.95,"sat":1.05,"sep":0}];
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var $ = function (id) { return document.getElementById(id); };
+  var root = document.documentElement;
+  function clamp(x, a, b) { return Math.min(b, Math.max(a, x)); }
+  function ss(x) { x = clamp(x, 0, 1); return x * x * (3 - 2 * x); }
+  function hex(h) { return [1, 3, 5].map(function (i) { return parseInt(h.slice(i, i + 2), 16); }); }
+  function toHex(c) { return "#" + c.map(function (v) { return ("0" + Math.round(clamp(v, 0, 255)).toString(16)).slice(-2); }).join(""); }
+  function mix(a, b, u) { return a.map(function (v, i) { return v + (b[i] - v) * u; }); }
+  var COL = ["canvas", "surface", "soft", "accent", "sky", "house", "sea", "disc", "tint"];
+  STOPS.forEach(function (s) { COL.forEach(function (k) { s["_" + k] = hex(s[k]); }); });
+
+  function grade(T) {
+    var i = 0;
+    while (i < STOPS.length - 2 && T > STOPS[i + 1].t) i++;
+    var a = STOPS[i], b = STOPS[i + 1], u = ss((T - a.t) / (b.t - a.t)), o = {};
+    COL.forEach(function (k) { o[k] = toHex(mix(a["_" + k], b["_" + k], u)); });
+    ["tintA", "bri", "sat", "sep"].forEach(function (k) { o[k] = a[k] + (b[k] - a[k]) * u; });
+    return o;
+  }
+  function apply(T) {
+    var g = grade(T), s = root.style;
+    s.setProperty("--sc-canvas", g.canvas); s.setProperty("--sc-surface", g.surface);
+    s.setProperty("--sc-ink-soft", g.soft); s.setProperty("--sc-accent", g.accent);
+    s.setProperty("--sky", g.sky); s.setProperty("--house", g.house); s.setProperty("--sea", g.sea);
+    s.setProperty("--disc", g.disc); s.setProperty("--tint", g.tint); s.setProperty("--tint-a", g.tintA.toFixed(3));
+    s.setProperty("--grade", "brightness(" + g.bri.toFixed(3) + ") saturate(" + g.sat.toFixed(3) + ") sepia(" + g.sep.toFixed(3) + ")");
+  }
+  function clock(T) {
+    var m = Math.round(T * 4) * 15, h = Math.floor(m / 60), mm = m % 60;
+    return (h < 10 ? "0" : "") + h + ":" + (mm < 10 ? "0" : "") + mm;
+  }
+
+  var hero = $("hero"), rooms = $("rooms"), ritual = $("ritual"), stay = $("stay");
+  var dial = $("dial"), clockEl = $("clock"), nameEl = $("dialName");
+  var stage = $("rtStage"), nowClock = $("nowClock"), disc = $("disc");
+  var days = [].slice.call(document.querySelectorAll(".day-b"));
+  var notes = [].slice.call(document.querySelectorAll(".nt"));
+  var rowEls = [].slice.call(document.querySelectorAll(".day li"));
+  var wins = [].slice.call(document.querySelectorAll(".rm"));
+  var times = days.map(function (b) { return parseFloat(b.getAttribute("data-t")); });
+  var titles = days.map(function (b) { return b.getAttribute("data-title"); });
+  var ORDER = [4, 0, 7, 2, 5, 8, 1, 6, 3];       // the order the stoves catch
+  var LIT_FROM = 17.2, LIT_STEP = 0.14, LIT_LEN = 0.18;
+
+  var K = [], vh = innerHeight;
+  function rect(el) { var r = el.getBoundingClientRect(); return { top: r.top + scrollY, h: r.height }; }
+  function layout() {
+    vh = innerHeight;
+    var h = rect(hero), rt = rect(ritual), cl = rect(stay), tr = rt.h - vh;
+    K = [[0, 6.5], [h.top + h.h - vh, 7.5], [rt.top, 8]];
+    [[0.08, 8], [0.26, 10], [0.44, 13], [0.62, 17], [0.86, 18.5], [0.96, 21], [1, 21]].forEach(function (k) { K.push([rt.top + tr * k[0], k[1]]); });
+    K.push([cl.top, 21.5]);
+    for (var i = 1; i < K.length; i++) if (K[i][0] <= K[i - 1][0]) K[i][0] = K[i - 1][0] + 1;
+  }
+  function baseline(y) {
+    if (y <= K[0][0]) return K[0][1];
+    for (var i = 1; i < K.length; i++) if (y <= K[i][0]) return K[i - 1][1] + (K[i][1] - K[i - 1][1]) * ss((y - K[i - 1][0]) / (K[i][0] - K[i - 1][0]));
+    return K[K.length - 1][1];
+  }
+
+  var manual = null, manualY = 0;
+  function pin(T) { manual = T; manualY = scrollY; }
+  dial.addEventListener("input", function () { pin(parseFloat(dial.value)); });
+  days.forEach(function (b) { b.addEventListener("click", function () { pin(parseFloat(b.getAttribute("data-t"))); }); });
+
+  var shown = 6.5, last = -1, lastSig = "";
+  function paint(T) {
+    apply(T);
+    var c = clock(T), act = -1, i;
+    for (i = 0; i < times.length; i++) if (T >= times[i] - 0.001) act = i;
+    clockEl.textContent = c; nowClock.textContent = c;
+    if (Math.abs(parseFloat(dial.value) - T) > 0.01) dial.value = T.toFixed(2);
+    dial.setAttribute("aria-valuetext", c + (act > -1 ? ", " + titles[act] : ""));
+    nameEl.textContent = act > -1 ? titles[act] : "";
+    var lit = 0;
+    for (i = 0; i < wins.length; i++) {
+      var rank = ORDER.indexOf(i), f = clamp((T - (LIT_FROM + rank * LIT_STEP)) / LIT_LEN, 0, 1);
+      if (f > 0.999) lit++;
+      wins[i].style.setProperty("--lit", f.toFixed(3));
+    }
+    var u = clamp((T - 6) / 17, 0, 1);
+    disc.setAttribute("cx", (50 + u * 380).toFixed(1));
+    disc.setAttribute("cy", (150 - Math.sin(u * Math.PI) * 100).toFixed(1));
+    var sig = act + "|" + lit;
+    if (sig !== lastSig) {
+      lastSig = sig;
+      rowEls.forEach(function (r, j) { r.classList.toggle("is-on", j === act); });
+      notes.forEach(function (n, j) { n.classList.toggle("is-on", j === act); n.setAttribute("aria-hidden", j === act ? "false" : "true"); });
+    }
+    stage.setAttribute("data-sc-verify-state", T.toFixed(2) + "|" + act + "|" + lit);
+  }
+
+  function tick() {
+    var y = scrollY, target = baseline(y);
+    if (manual !== null) { if (Math.abs(y - manualY) < vh * 0.3) target = manual; else manual = null; }
+    shown = reduce ? target : shown + (target - shown) * 0.16;
+    if (Math.abs(target - shown) < 0.003) shown = target;
+    if (Math.abs(shown - last) > 0.0005) { last = shown; paint(shown); }
+    requestAnimationFrame(tick);
+  }
+  layout(); shown = baseline(scrollY); paint(shown); last = shown;
+  addEventListener("resize", layout);
+  addEventListener("load", layout);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
+  requestAnimationFrame(tick);
+
+  /* the rooms rail: buttons nudge by one card, direction-aware */
+  var rail = $("rail");
+  [].forEach.call(document.querySelectorAll("[data-rail]"), function (b) {
+    b.addEventListener("click", function () {
+      var card = rail.querySelector("li"), step = card ? card.getBoundingClientRect().width + 24 : 320;
+      var rtl = getComputedStyle(rail).direction === "rtl" ? -1 : 1;
+      rail.scrollBy({ left: rtl * (b.getAttribute("data-rail") === "next" ? 1 : -1) * step, behavior: reduce ? "auto" : "smooth" });
+    });
+  });
+
+  /* the close: local only, nothing leaves the page */
+  var form = $("form"), reply = $("reply");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    reply.textContent = form.getAttribute("data-ok");
+  });
+})();
+</script>
+</body>
+</html>

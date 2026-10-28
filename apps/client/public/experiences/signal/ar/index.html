@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>إشارة: امنح غير المرئي شكلًا (علامة تجريبية لاستوديو صوت مكاني)</title>
+<meta name="description" content="موقع تجريبي لاستوديو صوت مكاني: ستة مسارات في حقل ستيريو، والغرفة التي بُنيت لتختفي، وما يسمعه الفنانون فيها. احجز جلسة.">
+<link rel="alternate" hreflang="en" href="../">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23170d1c'/><circle cx='16' cy='16' r='4' fill='%23e592ff'/><circle cx='16' cy='16' r='9' fill='none' stroke='%23e592ff' stroke-width='2'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lalezar&family=Almarai:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../_engine/scrollcraft.css">
+<style>
+  :root {
+    --sc-canvas:     #170d1c;
+    --sc-surface:    #26142d;
+    --sc-ink:        #f8edff;
+    --sc-ink-soft:   #cdb6da;
+    --sc-accent:     #e592ff;
+    --sc-accent-ink: #170d1c;
+    --sc-font-display: "Lalezar", "Almarai", Tahoma, sans-serif;
+    --sc-font-text:    "Almarai", Tahoma, system-ui, sans-serif;
+    --line: color-mix(in oklab, var(--sc-ink) 20%, transparent);
+    --bar-h: 3.75rem;
+    --bar-room: calc(var(--bar-h) + 2.5rem + env(safe-area-inset-bottom, 0px));
+    --h1: clamp(2.4rem, 1.1rem + 3.9vw, 4.8rem);
+    --h2: clamp(2.1rem, 1.4rem + 2.8vw, 3.8rem);
+    --lh: 1.85;
+    --trk: 0;
+  }
+  html { scroll-padding-bottom: var(--bar-room); }
+  body { font-family: var(--sc-font-text); line-height: var(--lh); }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  bdi { unicode-bidi: isolate; }
+  :focus-visible { outline: 2px solid var(--sc-accent); outline-offset: 3px; }
+  h1, h2, h3, p, dl, dd, figure, ol, ul { margin: 0; padding: 0; }
+  h1, h2 { font-family: var(--sc-font-display); font-weight: 400; letter-spacing: var(--trk); line-height: 1.02; text-wrap: balance; }
+  h2 { font-size: var(--h2); }
+  .soft { color: var(--sc-ink-soft); }
+  .note { color: var(--sc-ink-soft); font-size: var(--sc-t-sm); text-wrap: pretty; max-width: 42ch; }
+
+  /* ---- bottom bar: now playing + the one CTA ---- */
+  .bar {
+    position: fixed; z-index: var(--sc-z-chrome);
+    inset-inline: 0; margin-inline: auto; width: min(38rem, calc(100% - 2rem));
+    bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+    height: var(--bar-h); box-sizing: border-box;
+    display: flex; align-items: center; gap: var(--sc-4);
+    padding-block: 0.5rem; padding-inline: var(--sc-4) 0.5rem;
+    background: var(--sc-surface); border: 1px solid var(--line); border-radius: var(--sc-r-md);
+  }
+  .np-eq { display: flex; align-items: flex-end; gap: 3px; height: 1.5rem; flex: none; direction: ltr; }
+  .np-eq i { width: 4px; height: 100%; background: var(--sc-accent); transform-origin: bottom; transform: scaleY(0.2); border-radius: 1px; }
+  .np { min-width: 0; flex: 1; display: grid; gap: 0.15rem; }
+  .np-k { font-size: var(--sc-t-xs); color: var(--sc-ink-soft); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .np-t { font: 600 var(--sc-t-base)/1.2 var(--sc-font-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cta {
+    flex: none; display: inline-flex; align-items: center; justify-content: center;
+    min-height: 2.75rem; padding-inline: var(--sc-5); box-sizing: border-box;
+    background: var(--sc-accent); color: var(--sc-accent-ink);
+    font: 700 var(--sc-t-sm)/1 var(--sc-font-text); text-decoration: none; border: 0; border-radius: var(--sc-r-sm); cursor: pointer;
+    transition: transform var(--sc-d-fast) var(--sc-ease-out);
+  }
+  .cta:active { transform: scale(0.97); }
+  .cta:focus-visible { outline-color: var(--sc-ink); }
+  @media (hover: hover) and (pointer: fine) { .cta:hover { transform: translateY(-1px); } }
+
+  /* ---- 1. hero: greet headline anchored to the start corner ---- */
+  .hero-copy {
+    position: absolute; z-index: 20; inset-inline-start: var(--sc-gutter);
+    top: clamp(1.5rem, 5svh, 4rem);
+    width: fit-content; max-width: min(44rem, calc(100% - 2 * var(--sc-gutter)));
+  }
+  .hero-copy h1 { font-size: var(--h1); }
+  .hero-copy h1 .brand { display: block; width: fit-content; color: var(--sc-accent); }
+  .hero-copy h1 span { background: color-mix(in oklab, var(--sc-canvas) 78%, transparent); box-decoration-break: clone; -webkit-box-decoration-break: clone; padding: 0 0.16em; margin-inline-start: -0.16em; }
+  .hero-copy .lede { margin-top: var(--sc-5); max-width: 34rem; font-size: var(--sc-t-base); text-wrap: pretty; }
+  .hero-copy .sample { margin-top: var(--sc-3); color: var(--sc-ink-soft); font-size: var(--sc-t-xs); }
+  .hero-copy .plate { display: inline; background: color-mix(in oklab, var(--sc-canvas) 82%, transparent); box-decoration-break: clone; -webkit-box-decoration-break: clone; padding: 0.1em 0.45em; }
+
+  /* ---- 2. the mixer: a pinned stage, the list pans across a stereo field ---- */
+  .mix-stage {
+    display: grid; grid-template-columns: minmax(17rem, 25rem) minmax(0, 1fr); gap: clamp(2rem, 6vw, 7rem);
+    align-content: center; align-items: center;
+    padding: 3rem var(--sc-gutter) var(--bar-room); box-sizing: border-box;
+    background: var(--sc-canvas);
+  }
+  .mix-head { display: grid; gap: var(--sc-4); align-content: center; }
+  .fld { position: relative; height: 5.75rem; margin-top: var(--sc-3); }
+  .fld-in { position: absolute; inset: 0 1.375rem; }
+  .fld-axis { position: absolute; inset-inline: -1rem; top: 1.1rem; height: 1px; background: var(--line); }
+  .fld-dot { position: absolute; top: 1.1rem; width: 0.8rem; height: 0.8rem; margin: -0.4rem 0 0 -0.4rem; border-radius: 50%; background: var(--sc-canvas); border: 1.5px solid var(--sc-ink-soft); box-sizing: border-box; }
+  .fld-dot.is-loud { background: var(--sc-accent); border-color: var(--sc-accent); }
+  .fld-you { position: absolute; top: 0.2rem; bottom: 1.4rem; width: 2px; margin-left: -1px; background: var(--sc-accent); left: 0; }
+  .fld-end { position: absolute; top: 0.55rem; font: 600 var(--sc-t-xs)/1 var(--sc-font-text); color: var(--sc-ink-soft); }
+  .fld-end.l { left: 0; } .fld-end.r { right: 0; }
+  .fld input { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 2.75rem; margin: 0; padding: 0; background: transparent; cursor: ew-resize; touch-action: pan-y; -webkit-appearance: none; appearance: none; }
+  .fld input::-webkit-slider-runnable-track { height: 2.75rem; background: transparent; }
+  .fld input::-moz-range-track { height: 2.75rem; background: transparent; }
+  .fld input::-webkit-slider-thumb { -webkit-appearance: none; width: 2.75rem; height: 2.75rem; box-sizing: border-box; border-radius: 50%; border: 0.8rem solid var(--sc-accent); background: var(--sc-canvas); }
+  .fld input::-moz-range-thumb { width: 2.75rem; height: 2.75rem; box-sizing: border-box; border-radius: 50%; border: 0.8rem solid var(--sc-accent); background: var(--sc-canvas); }
+  .fld input:focus-visible { outline: 2px solid var(--sc-ink); outline-offset: 2px; border-radius: 999px; }
+
+  .tracks { list-style: none; display: grid; border-top: 1px solid var(--line); }
+  .tk {
+    position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(7rem, 30%) 3.2rem; align-items: center; gap: var(--sc-5);
+    padding-block: var(--sc-3); border-bottom: 1px solid var(--line); will-change: transform;
+  }
+  .tk::before { content: ""; position: absolute; inset-block: 0.55rem; inset-inline-start: -0.9rem; width: 3px; background: var(--sc-accent); transform: scaleY(0); transition: transform var(--sc-d-base) var(--sc-ease-out); }
+  .tk.is-on::before { transform: scaleY(1); }
+  .tk-t { display: block; font: 400 var(--sc-t-lg)/1.15 var(--sc-font-display); letter-spacing: var(--trk); color: var(--sc-ink-soft); }
+  .tk.is-on .tk-t { color: var(--sc-ink); }
+  .tk-m { display: block; margin-top: 0.2rem; font-size: var(--sc-t-xs); color: var(--sc-ink-soft); line-height: 1.35; }
+  .tk-lv { display: grid; gap: 4px; direction: ltr; }
+  .m { position: relative; height: 5px; background: color-mix(in oklab, var(--sc-ink) 14%, transparent); overflow: hidden; border-radius: 1px; }
+  .m i { position: absolute; inset: 0; background: var(--sc-accent); transform-origin: left; transform: scaleX(0); }
+  .tk-len { justify-self: end; font-size: var(--sc-t-sm); color: var(--sc-ink-soft); font-variant-numeric: tabular-nums; }
+
+  /* ---- 3. the room: quiet, ruled, one plan ---- */
+  .room { background: var(--sc-canvas); padding: clamp(4rem, 8vw, 7rem) var(--sc-gutter) var(--bar-room); }
+  .room-in { max-width: var(--sc-maxw); margin-inline: auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: clamp(2rem, 6vw, 7rem); align-items: start; }
+  .room-lead { display: grid; gap: var(--sc-4); grid-column: 1; grid-row: 1; }
+  .specs { grid-column: 2; grid-row: 1 / span 2; }
+  .plan { grid-column: 1; grid-row: 2; }
+  .room-lead .sc-body { color: var(--sc-ink-soft); max-width: 36ch; }
+  .plan { margin-top: var(--sc-6); max-width: 26rem; }
+  .plan svg { display: block; width: 100%; height: auto; direction: ltr; }
+  .plan .wall { fill: none; stroke: var(--sc-ink-soft); stroke-width: 1.5; }
+  .plan .ear { fill: var(--sc-accent); }
+  .plan .over { fill: none; stroke: var(--sc-accent); stroke-width: 2; }
+  .plan .sub { fill: var(--sc-ink); }
+  .plan .you { stroke: var(--sc-ink-soft); stroke-width: 1.5; }
+  .plan figcaption { margin-top: var(--sc-3); font-size: var(--sc-t-xs); color: var(--sc-ink-soft); display: grid; gap: var(--sc-1); }
+  .plan .key { display: flex; flex-wrap: wrap; gap: var(--sc-1) var(--sc-4); }
+  .specs { display: grid; border-top: 1px solid var(--line); }
+  .specs > div { display: grid; grid-template-columns: minmax(8rem, 11rem) minmax(0, 1fr); gap: var(--sc-5); padding-block: var(--sc-3); border-bottom: 1px solid var(--line); }
+  .specs dt { color: var(--sc-ink-soft); font-size: var(--sc-t-sm); }
+  .specs dd { font-size: var(--sc-t-base); text-wrap: pretty; }
+
+  /* ---- 4. the peak: the room opens; quote and facts sit on flat plates ---- */
+  .pk-end { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; z-index: 0; }
+  .pk-quote { position: absolute; z-index: 20; inset-inline-start: var(--sc-gutter); top: clamp(2rem, 8svh, 5rem); width: min(44rem, calc(100% - 2 * var(--sc-gutter))); }
+  .pk-quote blockquote { margin: 0; font: 400 var(--sc-t-xl)/1.18 var(--sc-font-display); letter-spacing: var(--trk); text-wrap: balance; }
+  .pk-quote .plate { background: color-mix(in oklab, var(--sc-canvas) 86%, transparent); box-decoration-break: clone; -webkit-box-decoration-break: clone; padding: 0.08em 0.4em; }
+  .pk-quote figcaption { margin-top: var(--sc-4); font-size: var(--sc-t-sm); }
+  .pk-quote figcaption .plate { padding: 0.15em 0.5em; color: var(--sc-ink); }
+  .pk-facts {
+    position: absolute; z-index: 20; inset-inline: var(--sc-gutter); bottom: var(--bar-room);
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sc-5);
+    padding: var(--sc-4) var(--sc-5); background: color-mix(in oklab, var(--sc-canvas) 90%, transparent); border-radius: var(--sc-r-md);
+  }
+  .pk-facts div { display: grid; gap: 0.2rem; }
+  .pk-facts dt { order: 2; font-size: var(--sc-t-xs); color: var(--sc-ink-soft); }
+  .pk-facts dd { order: 1; font: 400 var(--sc-t-2xl)/1 var(--sc-font-display); letter-spacing: var(--trk); color: var(--sc-accent); }
+
+  /* ---- 5. the close: a flat disc follows the pointer, the form sits on it ---- */
+  .cl-stage { background: var(--sc-canvas); display: grid; align-content: center; padding: 2rem var(--sc-gutter) var(--bar-room); box-sizing: border-box; isolation: isolate; }
+  .cl-spot { position: absolute; inset: 0; z-index: -1; background: var(--sc-surface); clip-path: circle(min(34vmax, 40rem) at calc(var(--sc-mx, 0.35) * 100%) calc(var(--sc-my, 0.45) * 100%)); }
+  .cl-in { width: min(100%, var(--sc-maxw)); margin-inline: auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(2rem, 6vw, 6rem); align-items: center; }
+  .cl-lead { display: grid; gap: var(--sc-4); }
+  .cl-lead h2 { font-size: var(--h2); }
+  .cl-lead p { color: var(--sc-ink); max-width: 32ch; text-wrap: pretty; }
+  form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sc-4); }
+  .f { display: grid; gap: 0.35rem; min-width: 0; }
+  .f.wide { grid-column: 1 / -1; }
+  .f label { font-size: var(--sc-t-sm); color: var(--sc-ink); }
+  .f input, .f select, .f textarea {
+    box-sizing: border-box; width: 100%; min-height: 2.75rem; padding: 0.55rem 0.75rem;
+    font: 400 var(--sc-t-base)/1.3 var(--sc-font-text); color: var(--sc-ink); color-scheme: dark;
+    background: var(--sc-canvas); border: 1px solid var(--sc-ink-soft); border-radius: var(--sc-r-sm);
+  }
+  .f textarea { min-height: 4.5rem; resize: vertical; }
+  .f input:focus-visible, .f select:focus-visible, .f textarea:focus-visible { outline: 2px solid var(--sc-accent); outline-offset: 2px; border-color: var(--sc-accent); }
+  .f input::-webkit-calendar-picker-indicator:focus-visible { outline: 2px solid var(--sc-accent); outline-offset: 2px; }
+  form .cta { grid-column: 1 / -1; justify-self: start; min-height: 3rem; padding-inline: var(--sc-6); }
+  .reply { grid-column: 1 / -1; min-height: 1.4em; color: var(--sc-ink); font-size: var(--sc-t-sm); }
+  .foot { position: absolute; inset-inline: var(--sc-gutter); bottom: calc(var(--bar-room) - 1.25rem); display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--sc-5); font-size: var(--sc-t-xs); color: var(--sc-ink-soft); }
+  .foot a { color: var(--sc-ink); min-height: 2.75rem; min-width: 2.75rem; padding-inline: 0.4rem; margin-inline: -0.4rem; box-sizing: border-box; justify-content: center; display: inline-flex; align-items: center; text-underline-offset: 0.2em; }
+
+  @media (max-width: 860px) {
+    :root { --bar-h: 3.5rem; --bar-room: calc(var(--bar-h) + 1.75rem + env(safe-area-inset-bottom, 0px)); }
+    .np-k { display: none; }
+    .cta { padding-inline: var(--sc-4); }
+    .hero-copy .lede { font-size: var(--sc-t-sm); }
+    .mix-stage { grid-template-columns: 1fr; gap: var(--sc-3); align-content: start; padding-top: 1.25rem; }
+    .mix-head .note { display: none; }
+    .mix-head h2 { font-size: var(--sc-t-xl); }
+    .fld { margin-top: 0; height: 5.25rem; }
+    .tk { grid-template-columns: minmax(0, 1fr) 3rem; gap: var(--sc-2) var(--sc-3); padding-block: var(--sc-2); }
+    .tk-lv { grid-column: 1 / -1; grid-row: 2; }
+    .tk-m { display: none; }
+    .tk-t { font-size: var(--sc-t-base); }
+    .room-in { grid-template-columns: 1fr; }
+    .room-lead, .specs, .plan { grid-column: 1; grid-row: auto; }
+    .plan { order: 2; margin-top: 0; }
+    .specs { order: 3; }
+    .specs > div { grid-template-columns: 1fr; gap: var(--sc-1); }
+    .pk-quote blockquote { font-size: var(--sc-t-lg); }
+    .pk-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sc-3) var(--sc-5); padding: var(--sc-3) var(--sc-4); }
+    .pk-facts dd { font-size: var(--sc-t-xl); }
+    .cl-in { grid-template-columns: 1fr; gap: var(--sc-4); }
+    .cl-lead p { display: none; }
+    form { gap: var(--sc-3); }
+    .f.t { display: none; }
+    .foot { bottom: calc(var(--bar-room) - 1.1rem); }
+  }
+  @media (max-height: 760px) and (min-width: 861px) { .tk-m { display: none; } .note { display: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .pk-end { display: block; opacity: clamp(0, calc((var(--sc-p, 0) - 0.12) * 3), 1); }
+    .tk::before { transition: none; }
+    .cta { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="bar" aria-label="إشارة">
+  <span class="np-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+  <p class="np"><span class="np-k">قيد التشغيل (صامت)</span><span class="np-t" id="npTitle">أرشيف الجَزر</span></p>
+  <a class="cta" href="#book">احجز جلسة</a>
+</nav>
+
+<main id="top">
+
+  <!-- 1. HERO: the ripple film scrubs under the hand. Greet headline, start corner. -->
+  <section id="hero" data-sc-act="scrub" data-sc-span="2.2" data-sc-dwell="0.3" aria-label="إشارة">
+    <div data-sc-stage>
+      <img class="sc-stage__poster" src="../assets/hero-poster.webp" alt="" width="1280" height="720">
+      <video data-sc-scrub data-sc-src="../assets/hero.mp4" data-sc-src-mobile="../assets/hero-m.mp4" muted playsinline aria-hidden="true"></video>
+      <div class="hero-copy" data-sc-cue="0 0.56 0 0.1">
+        <h1><span class="brand">إشارة</span><span class="stmt">امنح غير المرئي شكلًا.</span></h1>
+        <p class="lede"><span class="plate">استوديو صوت مكاني: <bdi dir="ltr">24</bdi> مزيجًا مكانيًا و<bdi dir="ltr">11</bdi> أسطوانة فينيل حتى الآن، مع فنانين يبنون عوالم من الصوت.</span></p>
+        <p class="sample"><span class="plate">«إشارة» علامة تجريبية. كل الأسماء والأرقام في هذه الصفحة محتوى تجريبي.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. THE MIXER: pin. The pointer (or the puck) pans the list across the stereo field. -->
+  <section id="mix" data-sc-act="pin" data-sc-span="2.4" aria-labelledby="mixH">
+    <div data-sc-stage class="mix-stage" id="mixStage" data-sc-verify-state="">
+      <div class="mix-head">
+        <h2 id="mixH">مسجّلة في الغرفة وممزوجة من حولك</h2>
+        <p class="note">حرّك المؤشر عبر الصفحة أو اسحب القرص. كل مسار في موضعه داخل المزيج، وتُظهر العدّادات ارتفاع صوته حيث تقف. هذه المعاينة صامتة.</p>
+        <div class="fld" dir="ltr" id="fld">
+          <div class="fld-in">
+            <span class="fld-axis" aria-hidden="true"></span>
+            <i class="fld-dot" style="left:7.50%" aria-hidden="true"></i>
+            <i class="fld-dot" style="left:24.50%" aria-hidden="true"></i>
+            <i class="fld-dot" style="left:41.50%" aria-hidden="true"></i>
+            <i class="fld-dot" style="left:58.50%" aria-hidden="true"></i>
+            <i class="fld-dot" style="left:75.50%" aria-hidden="true"></i>
+            <i class="fld-dot" style="left:92.50%" aria-hidden="true"></i>
+            <span class="fld-you" id="you" aria-hidden="true"></span>
+          </div>
+          <span class="fld-end l" aria-hidden="true">L</span><span class="fld-end r" aria-hidden="true">R</span>
+          <input id="pan" type="range" min="-100" max="100" step="1" value="-95" aria-label="موضع الاستماع، من اليسار إلى اليمين" aria-describedby="panHelp">
+        </div>
+        <p class="sr-only" id="panHelp">استخدم مفتاحي السهم الأيمن والأيسر لتحريك موضع الاستماع عبر المجال الصوتي. العدّادات مرسومة والمعاينة صامتة.</p>
+      </div>
+      <ol class="tracks" aria-label="المسارات">
+        <li class="tk" data-title="أرشيف الجَزر"><span><span class="tk-t">أرشيف الجَزر</span><span class="tk-m">أورلا فين · مزيج مكاني <bdi dir="ltr">8.4</bdi></span></span><span class="tk-lv" aria-hidden="true"><span class="m"><i></i></span><span class="m"><i></i></span></span><span class="tk-len"><bdi dir="ltr">4:12</bdi></span></li>
+        <li class="tk" data-title="جوقة الزجاج"><span><span class="tk-t">جوقة الزجاج</span><span class="tk-m">ماتيو سار · مزيج مكاني <bdi dir="ltr">8.4</bdi></span></span><span class="tk-lv" aria-hidden="true"><span class="m"><i></i></span><span class="m"><i></i></span></span><span class="tk-len"><bdi dir="ltr">6:48</bdi></span></li>
+        <li class="tk" data-title="حافلة الليل، خط 9"><span><span class="tk-t">حافلة الليل، خط 9</span><span class="tk-m">إمكه دويل · تسجيل حي على شريط</span></span><span class="tk-lv" aria-hidden="true"><span class="m"><i></i></span><span class="m"><i></i></span></span><span class="tk-len"><bdi dir="ltr">3:37</bdi></span></li>
+        <li class="tk" data-title="على بُعد سبع غرف"><span><span class="tk-t">على بُعد سبع غرف</span><span class="tk-m">أورلا فين · مزيج ثنائي الأذن</span></span><span class="tk-lv" aria-hidden="true"><span class="m"><i></i></span><span class="m"><i></i></span></span><span class="tk-len"><bdi dir="ltr">5:21</bdi></span></li>
+        <li class="tk" data-title="ريح نحاسية"><span><span class="tk-t">ريح نحاسية</span><span class="tk-m">ثلاثي هالدن · أسطوانة فينيل <bdi dir="ltr">12</bdi> بوصة</span></span><span class="tk-lv" aria-hidden="true"><span class="m"><i></i></span><span class="m"><i></i></span></span><span class="tk-len"><bdi dir="ltr">8:03</bdi></span></li>
+        <li class="tk" data-title="ساعات الفجر الأولى"><span><span class="tk-t">ساعات الفجر الأولى</span><span class="tk-m">كوفي ألدان · مزيج مكاني <bdi dir="ltr">8.4</bdi></span></span><span class="tk-lv" aria-hidden="true"><span class="m"><i></i></span><span class="m"><i></i></span></span><span class="tk-len"><bdi dir="ltr">4:55</bdi></span></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 3. THE ROOM: flow. The quiet one before the peak. -->
+  <section id="room" class="room" data-sc-act="flow" aria-labelledby="roomH">
+    <div class="room-in">
+      <div class="room-lead" data-sc-in data-sc-stagger="70">
+        <h2 id="roomH">غرفة بُنيت لتختفي</h2>
+        <p class="sc-body">لا شيء في الاستوديو الأول يلوّن الصوت. صندوق هادئ فيه اثنا عشر مكبّر صوت وُضعت حيث تتوقعها أذناك.</p>
+      </div>
+      <dl class="specs" data-sc-in data-sc-stagger="45">
+        <div><dt>الأبعاد</dt><dd><bdi dir="ltr">9.2 × 6.8 × 4.1</bdi> م</dd></div>
+        <div><dt>مكبّرات الصوت</dt><dd><bdi dir="ltr">12</bdi> مكبّر صوت كامل النطاق ومكبّرا صوت للترددات المنخفضة</dd></div>
+        <div><dt>صيغة القنوات</dt><dd>صيغة الاستوديو <bdi dir="ltr">8.4</bdi>: ثمانية عند مستوى الأذن وأربعة علوية، إضافة إلى مكبّري الترددات المنخفضة</dd></div>
+        <div><dt>المراقبة</dt><dd>معايَرة عند <bdi dir="ltr">79</bdi> ديسيبل لكل قناة</dd></div>
+        <div><dt>المعالجة الصوتية</dt><dd>مصائد عريضة النطاق وبلا أسطح عاكسة</dd></div>
+        <div><dt>آلات الشريط</dt><dd>آلتان بـ<bdi dir="ltr">24</bdi> مسارًا وآلة ستيريو نصف بوصة</dd></div>
+        <div><dt>مستوى الضجيج</dt><dd>أقل من <bdi dir="ltr">18</bdi> ديسيبل والآلات متوقفة</dd></div>
+        <div><dt>أدنى مدة حجز</dt><dd>يوم واحد، من <bdi dir="ltr">10:00</bdi> إلى <bdi dir="ltr">22:00</bdi></dd></div>
+      </dl>
+      <figure class="plan" data-sc-reveal="up" data-sc-reveal-at="0.1 0.42">
+        <svg viewBox="0 0 460 340" role="img" aria-labelledby="planT"><title id="planT">مخطط علوي للغرفة يبيّن مكبّرات الصوت</title><rect class="wall" x="10" y="10" width="440" height="320"/><circle class="ear" cx="418.0" cy="170.0" r="6"/><circle class="ear" cx="362.9" cy="260.5" r="6"/><circle class="ear" cx="230.0" cy="298.0" r="6"/><circle class="ear" cx="97.1" cy="260.5" r="6"/><circle class="ear" cx="42.0" cy="170.0" r="6"/><circle class="ear" cx="97.1" cy="79.5" r="6"/><circle class="ear" cx="230.0" cy="42.0" r="6"/><circle class="ear" cx="362.9" cy="79.5" r="6"/><circle class="over" cx="138" cy="110" r="7"/><circle class="over" cx="138" cy="230" r="7"/><circle class="over" cx="322" cy="110" r="7"/><circle class="over" cx="322" cy="230" r="7"/><rect class="sub" x="24" y="24" width="14" height="14"/><rect class="sub" x="422" y="24" width="14" height="14"/><path class="you" d="M222 170h16M230 162v16"/></svg>
+        <figcaption><span class="key"><span>● مستوى الأذن (<bdi dir="ltr">8</bdi>)</span><span>○ علوية (<bdi dir="ltr">4</bdi>)</span><span>■ مكبّر ترددات منخفضة (<bdi dir="ltr">2</bdi>)</span></span><span>مخطط توضيحي بلا مقياس رسم. أعداد المكبّرات من مواصفات الغرفة، ومواضعها مرسومة للتوضيح.</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 4. THE PEAK: scrub. The room opens. The quote, then the four real figures. -->
+  <section id="open" data-sc-act="scrub" data-sc-span="3.2" data-sc-dwell="0.3" aria-label="ما يسمعه الفنانون في الغرفة">
+    <div data-sc-stage>
+      <img class="sc-stage__poster" src="../assets/open-poster.webp" alt="" width="1280" height="720">
+      <img class="pk-end" src="../assets/open-end.webp" alt="" width="1280" height="720">
+      <video data-sc-scrub data-sc-src="../assets/open.mp4" data-sc-src-mobile="../assets/open-m.mp4" muted playsinline aria-hidden="true"></video>
+      <figure class="pk-quote" data-sc-cue="0.1 1 0.2 0.1">
+        <blockquote><span class="plate">توقفت عن تخيّل المزيج وبدأت أتجول داخله. في الليلة الثانية تركت السماعات في السيارة.</span></blockquote>
+        <figcaption><span class="plate">أورلا فين، مؤلفة موسيقية ومنتجة</span></figcaption>
+      </figure>
+      <dl class="pk-facts" data-sc-cue="0.5 1 0.18 0.1">
+        <div><dt>مزيجات مكانية</dt><dd><bdi dir="ltr">24</bdi></dd></div>
+        <div><dt>أسطوانات فينيل</dt><dd><bdi dir="ltr">11</bdi></dd></div>
+        <div><dt>صيغة القنوات</dt><dd><bdi dir="ltr">8.4</bdi></dd></div>
+        <div><dt>جلسات في السنة</dt><dd><bdi dir="ltr">60</bdi></dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 5. THE CLOSE: pinned. A flat disc follows the pointer; the form sits on it. -->
+  <section id="book" data-sc-act="pin" data-sc-span="1.2" aria-labelledby="bookH">
+    <div data-sc-stage class="cl-stage" data-sc-spotlight>
+      <div class="cl-spot" aria-hidden="true"></div>
+      <div class="cl-in">
+        <div class="cl-lead">
+          <h2 id="bookH">أحضر صوتك ونحن نبني الغرفة حوله.</h2>
+          <p>أخبرنا بما تصنعه ومتى. نردّ خلال يومين بموعد متاح ومهندس صوت.</p>
+        </div>
+        <form id="form" novalidate data-ok="وصلنا طلبك. سيكتب لك مهندس صوت خلال يومين بالمواعيد المتاحة. هذا استوديو تجريبي، لذلك لم يُرسل شيء.">
+          <div class="f"><label for="f-name">اسمك</label><input id="f-name" name="name" type="text" autocomplete="name" required></div>
+          <div class="f"><label for="f-email">البريد الإلكتروني</label><input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" dir="ltr" required></div>
+          <div class="f"><label for="f-date">التاريخ المفضل</label><input id="f-date" name="date" type="date" required></div>
+          <div class="f"><label for="f-type">نوع الجلسة</label><select id="f-type" name="type"><option>مزج مكاني</option><option>تسجيل على شريط</option><option>ماسترينغ للفينيل</option><option>استماع فقط</option></select></div>
+          <div class="f wide t"><label for="f-project">ما الذي تصنعه؟</label><textarea id="f-project" name="project" rows="3"></textarea></div>
+          <button class="cta" type="submit">احجز جلسة</button>
+          <p class="reply" id="reply" role="status"></p>
+        </form>
+      </div>
+      <p class="foot"><span>«إشارة» علامة تجريبية من Landscape Lab. المعاينة صامتة والنموذج لا يرسل شيئًا.</span><a href="/signal">العودة إلى صفحة «إشارة»</a><a href="../" hreflang="en" lang="en">English</a></p>
+    </div>
+  </section>
+
+</main>
+
+<script src="../../_engine/scrollcraft.js"></script>
+<script>ScrollCraft.mount(document.body);</script>
+<script>
+/* The spatial mixer. Nothing here makes a sound. Six tracks sit at fixed places in a
+   stereo field; the listening position (the pointer, the puck, or scroll when neither
+   is in use) decides how loud each one is. Levels are a pure function of that position
+   (plus a small scroll-driven shimmer), so the same position always paints the same
+   frame. Left and right are physical in both languages: stereo is not reading order. */
+(function () {
+  "use strict";
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var $ = function (id) { return document.getElementById(id); };
+  var act = $("mix"), stage = $("mixStage"), input = $("pan"), you = $("you"), npTitle = $("npTitle");
+  var rows = [].slice.call(document.querySelectorAll(".tk"));
+  var dots = [].slice.call(document.querySelectorAll(".fld-dot"));
+  var eq = [].slice.call(document.querySelectorAll(".np-eq i"));
+  var N = rows.length, X = [], titles = [], mL = [], mR = [];
+  rows.forEach(function (r, i) {
+    X.push(-0.85 + i * (1.7 / (N - 1)));
+    titles.push(r.getAttribute("data-title"));
+    var f = r.querySelectorAll(".m i"); mL.push(f[0]); mR.push(f[1]);
+  });
+  function clamp(x, a, b) { return Math.min(b, Math.max(a, x)); }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  var userPan = 0, userUntil = 0, shown = null, sig = "", titleNow = "";
+  stage.addEventListener("pointermove", function (e) {
+    if (e.pointerType === "touch") return;
+    var r = stage.getBoundingClientRect();
+    userPan = clamp(((e.clientX - r.left) / r.width) * 2 - 1, -1, 1);
+    userUntil = performance.now() + 3500;
+  });
+  input.addEventListener("input", function () { userPan = input.value / 100; userUntil = performance.now() + 8000; });
+
+  function actP() {
+    var r = act.getBoundingClientRect(), travel = act.offsetHeight - innerHeight;
+    return travel > 0 ? clamp(-r.top / travel, 0, 1) : 0;
+  }
+
+  function render(pan, p) {
+    var lv = [], L = [], R = [], loud = 0, i, d, base, v, pr;
+    for (i = 0; i < N; i++) {
+      d = X[i] - pan;
+      base = Math.max(0, 1 - Math.abs(d) / 0.9);
+      v = 0.06 + 0.94 * Math.pow(base, 1.25);
+      if (!reduce) v *= 0.94 + 0.06 * Math.sin(p * 50 + i * 1.9);
+      v = clamp(v, 0, 1);
+      pr = clamp(d / 0.6, -1, 1);
+      lv.push(v); L.push(clamp(v * (0.55 - 0.45 * pr), 0, 1)); R.push(clamp(v * (0.55 + 0.45 * pr), 0, 1));
+      if (v > lv[loud]) loud = i;
+    }
+    var key = Math.round(pan * 200) + "|" + loud + "|" + L.map(function (x) { return Math.round(x * 100); }).join(",") + R.map(function (x) { return Math.round(x * 100); }).join(",");
+    if (key === sig) return;
+    sig = key;
+    for (i = 0; i < N; i++) {
+      rows[i].style.transform = "translateX(" + ((X[i] - pan) * 14).toFixed(1) + "px)";
+      rows[i].classList.toggle("is-on", i === loud);
+      mL[i].style.transform = "scaleX(" + L[i].toFixed(3) + ")";
+      mR[i].style.transform = "scaleX(" + R[i].toFixed(3) + ")";
+      var s = 0.85 + lv[i] * 0.9;
+      dots[i].style.transform = "scale(" + s.toFixed(2) + ")";
+      dots[i].classList.toggle("is-loud", i === loud);
+    }
+    you.style.left = ((pan + 1) / 2 * 100).toFixed(2) + "%";
+    var iv = Math.round(pan * 100);
+    if (+input.value !== iv) input.value = iv;
+    if (titles[loud] !== titleNow) { titleNow = titles[loud]; npTitle.textContent = titleNow; }
+    var bars = [L[loud], (L[loud] + R[loud]) / 2, R[loud], lv[loud] * 0.6];
+    for (i = 0; i < eq.length; i++) eq[i].style.transform = "scaleY(" + clamp(0.15 + bars[i] * 0.85, 0.15, 1).toFixed(2) + ")";
+    stage.setAttribute("data-sc-verify-state", [Math.round(pan * 100), loud, L.map(function (x) { return Math.round(x * 10); }).join(""), R.map(function (x) { return Math.round(x * 10); }).join("")].join("|"));
+  }
+
+  function tick() {
+    var p = actP();
+    var target = performance.now() < userUntil ? userPan : lerp(-0.95, 0.95, clamp((p - 0.04) / 0.9, 0, 1));
+    if (shown === null) shown = target;
+    shown = reduce ? target : shown + (target - shown) * 0.2;
+    if (Math.abs(target - shown) < 0.002) shown = target;
+    render(shown, p);
+    requestAnimationFrame(tick);
+  }
+  render(-0.95, 0); shown = -0.95;
+  requestAnimationFrame(tick);
+
+  /* the close: local only, nothing leaves the page */
+  var form = $("form"), reply = $("reply");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    reply.textContent = form.getAttribute("data-ok");
+  });
+})();
+</script>
+</body>
+</html>

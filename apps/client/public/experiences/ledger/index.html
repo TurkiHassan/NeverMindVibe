@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ledger: every account in one table (sample brand)</title>
+<meta name="description" content="Treasury software that reconciles every bank account overnight. Scroll to watch a sample unmatched total count down to exactly 0.00. Sample brand.">
+<link rel="alternate" hreflang="ar" href="ar/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23131613'/><path d='M8 17l5 5 11-12' fill='none' stroke='%23d5f36b' stroke-width='3'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Schibsted+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_engine/scrollcraft.css">
+<style>
+  :root { --sc-font-display: "Sora", system-ui, sans-serif; --sc-font-text: "Schibsted Grotesk", system-ui, sans-serif; --sc-font-mono: "Schibsted Grotesk", system-ui, sans-serif; }
+  :root {
+    --sc-canvas:     #131613;
+    --sc-surface:    #1b1f1a;
+    --sc-ink:        #f0f2e9;
+    --sc-ink-soft:   #a8af9e;
+    --sc-accent:     #d5f36b;
+    --sc-accent-ink: #131613;
+    --lg-hi:   #26311a;
+    --lg-line: #30382d;
+    --lg-top: 3.5rem;
+    --lg-bot: 2.5rem;
+    --lg-row: clamp(2.9rem, 7.6vh, 4.75rem);
+    --dir: 1;
+    --ox: 0% 50%;
+  }
+  [dir="rtl"] { --dir: -1; --ox: 100% 50%; }
+  [lang="ar"], [lang="ar"] * { letter-spacing: 0 !important; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  bdi { unicode-bidi: isolate; }
+  button { cursor: pointer; }
+
+  /* ---------- app chrome: tabs on top, status line on the bottom ---------- */
+  .lg-bar {
+    position: fixed; inset: 0 0 auto 0; z-index: 30; height: var(--lg-top);
+    display: flex; align-items: stretch; gap: var(--sc-4);
+    padding-inline: var(--sc-gutter);
+    background: var(--sc-canvas); border-bottom: 1px solid var(--lg-line);
+  }
+  .lg-brand { align-self: center; margin-inline-end: var(--sc-5); font: 700 var(--sc-t-base)/1 var(--sc-font-display); letter-spacing: -0.01em; white-space: nowrap; }
+  .lg-tabs { display: flex; align-items: stretch; gap: var(--sc-1); }
+  .lg-tab {
+    position: relative; display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 var(--sc-4);
+    background: none; border: 0; border-radius: 0; color: var(--sc-ink-soft);
+    font: 500 var(--sc-t-sm)/1 var(--sc-font-text); white-space: nowrap;
+    transition: color var(--sc-d-fast) var(--sc-ease-out);
+  }
+  .lg-tab::after { content: ""; position: absolute; inset-inline: var(--sc-3); bottom: -1px; height: 2px; background: var(--sc-accent); transform: scaleX(0); transition: transform var(--sc-d-base) var(--sc-ease-out); }
+  .lg-tab[aria-selected="true"] { color: var(--sc-ink); }
+  .lg-tab[aria-selected="true"]::after { transform: scaleX(1); }
+  .lg-bar[data-away="true"] .lg-tab::after { transform: scaleX(0); }
+  .lg-bar[data-away="true"] .lg-tab[aria-selected="true"] { color: var(--sc-ink-soft); }
+  .lg-tab:active { transform: translateY(1px); }
+  @media (hover: hover) and (pointer: fine) { .lg-tab:hover { color: var(--sc-ink); } }
+  .lg-lang { margin-inline-start: auto; align-self: center; display: inline-flex; align-items: center; min-height: 2.75rem; padding-inline: var(--sc-3); color: var(--sc-ink-soft); font: 500 var(--sc-t-sm)/1 var(--sc-font-text); text-decoration: none; }
+  @media (hover: hover) and (pointer: fine) { .lg-lang:hover { color: var(--sc-ink); text-decoration: underline; } }
+  .lg-open {
+    align-self: center; display: inline-flex; align-items: center; min-height: 2.75rem; padding-inline: var(--sc-5);
+    background: var(--sc-accent); color: var(--sc-accent-ink); border-radius: var(--sc-r-sm);
+    font: 600 var(--sc-t-sm)/1 var(--sc-font-text); text-decoration: none; white-space: nowrap;
+    transition: transform var(--sc-d-fast) var(--sc-ease-out);
+  }
+  .lg-open:active { transform: scale(0.97); }
+  @media (hover: hover) and (pointer: fine) { .lg-open:hover { transform: translateY(-1px); } }
+
+  .lg-status {
+    position: fixed; inset: auto 0 0 0; z-index: 30; height: var(--lg-bot);
+    display: flex; align-items: center; justify-content: space-between; gap: var(--sc-5);
+    padding-inline: var(--sc-gutter); background: var(--sc-canvas); border-top: 1px solid var(--lg-line);
+    font: 400 var(--sc-t-xs)/1.2 var(--sc-font-text); color: var(--sc-ink-soft); white-space: nowrap; overflow: hidden;
+  }
+  .lg-status p { margin: 0; overflow: hidden; text-overflow: ellipsis; }
+  .lg-status b { color: var(--sc-ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+  .lg-status .lg-sdone { color: var(--sc-accent); }
+
+  /* ---------- the console ---------- */
+  .lg-stage {
+    display: grid; grid-template-rows: minmax(0, 1fr); grid-template-columns: minmax(0, 1fr);
+    padding: calc(var(--lg-top) + var(--sc-5)) var(--sc-gutter) calc(var(--lg-bot) + var(--sc-4));
+    background: var(--sc-canvas);
+  }
+  .lg-view {
+    grid-area: 1 / 1; min-height: 0; display: flex; flex-direction: column; gap: var(--sc-4);
+    opacity: 0; visibility: hidden;
+    transition: opacity var(--sc-d-base) var(--sc-ease-out), visibility 0s linear var(--sc-d-base);
+  }
+  .lg-view.is-on { opacity: 1; visibility: visible; transition-delay: 0s; }
+  .lg-head { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--sc-6); }
+  .lg-vt { margin: 0; max-width: 26ch; font: 600 clamp(1.35rem, 0.95rem + 1.2vw, 2rem)/1.1 var(--sc-font-display); letter-spacing: -0.02em; text-wrap: balance; }
+  .lg-lede { margin: var(--sc-2) 0 0; max-width: 58ch; color: var(--sc-ink-soft); font-size: var(--sc-t-sm); line-height: 1.5; text-wrap: pretty; }
+  .lg-total { flex: none; text-align: end; }
+  .lg-total-l { margin: 0; color: var(--sc-ink-soft); font-size: var(--sc-t-xs); line-height: 1.3; }
+  .lg-total-n { margin: var(--sc-1) 0 0; font: 600 clamp(2.4rem, 1.2rem + 3.6vw, 4.6rem)/1 var(--sc-font-display); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .lg-total.is-zero .lg-total-n, .lg-total.is-zero .lg-total-d { color: var(--sc-accent); }
+  .lg-total-d { margin: var(--sc-2) 0 0; min-height: 1.3em; color: var(--sc-ink-soft); font-size: var(--sc-t-xs); line-height: 1.3; }
+
+  .lg-tools { display: flex; align-items: center; justify-content: space-between; gap: var(--sc-4); }
+  .lg-cap { margin: 0; color: var(--sc-ink-soft); font-size: var(--sc-t-sm); line-height: 1.4; max-width: 62ch; text-wrap: pretty; }
+  .lg-btns { display: flex; gap: var(--sc-2); flex: none; }
+  .lg-btn {
+    min-height: 2.75rem; padding-inline: var(--sc-5); border-radius: var(--sc-r-sm);
+    border: 1px solid var(--sc-ink-soft); background: transparent; color: var(--sc-ink);
+    font: 600 var(--sc-t-sm)/1 var(--sc-font-text); white-space: nowrap;
+    transition: transform var(--sc-d-fast) var(--sc-ease-out), background var(--sc-d-fast) var(--sc-ease-out);
+  }
+  .lg-btn--go { background: var(--sc-accent); border-color: var(--sc-accent); color: var(--sc-accent-ink); }
+  .lg-btn:active { transform: scale(0.97); }
+  .lg-btn:disabled { opacity: 0.45; cursor: default; }
+  @media (hover: hover) and (pointer: fine) { .lg-btn:not(.lg-btn--go):not(:disabled):hover { background: var(--lg-hi); } .lg-btn--go:hover { transform: translateY(-1px); } }
+
+  .lg-table { width: 100%; border-collapse: collapse; font-size: var(--sc-t-sm); font-variant-numeric: normal; }
+  .lg-table th, .lg-table td { height: var(--lg-row); padding: 0 var(--sc-3); border-bottom: 1px solid var(--lg-line); text-align: start; font-weight: 400; white-space: nowrap; }
+  .lg-table thead th { height: 2.25rem; color: var(--sc-ink-soft); font-size: var(--sc-t-xs); font-weight: 500; }
+  .lg-table tbody th { font-weight: 500; white-space: normal; }
+  .lg-table .n, .lg-rr .n { text-align: end; font-variant-numeric: tabular-nums; }
+  .lg-table tbody tr { position: relative; }
+  .lg-table tbody tr::after { content: ""; position: absolute; inset-inline: 0; bottom: -1px; height: 2px; background: var(--sc-accent); transform: scaleX(var(--lp, 0)); transform-origin: var(--ox); pointer-events: none; }
+  .lg-table tbody tr.is-active > * { background: var(--lg-hi); }
+  .lg-table tbody tr.s-2 { color: var(--sc-ink-soft); }
+  .lg-table tbody tr.s-2 th { color: var(--sc-ink); }
+  .lg-meta { display: none; }
+  .lg-stc { display: flex; align-items: center; gap: var(--sc-2); }
+  .lg-mk { flex: none; width: 0.7rem; height: 0.7rem; }
+  .s-0 .lg-mk { background: var(--sc-accent); transform: rotate(45deg) scale(0.85); }
+  .s-1 .lg-mk { border: 2px solid var(--sc-accent); border-radius: 50%; }
+  .s-2 .lg-mk { width: 0.42rem; height: 0.75rem; margin-inline: 0.14rem; border: solid var(--sc-ink-soft); border-width: 0 2px 2px 0; transform: rotate(45deg) translate(-1px, -2px); }
+  .s-1 .lg-stt, .s-0 .lg-stt { color: var(--sc-ink); }
+
+  .lg-bottom { margin-top: auto; display: grid; gap: var(--sc-3); }
+  .lg-cur { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--sc-2) var(--sc-6); margin: 0; }
+  .lg-cur-h { color: var(--sc-ink-soft); font-size: var(--sc-t-xs); margin: 0; }
+  .lg-cur div { display: flex; gap: var(--sc-2); align-items: baseline; }
+  .lg-cur dt { color: var(--sc-ink-soft); font-size: var(--sc-t-xs); }
+  .lg-cur dd { margin: 0; font-size: var(--sc-t-sm); font-weight: 500; font-variant-numeric: tabular-nums; }
+  .lg-note { margin: 0; color: var(--sc-ink-soft); font-size: var(--sc-t-xs); line-height: 1.5; max-width: 90ch; text-wrap: pretty; }
+
+  /* ---------- risk radar ---------- */
+  .lg-thr { display: grid; justify-items: end; gap: var(--sc-1); min-width: min(18rem, 100%); }
+  .lg-thr label { color: var(--sc-ink-soft); font-size: var(--sc-t-xs); line-height: 1.3; }
+  .lg-thr-row { display: flex; align-items: center; gap: var(--sc-4); width: 100%; }
+  .lg-thr input[type="range"] { flex: 1; min-width: 0; height: 2.75rem; margin: 0; background: transparent; }
+  .lg-thr output { min-width: 5.5rem; text-align: end; font: 600 var(--sc-t-lg)/1 var(--sc-font-display); font-variant-numeric: tabular-nums; }
+  .lg-alerts { margin: 0; font: 600 var(--sc-t-sm)/1.2 var(--sc-font-text); color: var(--sc-ink); }
+  .lg-radar { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--lg-line); }
+  .lg-rh, .lg-rr { display: grid; grid-template-columns: minmax(9rem, 17rem) minmax(0, 1fr) 6.5rem 6rem 6rem; align-items: center; column-gap: var(--sc-4); padding-inline: var(--sc-3); border-bottom: 1px solid var(--lg-line); }
+  .lg-rh { height: 2.25rem; color: var(--sc-ink-soft); font-size: var(--sc-t-xs); font-weight: 500; }
+  .lg-rr { height: var(--lg-row); font-size: var(--sc-t-sm); }
+  .lg-rr .nm { font-weight: 500; }
+  .lg-track { position: relative; align-self: stretch; display: flex; align-items: center; overflow: hidden; }
+  .lg-track i { display: block; width: 100%; height: 0.6rem; background: var(--sc-ink); transform-origin: var(--ox); transform: scaleX(0); }
+  .lg-rr.is-alert .lg-track i { background: var(--sc-accent); }
+  .lg-flag { position: absolute; inset: 0; transform: translateX(calc(var(--thr, 24) * var(--dir) * 1%)); pointer-events: none; }
+  .lg-flag::before { content: ""; position: absolute; inset-block: 0; inset-inline-start: 0; width: 2px; margin-inline-start: -1px; background: var(--sc-ink-soft); }
+  .lg-rr .st { display: flex; align-items: center; gap: var(--sc-2); }
+  .lg-rr.is-alert .st { color: var(--sc-ink); }
+  .lg-rr:not(.is-alert) .st { color: var(--sc-ink-soft); }
+  .lg-rr.is-alert .lg-mk { background: var(--sc-accent); transform: rotate(45deg) scale(0.85); }
+  .lg-rr:not(.is-alert) .lg-mk { width: 0.42rem; height: 0.75rem; margin-inline: 0.14rem; border: solid var(--sc-ink-soft); border-width: 0 2px 2px 0; transform: rotate(45deg) translate(-1px, -2px); }
+  .lg-form[hidden] { display: none; }
+  .lg-rr.is-na .lg-track i { visibility: hidden; }
+  .lg-rr.is-na .st { visibility: hidden; }
+
+  /* ---------- playbooks ---------- */
+  .lg-pb { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: var(--sc-7); min-height: 0; }
+  .lg-rules { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--lg-line); align-self: start; }
+  .lg-rule { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--sc-4); row-gap: var(--sc-1); padding: clamp(1rem, 2.6vh, 1.75rem) var(--sc-3); border-bottom: 1px solid var(--lg-line); }
+  .lg-rule h3 { margin: 0; font: 600 var(--sc-t-base)/1.2 var(--sc-font-display); letter-spacing: -0.01em; }
+  .lg-rule p { margin: 0; color: var(--sc-ink-soft); font-size: var(--sc-t-sm); line-height: 1.45; }
+  .lg-rule .res { margin-top: var(--sc-1); color: var(--sc-ink); font-size: var(--sc-t-sm); font-weight: 500; min-height: 1.45em; }
+  .lg-rule.is-off .res { color: var(--sc-ink-soft); font-weight: 400; }
+  .lg-rule.is-run .res::before { content: ""; display: inline-block; width: 0.6rem; height: 0.6rem; margin-inline-end: var(--sc-2); background: var(--sc-accent); transform: rotate(45deg) scale(0.85); }
+  .lg-sw { position: relative; grid-row: 1 / span 3; align-self: start; display: inline-flex; align-items: center; gap: var(--sc-2); min-height: 2.75rem; min-width: 5.25rem; }
+  .lg-sw input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; z-index: 1; }
+  .lg-sw .tr { flex: none; width: 2.5rem; height: 1.4rem; border-radius: 1rem; border: 1.5px solid var(--sc-ink-soft); position: relative; transition: background var(--sc-d-fast) var(--sc-ease-out); }
+  .lg-sw .tr::after { content: ""; position: absolute; top: 2px; inset-inline-start: 2px; width: 1rem; height: 1rem; border-radius: 50%; background: var(--sc-ink-soft); transform: translateX(calc(var(--sw, 0) * 1.1rem * var(--dir))); transition: transform var(--sc-d-fast) var(--sc-ease-out), background var(--sc-d-fast) var(--sc-ease-out); }
+  .lg-sw input:checked ~ .tr { background: var(--sc-accent); border-color: var(--sc-accent); --sw: 1; }
+  .lg-sw input:checked ~ .tr::after { background: var(--sc-accent-ink); }
+  .lg-sw input:focus-visible ~ .tr { outline: 2px solid var(--sc-accent); outline-offset: 3px; }
+  .lg-sw .lbl { color: var(--sc-ink-soft); font-size: var(--sc-t-xs); }
+  .lg-side { align-self: start; border-top: 1px solid var(--lg-line); padding-top: var(--sc-4); display: grid; gap: var(--sc-4); }
+  .lg-side h2 { margin: 0; font: 600 var(--sc-t-base)/1.2 var(--sc-font-display); }
+  .lg-quote { margin: 0; font: 500 var(--sc-t-lg)/1.3 var(--sc-font-display); letter-spacing: -0.01em; text-wrap: balance; }
+  .lg-who { margin: 0; color: var(--sc-ink-soft); font-size: var(--sc-t-sm); }
+  .lg-facts { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sc-4) var(--sc-5); }
+  .lg-facts div { border-top: 1px solid var(--lg-line); padding-top: var(--sc-2); }
+  .lg-facts dt { color: var(--sc-ink-soft); font-size: var(--sc-t-xs); line-height: 1.3; }
+  .lg-facts dd { margin: var(--sc-1) 0 0; font: 600 var(--sc-t-lg)/1.1 var(--sc-font-display); font-variant-numeric: tabular-nums; }
+
+  /* ---------- first run: the close is a real input ---------- */
+  .lg-close { display: grid; align-content: center; padding: calc(var(--lg-top) + var(--sc-6)) var(--sc-gutter) calc(var(--lg-bot) + var(--sc-6)); background: var(--sc-canvas); }
+  .lg-fr { width: min(100%, 70rem); margin-inline: auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: var(--sc-8); align-items: start; }
+  .lg-fr h2 { margin: 0; font: 600 var(--sc-t-xl)/1.08 var(--sc-font-display); letter-spacing: -0.025em; text-wrap: balance; }
+  .lg-fr .lg-lede { font-size: var(--sc-t-base); }
+  .lg-steps { margin: var(--sc-6) 0 0; padding: 0; list-style: none; display: grid; gap: 0; counter-reset: s; border-top: 1px solid var(--lg-line); }
+  .lg-steps li { display: flex; align-items: center; gap: var(--sc-3); min-height: 2.75rem; border-bottom: 1px solid var(--lg-line); color: var(--sc-ink-soft); font-size: var(--sc-t-sm); counter-increment: s; }
+  .lg-steps li::before { content: counter(s); flex: none; display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; border: 1.5px solid var(--sc-ink-soft); font: 500 var(--sc-t-xs)/1 var(--sc-font-text); font-variant-numeric: tabular-nums; }
+  .lg-steps li.is-now { color: var(--sc-ink); font-weight: 500; }
+  .lg-steps li.is-now::before { background: var(--sc-accent); border-color: var(--sc-accent); color: var(--sc-accent-ink); }
+  .lg-steps li.is-done::before { content: ""; border-color: var(--sc-accent); background: var(--lg-hi); }
+  .lg-form { display: grid; gap: var(--sc-5); }
+  .lg-form fieldset { margin: 0; padding: 0; border: 0; min-width: 0; display: grid; gap: var(--sc-4); }
+  .lg-form fieldset[hidden] { display: none; }
+  .lg-form legend { padding: 0; margin: 0 0 var(--sc-3); font: 600 var(--sc-t-lg)/1.2 var(--sc-font-display); }
+  .lg-fld { display: grid; gap: var(--sc-1); }
+  .lg-fld label { color: var(--sc-ink-soft); font-size: var(--sc-t-sm); }
+  .lg-fld input[type="text"], .lg-fld input[type="email"], .lg-fld textarea {
+    width: 100%; min-height: 2.75rem; padding: var(--sc-2) var(--sc-3);
+    background: var(--sc-surface); color: var(--sc-ink); border: 1px solid var(--sc-ink-soft); border-radius: var(--sc-r-sm);
+    font: 400 var(--sc-t-base)/1.4 var(--sc-font-text);
+  }
+  .lg-fld textarea { min-height: 5.5rem; resize: vertical; }
+  .lg-fld input::placeholder, .lg-fld textarea::placeholder { color: var(--sc-ink-soft); opacity: 1; }
+  .lg-fld input:focus-visible, .lg-fld textarea:focus-visible { outline: 2px solid var(--sc-accent); outline-offset: 2px; border-color: var(--sc-accent); }
+  .lg-fld input[aria-invalid="true"] { border-color: var(--sc-accent); }
+  .lg-err { margin: 0; min-height: 1.4em; color: var(--sc-ink); font-size: var(--sc-t-sm); }
+  .lg-opts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border: 1px solid var(--sc-ink-soft); border-radius: var(--sc-r-sm); overflow: hidden; }
+  .lg-opt { position: relative; display: grid; place-items: center; min-height: 2.75rem; padding: var(--sc-2) var(--sc-3); text-align: center; font-size: var(--sc-t-sm); font-weight: 500; }
+  .lg-opt + .lg-opt { border-inline-start: 1px solid var(--sc-ink-soft); }
+  .lg-opt input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+  .lg-opt:has(input:checked) { background: var(--sc-accent); color: var(--sc-accent-ink); }
+  .lg-opt:has(input:focus-visible) { outline: 2px solid var(--sc-accent); outline-offset: -4px; }
+  .lg-plan { display: grid; gap: var(--sc-2); border-top: 1px solid var(--lg-line); padding-top: var(--sc-3); }
+  .lg-plan-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--sc-1) var(--sc-3); margin: 0; }
+  .lg-plan-h b { font: 600 var(--sc-t-lg)/1.1 var(--sc-font-display); }
+  .lg-plan-h span { color: var(--sc-ink-soft); font-size: var(--sc-t-sm); }
+  .lg-plan ul { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--sc-1); color: var(--sc-ink-soft); font-size: var(--sc-t-sm); }
+  .lg-sum { margin: 0; display: grid; gap: var(--sc-2); font-size: var(--sc-t-sm); }
+  .lg-sum div { display: flex; flex-wrap: wrap; gap: var(--sc-1) var(--sc-3); border-bottom: 1px solid var(--lg-line); padding-bottom: var(--sc-2); }
+  .lg-sum dt { color: var(--sc-ink-soft); min-width: 8rem; }
+  .lg-sum dd { margin: 0; font-weight: 500; }
+  .lg-nav { display: flex; gap: var(--sc-3); align-items: center; }
+  .lg-nav .lg-btn[hidden] { display: none; }
+  .lg-ok { margin: 0; font: 500 var(--sc-t-base)/1.45 var(--sc-font-text); }
+  .lg-ok small { display: block; margin-top: var(--sc-2); color: var(--sc-ink-soft); font-size: var(--sc-t-sm); font-weight: 400; }
+  .lg-foot { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--sc-5); margin-top: var(--sc-5); color: var(--sc-ink-soft); font-size: var(--sc-t-xs); }
+  .lg-foot a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+  .lg-stepof { display: none; margin: 0; color: var(--sc-ink-soft); font-size: var(--sc-t-xs); }
+
+  /* ---------- phones: composed separately, not shrunk ---------- */
+  @media (max-width: 860px) {
+    :root { --lg-top: 5.75rem; --lg-bot: 2.25rem; --lg-row: 3rem; }
+    .lg-bar { display: grid; grid-template-columns: auto 1fr auto; grid-template-areas: "brand lang open" "tabs tabs tabs"; gap: 0 var(--sc-2); align-items: center; padding-top: 0.25rem; }
+    .lg-brand { grid-area: brand; margin: 0; }
+    .lg-lang { grid-area: lang; justify-self: end; }
+    .lg-open { grid-area: open; padding-inline: var(--sc-4); }
+    .lg-tabs { grid-area: tabs; justify-content: space-between; margin-inline: calc(var(--sc-3) * -1); }
+    .lg-tab { padding-inline: var(--sc-3); font-size: var(--sc-t-xs); flex: 1; justify-content: center; }
+    .lg-tab::after { inset-inline: var(--sc-2); bottom: 0; }
+    .lg-stage { padding-top: calc(var(--lg-top) + var(--sc-3)); padding-bottom: calc(var(--lg-bot) + var(--sc-3)); }
+    .lg-view { gap: var(--sc-3); }
+    .lg-head { flex-direction: column; align-items: stretch; gap: var(--sc-3); }
+    .lg-vt { font-size: var(--sc-t-lg); max-width: none; }
+    .lg-lede { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: var(--sc-1); font-size: var(--sc-t-xs); }
+    .lg-total { display: flex; align-items: baseline; justify-content: space-between; gap: var(--sc-3); text-align: start; border-top: 1px solid var(--lg-line); padding-top: var(--sc-3); flex-wrap: wrap; }
+    .lg-total-l { flex: 1 1 100%; }
+    .lg-total-n { font-size: clamp(2.2rem, 11vw, 3rem); margin: 0; }
+    .lg-total-d { display: none; margin: 0; }
+    .lg-cap { display: none; }
+    .lg-tools { justify-content: flex-end; }
+    .lg-btns { width: 100%; }
+    .lg-btns .lg-btn { flex: 1; }
+    .lg-table col.c-hide, .lg-table .hide-m { display: none; }
+    .lg-table th, .lg-table td { padding-inline: var(--sc-2); }
+    .lg-table { table-layout: fixed; }
+    .lg-table thead th:first-child { width: 50%; }
+    .lg-table thead th.n { width: 22%; }
+    .lg-table thead th:last-child { width: 28%; }
+    .lg-meta { display: block; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--sc-ink-soft); font-size: 0.7rem; font-weight: 400; font-variant-numeric: tabular-nums; }
+    .lg-cur { gap: var(--sc-1) var(--sc-4); }
+    .lg-cur-h { flex: 1 1 100%; }
+    .lg-note { font-size: 0.7rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .lg-table tbody th { font-size: 0.85rem; line-height: 1.2; }
+    .lg-stt { font-size: 0.8rem; }
+    .lg-thr { justify-items: stretch; min-width: 0; }
+    .lg-rh { display: none; }
+    .lg-rr { height: auto; min-height: 3.4rem; padding: var(--sc-2) var(--sc-2); grid-template-columns: minmax(0, 1fr) auto auto; grid-template-areas: "nm mo st" "tr tr tr"; row-gap: var(--sc-1); }
+    .lg-rr .nm { grid-area: nm; }
+    .lg-rr .mo { grid-area: mo; }
+    .lg-rr .ch { display: none; }
+    .lg-rr .lg-track { grid-area: tr; height: 0.9rem; align-self: auto; }
+    .lg-rr .st { grid-area: st; min-width: 4.5rem; justify-content: flex-end; }
+    .lg-pb { grid-template-columns: 1fr; gap: var(--sc-4); }
+    .lg-rule { padding: var(--sc-2) var(--sc-2); }
+    .lg-rule p:not(.res) { font-size: var(--sc-t-xs); }
+    .lg-sw { min-width: 4.4rem; }
+    .lg-sw .lbl { display: none; }
+    .lg-side { gap: var(--sc-2); padding-top: var(--sc-3); }
+    .lg-quote { font-size: var(--sc-t-sm); line-height: 1.35; }
+    .lg-facts { gap: var(--sc-2) var(--sc-4); }
+    .lg-facts dd { font-size: var(--sc-t-base); }
+    .lg-close { align-content: start; padding-top: calc(var(--lg-top) + var(--sc-4)); padding-bottom: calc(var(--lg-bot) + var(--sc-3)); }
+    .lg-fr { grid-template-columns: 1fr; gap: var(--sc-4); }
+    .lg-fr h2 { font-size: var(--sc-t-xl); }
+    .lg-fr .lg-lede { display: block; font-size: var(--sc-t-sm); }
+    .lg-steps { display: none; }
+    .lg-stepof { display: block; }
+    .lg-form legend { font-size: var(--sc-t-base); margin-bottom: var(--sc-2); }
+    .lg-foot { margin-top: var(--sc-2); }
+    .lg-status { gap: var(--sc-3); }
+    #sOpenP { display: none; }
+    .lg-sum dt { min-width: 6rem; }
+  }
+  @media (max-width: 860px) and (max-height: 700px) { .lg-lede, .lg-note { display: none; } .lg-fr .lg-lede { display: none; } .lg-total-n { font-size: 2rem; } :root { --lg-row: 2.6rem; } .lg-view { gap: var(--sc-2); } .lg-total { padding-top: var(--sc-2); } .lg-rule p:not(.res) { display: none; } .lg-rule { padding-block: var(--sc-1); } .lg-facts dt { display: none; } .lg-facts { gap: var(--sc-1) var(--sc-4); } .lg-quote { font-size: var(--sc-t-xs); } .lg-cur-h { display: none; } .lg-btn { min-height: 2.75rem; } .lg-rr { min-height: 2.8rem; } }
+  @media (max-width: 380px) { .lg-open { padding-inline: var(--sc-3); } .lg-brand { margin: 0; } }
+  @media (max-height: 760px) and (min-width: 861px) {
+    :root { --lg-row: 2.75rem; }
+    .lg-stage { padding-top: calc(var(--lg-top) + var(--sc-4)); }
+    .lg-lede { display: none; }
+    .lg-fr .lg-lede { display: block; }
+    .lg-total-n { font-size: clamp(2.2rem, 1rem + 3vw, 3.4rem); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lg-view, .lg-tab, .lg-tab::after, .lg-btn, .lg-open, .lg-sw .tr, .lg-sw .tr::after { transition: none; }
+    .lg-table tbody tr::after { display: none; }
+  }
+
+</style>
+</head>
+<body>
+
+<header class="lg-bar" id="bar" data-away="false">
+  <span class="lg-brand">ledger</span>
+  <div class="lg-tabs" role="tablist" aria-label="Views">
+    <button class="lg-tab" role="tab" id="tab-0" aria-controls="view-0" aria-selected="true" tabindex="0" type="button">Cash positions</button>
+    <button class="lg-tab" role="tab" id="tab-1" aria-controls="view-1" aria-selected="false" tabindex="-1" type="button">Risk radar</button>
+    <button class="lg-tab" role="tab" id="tab-2" aria-controls="view-2" aria-selected="false" tabindex="-1" type="button">Playbooks</button>
+  </div>
+  <a class="lg-lang" href="ar/" hreflang="ar" lang="ar">العربية</a>
+  <a class="lg-open" id="openA" href="#first-run">Open an account</a>
+</header>
+
+<footer class="lg-status">
+  <p class="lg-sdemo">Sample brand, sample figures</p>
+  <p id="sOpenP"><span id="sOpen">Open lines: 4 of 5</span></p>
+  <p id="sTotP">Unreconciled: <b><bdi dir="ltr" id="sTot">562,271.90</bdi></b></p>
+</footer>
+
+<main id="top">
+
+  <section id="console" data-sc-act="pin" data-sc-span="8" aria-label="Treasury console, sample data">
+    <div data-sc-stage class="lg-stage" id="stage" data-sc-verify-state="">
+
+      <section class="lg-view is-on" id="view-0" role="tabpanel" aria-labelledby="tab-0">
+        <div class="lg-head">
+          <div>
+            <h1 class="lg-vt">Every account in one table, before your coffee cools</h1>
+            <p class="lg-lede">Treasury software that reconciles every bank account overnight, so finance sees one true number each morning.</p>
+          </div>
+          <div class="lg-total" id="totalBox">
+            <p class="lg-total-l">Unreconciled, face value</p>
+            <p class="lg-total-n"><bdi dir="ltr" id="total">562,271.90</bdi></p>
+            <p class="lg-total-d" id="totalD">Sum of the lines in their own currencies, no FX conversion.</p>
+          </div>
+        </div>
+        <div class="lg-tools">
+          <p class="lg-cap">A morning view of cash across entities and currencies, reconciled overnight and sorted by what needs a decision.</p>
+          <div class="lg-btns">
+            <button class="lg-btn lg-btn--go" id="reconcile" type="button">Reconcile</button>
+            <button class="lg-btn" id="reset" type="button">Reset</button>
+          </div>
+        </div>
+        <table class="lg-table" id="cash">
+          <thead><tr>
+            <th scope="col">Entity</th><th scope="col" class="hide-m">Currency</th><th scope="col" class="n hide-m">Balance</th><th scope="col" class="n hide-m">24h change</th><th scope="col" class="hide-m">Runway</th><th scope="col" class="n">Unmatched</th><th scope="col">Status</th>
+          </tr></thead>
+          <tbody>
+          <tr class="s-0" data-name="ltd" data-label="Northgate Freight Ltd" data-pct="+1.2%" data-cur="GBP" data-bal="4218330" data-p10="12">
+            <th scope="row">Northgate Freight Ltd<span class="lg-meta"><bdi dir="ltr">GBP</bdi> · <bdi dir="ltr">4,218,330</bdi> · <bdi dir="ltr">+1.2%</bdi></span></th>
+            <td class="hide-m"><bdi dir="ltr">GBP</bdi></td>
+            <td class="n hide-m"><bdi dir="ltr">4,218,330</bdi></td>
+            <td class="n hide-m"><bdi dir="ltr">+1.2%</bdi></td>
+            <td class="hide-m">14.2 months</td>
+            <td class="n"><bdi dir="ltr" class="lg-amt">50,019.72</bdi></td>
+            <td><span class="lg-stc"><span class="lg-mk" aria-hidden="true"></span><span class="lg-stt">Unmatched</span></span></td>
+          </tr>
+          <tr class="s-0" data-name="gmbh" data-label="Northgate Freight GmbH" data-pct="-0.4%" data-cur="EUR" data-bal="1904075" data-p10="-4">
+            <th scope="row">Northgate Freight GmbH<span class="lg-meta"><bdi dir="ltr">EUR</bdi> · <bdi dir="ltr">1,904,075</bdi> · <bdi dir="ltr">-0.4%</bdi></span></th>
+            <td class="hide-m"><bdi dir="ltr">EUR</bdi></td>
+            <td class="n hide-m"><bdi dir="ltr">1,904,075</bdi></td>
+            <td class="n hide-m"><bdi dir="ltr">-0.4%</bdi></td>
+            <td class="hide-m">9.8 months</td>
+            <td class="n"><bdi dir="ltr" class="lg-amt">7,646.89</bdi></td>
+            <td><span class="lg-stc"><span class="lg-mk" aria-hidden="true"></span><span class="lg-stt">Unmatched</span></span></td>
+          </tr>
+          <tr class="s-0" data-name="inc" data-label="Harbour Logistics Inc." data-pct="+3.1%" data-cur="USD" data-bal="7560912" data-p10="31">
+            <th scope="row">Harbour Logistics Inc.<span class="lg-meta"><bdi dir="ltr">USD</bdi> · <bdi dir="ltr">7,560,912</bdi> · <bdi dir="ltr">+3.1%</bdi></span></th>
+            <td class="hide-m"><bdi dir="ltr">USD</bdi></td>
+            <td class="n hide-m"><bdi dir="ltr">7,560,912</bdi></td>
+            <td class="n hide-m"><bdi dir="ltr">+3.1%</bdi></td>
+            <td class="hide-m">21.0 months</td>
+            <td class="n"><bdi dir="ltr" class="lg-amt">227,340.71</bdi></td>
+            <td><span class="lg-stc"><span class="lg-mk" aria-hidden="true"></span><span class="lg-stt">Unmatched</span></span></td>
+          </tr>
+          <tr class="s-2" data-name="aed" data-label="Delta Cold Chain" data-pct="+0.0%" data-cur="AED" data-bal="2310448" data-p10="0">
+            <th scope="row">Delta Cold Chain<span class="lg-meta"><bdi dir="ltr">AED</bdi> · <bdi dir="ltr">2,310,448</bdi> · <bdi dir="ltr">+0.0%</bdi></span></th>
+            <td class="hide-m"><bdi dir="ltr">AED</bdi></td>
+            <td class="n hide-m"><bdi dir="ltr">2,310,448</bdi></td>
+            <td class="n hide-m"><bdi dir="ltr">+0.0%</bdi></td>
+            <td class="hide-m">7.4 months</td>
+            <td class="n"><bdi dir="ltr" class="lg-amt">0.00</bdi></td>
+            <td><span class="lg-stc"><span class="lg-mk" aria-hidden="true"></span><span class="lg-stt">Matched</span></span></td>
+          </tr>
+          <tr class="s-0" data-name="pool" data-label="Group treasury pool" data-pct="+2.2%" data-cur="USD" data-bal="12880200" data-p10="22">
+            <th scope="row">Group treasury pool<span class="lg-meta"><bdi dir="ltr">USD</bdi> · <bdi dir="ltr">12,880,200</bdi> · <bdi dir="ltr">+2.2%</bdi></span></th>
+            <td class="hide-m"><bdi dir="ltr">USD</bdi></td>
+            <td class="n hide-m"><bdi dir="ltr">12,880,200</bdi></td>
+            <td class="n hide-m"><bdi dir="ltr">+2.2%</bdi></td>
+            <td class="hide-m">n/a</td>
+            <td class="n"><bdi dir="ltr" class="lg-amt">277,264.58</bdi></td>
+            <td><span class="lg-stc"><span class="lg-mk" aria-hidden="true"></span><span class="lg-stt">Unmatched</span></span></td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="lg-bottom">
+          <dl class="lg-cur"><dt class="lg-cur-h">By currency</dt><div><dt><bdi dir="ltr">GBP</bdi></dt><dd><bdi dir="ltr" id="cur-GBP">50,019.72</bdi></dd></div><div><dt><bdi dir="ltr">EUR</bdi></dt><dd><bdi dir="ltr" id="cur-EUR">7,646.89</bdi></dd></div><div><dt><bdi dir="ltr">USD</bdi></dt><dd><bdi dir="ltr" id="cur-USD">504,605.29</bdi></dd></div><div><dt><bdi dir="ltr">AED</bdi></dt><dd><bdi dir="ltr" id="cur-AED">0.00</bdi></dd></div></dl>
+          <p class="lg-note">Demo scenario: each entity's 24h movement is the line waiting to be matched, worked out as balance times change over 100 plus change. Brand and figures are sample content. Sample figures for illustration.</p>
+        </div>
+      </section>
+
+      <section class="lg-view" id="view-1" role="tabpanel" aria-labelledby="tab-1" inert>
+        <div class="lg-head">
+          <div>
+            <h2 class="lg-vt">Risk radar</h2>
+            <p class="lg-lede">Runway by entity. Lines below your alert threshold light up.</p>
+          </div>
+          <div class="lg-thr">
+            <label for="thr">Alert below</label>
+            <div class="lg-thr-row"><input id="thr" type="range" min="3" max="24" step="1" value="24"><output for="thr" id="thrOut"><bdi dir="ltr">24</bdi></output></div>
+            <p class="lg-alerts" id="alerts">Alerts: 4</p>
+          </div>
+        </div>
+        <div role="group" aria-label="Runway by entity">
+          <ul class="lg-radar" id="radar">
+            <li class="lg-rh" aria-hidden="true"><span>Entity</span><span></span><span class="n">Runway</span><span class="n">24h change</span><span>Status</span></li>
+          <li class="lg-rr" data-run="14.2">
+            <span class="nm">Northgate Freight Ltd</span>
+            <span class="lg-track" aria-hidden="true"><i></i><span class="lg-flag"></span></span>
+            <span class="n mo">14.2 months</span>
+            <span class="n ch"><bdi dir="ltr">+1.2%</bdi></span>
+            <span class="st"><span class="lg-mk" aria-hidden="true"></span><span class="lg-stt">OK</span></span>
+          </li>
+          <li class="lg-rr" data-run="9.8">
+            <span class="nm">Northgate Freight GmbH</span>
+            <span class="lg-track" aria-hidden="true"><i></i><span class="lg-flag"></span></span>
+            <span class="n mo">9.8 months</span>
+            <span class="n ch"><bdi dir="ltr">-0.4%</bdi></span>
+            <span class="st"><span class="lg-mk" aria-hidden="true"></span><span class="lg-stt">OK</span></span>
+          </li>
+          <li class="lg-rr" data-run="21.0">
+            <span class="nm">Harbour Logistics Inc.</span>
+            <span class="lg-track" aria-hidden="true"><i></i><span class="lg-flag"></span></span>
+            <span class="n mo">21.0 months</span>
+            <span class="n ch"><bdi dir="ltr">+3.1%</bdi></span>
+            <span class="st"><span class="lg-mk" aria-hidden="true"></span><span class="lg-stt">OK</span></span>
+          </li>
+          <li class="lg-rr" data-run="7.4">
+            <span class="nm">Delta Cold Chain</span>
+            <span class="lg-track" aria-hidden="true"><i></i><span class="lg-flag"></span></span>
+            <span class="n mo">7.4 months</span>
+            <span class="n ch"><bdi dir="ltr">+0.0%</bdi></span>
+            <span class="st"><span class="lg-mk" aria-hidden="true"></span><span class="lg-stt">OK</span></span>
+          </li>
+          <li class="lg-rr is-na" data-run="">
+            <span class="nm">Group treasury pool</span>
+            <span class="lg-track" aria-hidden="true"><i></i><span class="lg-flag"></span></span>
+            <span class="n mo">n/a</span>
+            <span class="n ch"><bdi dir="ltr">+2.2%</bdi></span>
+            <span class="st"><span class="lg-mk" aria-hidden="true"></span><span class="lg-stt">OK</span></span>
+          </li>
+          </ul>
+        </div>
+        <p class="lg-note" style="margin-top:auto">Demo scenario: each entity's 24h movement is the line waiting to be matched, worked out as balance times change over 100 plus change. Sample figures for illustration.</p>
+      </section>
+
+      <section class="lg-view" id="view-2" role="tabpanel" aria-labelledby="tab-2" inert>
+        <div class="lg-head">
+          <div>
+            <h2 class="lg-vt">Playbooks for FX and sweeps</h2>
+            <p class="lg-lede">Rules that run on the table's own data. Switch any of them off.</p>
+          </div>
+        </div>
+        <div class="lg-pb">
+          <ul class="lg-rules">
+          <li class="lg-rule" data-at="0.08">
+            <label class="lg-sw"><input type="checkbox" checked aria-label="Sweep to the pool"><span class="tr" aria-hidden="true"></span><span class="lbl">On</span></label>
+            <h3>Sweep to the pool</h3>
+            <p>When every line is matched, move cash into Group treasury pool.</p>
+            <p class="res">Not run yet</p>
+          </li>
+          <li class="lg-rule" data-at="0.24">
+            <label class="lg-sw"><input type="checkbox" checked aria-label="FX review"><span class="tr" aria-hidden="true"></span><span class="lbl">On</span></label>
+            <h3>FX review</h3>
+            <p>When a non-USD entity moves down in 24 hours, open a review.</p>
+            <p class="res">Not run yet</p>
+          </li>
+          <li class="lg-rule" data-at="0.4">
+            <label class="lg-sw"><input type="checkbox" checked aria-label="Runway alert"><span class="tr" aria-hidden="true"></span><span class="lbl">On</span></label>
+            <h3>Runway alert</h3>
+            <p>When runway falls below the Risk radar threshold.</p>
+            <p class="res">Not run yet</p>
+          </li>
+          </ul>
+          <div class="lg-side">
+            <h2>What finance teams say</h2>
+            <blockquote class="lg-quote" style="margin:0">We closed the month in two days instead of nine, and nobody had to ask which number was right.</blockquote>
+            <p class="lg-who">Ines Haddad, CFO, Northgate Freight</p>
+            <dl class="lg-facts"><div><dt>Reconciled this quarter</dt><dd><bdi dir="ltr">$4.2B</bdi></dd></div><div><dt>Median close time</dt><dd><bdi dir="ltr">2.1 days</bdi></dd></div><div><dt>Banks connected</dt><dd><bdi dir="ltr">312</bdi></dd></div><div><dt>Uptime, 12 months</dt><dd><bdi dir="ltr">99.99%</bdi></dd></div></dl>
+          </div>
+        </div>
+        <p class="lg-note" style="margin-top:auto">Sample figures for illustration.</p>
+      </section>
+
+    </div>
+  </section>
+
+  <section id="first-run" data-sc-act="pin" data-sc-span="1.2" aria-labelledby="frTitle">
+    <div data-sc-stage class="lg-close">
+      <div class="lg-fr">
+        <div>
+          <h2 id="frTitle">Open an account in ten minutes.</h2>
+          <p class="lg-lede">Connect one bank, watch the first night reconcile, then decide.</p>
+          <ol class="lg-steps" aria-label="First run"><li>Connect a bank</li><li>Pick entities</li><li>Confirm</li></ol>
+        </div>
+        <div>
+          <p class="lg-stepof" id="fr-of" aria-hidden="true"></p>
+          <form class="lg-form" id="fr-form" novalidate>
+            <fieldset>
+              <legend>Connect a bank</legend>
+              <div class="lg-fld"><label for="f-email">Work email</label><input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="name@company.com" dir="ltr" aria-describedby="f-email-err" required><p class="lg-err" id="f-email-err" role="alert"></p></div>
+              <div class="lg-fld"><label for="f-company">Company</label><input id="f-company" name="company" type="text" autocomplete="organization"></div>
+            </fieldset>
+            <fieldset hidden>
+              <legend>Entities to reconcile</legend>
+              <div class="lg-opts"><label class="lg-opt"><input type="radio" name="entities" value="0"><span>1 to 3</span></label><label class="lg-opt"><input type="radio" name="entities" value="1" checked><span>4 to 20</span></label><label class="lg-opt"><input type="radio" name="entities" value="2"><span>More than 20</span></label></div>
+              <div class="lg-plan"><p class="lg-plan-h"><b id="plan-n"></b><span><bdi dir="ltr" id="plan-p"></bdi> <span id="plan-per"></span></span></p><ul id="plan-pts"></ul></div>
+            </fieldset>
+            <fieldset hidden>
+              <legend>Confirm</legend>
+              <dl class="lg-sum" aria-label="Your first run">
+                <div><dt>Work email</dt><dd><bdi dir="ltr" id="s-email"></bdi></dd></div>
+                <div><dt>Company</dt><dd id="s-company"></dd></div>
+                <div><dt>Entities to reconcile</dt><dd id="s-ent"></dd></div>
+              </dl>
+              <div class="lg-fld"><label for="f-name">Your name</label><input id="f-name" name="name" type="text" autocomplete="name"></div>
+              <div class="lg-fld"><label for="f-first">What should reconcile first?</label><textarea id="f-first" name="first" rows="3"></textarea></div>
+            </fieldset>
+            <div class="lg-nav">
+              <button class="lg-btn" id="fr-back" type="button" hidden>Back</button>
+              <button class="lg-btn lg-btn--go" id="fr-next" type="submit">Continue</button>
+            </div>
+          </form>
+          <p class="lg-ok" id="fr-ok" role="status" hidden>Request received. We'll send a secure link to connect your first bank.<small>Demo form: nothing was sent from this page.</small></p>
+        </div>
+        <div class="lg-foot"><span>ledger is a sample brand from Landscape Lab. Brand and figures are sample content.</span><a href="/ledger">Back to the ledger page</a></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script type="application/json" id="plans-json">[{"name":"Operator","price":"$480","per":"per month","points":["Up to 3 entities","Daily reconciliation","Email support"],"option":"1 to 3"},{"name":"Treasury","price":"$1,900","per":"per month","points":["Up to 20 entities","Risk radar and alerts","Playbooks for FX and sweeps","Named finance engineer"],"option":"4 to 20"},{"name":"Group","price":"Custom","per":"per quote","points":["Unlimited entities","Private deployment","Audit-ready exports"],"option":"More than 20"}]</script>
+<script src="../_engine/scrollcraft.js"></script>
+<script>ScrollCraft.mount(document.body);</script>
+<script>window.LG_T = {"st":["Unmatched","Matching","Matched"],"done":"All lines matched","noFx":"Sum of the lines in their own currencies, no FX conversion.","openLines":"Open lines: {n} of {t}","alerts":"Alerts: {n}","alert":"Alert","ok":"OK","months":function (n) { return (n + " months"); },"notRun":"Not run yet","on":"On","off":"Off","r0ok":"Ready: {n} entities","r0wait":"Waiting: {n} lines still open","r1":"Reviews: {n} ({who})","r2":"Alerts: {n} at {m}","sep":", ","stepOf":"Step {n} of {t}","next":"Continue","submit":"Connect your first bank","emailErr":"Enter a work email, for example name@company.com.","none":"Not given"};</script>
+<script>
+/* ledger console. Every value is computed from the table markup (sample content):
+   movement = balance x change / (100 + change), in integer cents. Nothing is painted. */
+(function () {
+  "use strict";
+  var T = window.LG_T;
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var $ = function (id) { return document.getElementById(id); };
+  function clamp(x, a, b) { return Math.min(b, Math.max(a, x)); }
+  function seg(p, a, b) { return clamp((p - a) / (b - a), 0, 1); }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function ease(t) { return t * t * (3 - 2 * t); }
+  function fmt(c) { var w = Math.floor(c / 100), f = c % 100; return String(w).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "." + (f < 10 ? "0" : "") + f; }
+  function months(n) { return T.months(n); }
+  function sub(s, o) { return s.replace(/\{(\w+)\}/g, function (m, k) { return o[k]; }); }
+
+  // scroll windows of the console (share of its pinned travel)
+  var HOLD = 0.03, REC1 = 0.46, T1 = 0.52, T2 = 0.74;
+
+  var act = $("console"), stage = $("stage"), bar = $("bar");
+  var cache = {};
+  function setText(node, key, v) { if (cache[key] !== v) { cache[key] = v; node.textContent = v; } }
+  function setCls(node, key, name, on) { var k = key + name; if (cache[k] !== on) { cache[k] = on; node.classList.toggle(name, on); } }
+
+  // ---- data: read from the markup ----
+  var L = [].slice.call(document.querySelectorAll("#cash tbody tr")).map(function (tr) {
+    var bal = +tr.dataset.bal, p10 = +tr.dataset.p10;
+    return { tr: tr, cur: tr.dataset.cur, bal: bal, p10: p10, name: tr.dataset.name,
+      cents: Math.round(Math.abs(bal * 100 * p10 / (1000 + p10))),
+      amt: tr.querySelector(".lg-amt"), stt: tr.querySelector(".lg-stt"), a: 0, b: 0 };
+  });
+  var open = L.filter(function (l) { return l.cents > 0; });
+  open.forEach(function (l, i) { var w = (REC1 - HOLD) / open.length; l.a = HOLD + i * w; l.b = HOLD + (i + 1) * w; });
+  var CURS = []; L.forEach(function (l) { if (CURS.indexOf(l.cur) < 0) CURS.push(l.cur); });
+  var curEl = {}; CURS.forEach(function (c) { curEl[c] = $("cur-" + c); });
+
+  var R = [].slice.call(document.querySelectorAll("#radar .lg-rr")).map(function (li) {
+    var m = li.dataset.run; return { li: li, months: m === "" ? null : +m, bar: li.querySelector(".lg-track i"), st: li.querySelector(".lg-stt") };
+  });
+  var radar = $("radar"), slider = $("thr"), thrOut = $("thrOut"), alertsEl = $("alerts");
+  var manual = false;
+  slider.addEventListener("input", function () { manual = true; cache.force = 1; render(shown); });
+
+  var rules = [].slice.call(document.querySelectorAll(".lg-rule")).map(function (li) {
+    return { li: li, cb: li.querySelector("input"), res: li.querySelector(".res"), at: +li.dataset.at };
+  });
+  rules.forEach(function (r) { r.cb.addEventListener("change", function () { cache.force = 1; render(shown); }); });
+
+  var views = [$("view-0"), $("view-1"), $("view-2")], tabs = [].slice.call(document.querySelectorAll(".lg-tab"));
+  var thrNow = 12, alertN = 0;
+
+  function render(p) {
+    cache.force = 0;
+    // ---- tab ----
+    var tab = p < T1 ? 0 : p < T2 ? 1 : 2;
+    views.forEach(function (v, i) { setCls(v, "v" + i, "is-on", i === tab); if (i === tab) v.removeAttribute("inert"); else v.setAttribute("inert", ""); });
+    tabs.forEach(function (t, i) { var on = i === tab; if (cache["t" + i] !== on) { cache["t" + i] = on; t.setAttribute("aria-selected", on ? "true" : "false"); t.tabIndex = on ? 0 : -1; } });
+
+    // ---- the running reconcile ----
+    var total = 0, per = {}, active = -1, openN = 0, sig = [];
+    CURS.forEach(function (c) { per[c] = 0; });
+    L.forEach(function (l, i) {
+      var q = l.cents > 0 ? seg(p, l.a, l.b) : 1;
+      var remain = l.cents - Math.round(l.cents * q);
+      var st = l.cents === 0 || q >= 1 ? 2 : q <= 0 ? 0 : 1;
+      total += remain; per[l.cur] += remain; if (remain > 0) openN++;
+      if (st === 1) active = i;
+      setText(l.amt, "a" + i, fmt(remain));
+      setText(l.stt, "s" + i, T.st[st]);
+      if (cache["st" + i] !== st) { cache["st" + i] = st; l.tr.classList.remove("s-0", "s-1", "s-2"); l.tr.classList.add("s-" + st); }
+      setCls(l.tr, "ac" + i, "is-active", st === 1);
+      if (!reduce) { var lp = st === 1 ? q.toFixed(3) : "0"; if (cache["lp" + i] !== lp) { cache["lp" + i] = lp; l.tr.style.setProperty("--lp", lp); } }
+    });
+    var done = total === 0;
+    setText($("total"), "tot", fmt(total));
+    setText($("totalD"), "totd", done ? T.done : T.noFx);
+    setCls($("totalBox"), "z", "is-zero", done);
+    CURS.forEach(function (c) { setText(curEl[c], "c" + c, fmt(per[c])); });
+    setText($("sOpen"), "so", sub(T.openLines, { n: openN, t: L.length }));
+    setText($("sTot"), "stot", fmt(total));
+    setCls($("sTotP"), "sz", "lg-sdone", done);
+    $("reconcile").disabled = done;
+
+    // ---- risk radar ----
+    var rq = seg(p, T1, T2);
+    var grow = reduce ? 1 : ease(seg(rq, 0, 0.35));
+    var thr = manual ? +slider.value : reduce ? 12 : Math.round(lerp(24, 12, ease(seg(rq, 0.3, 0.9))));
+    if (!manual && String(slider.value) !== String(thr)) slider.value = thr;
+    thrNow = thr;
+    alertN = 0;
+    R.forEach(function (r, i) {
+      var al = r.months !== null && r.months < thr; if (al) alertN++;
+      setCls(r.li, "r" + i, "is-alert", al);
+      setText(r.st, "rs" + i, al ? T.alert : T.ok);
+      var g = r.months === null ? 0 : r.months / 24 * grow;
+      var gs = g.toFixed(3); if (cache["g" + i] !== gs) { cache["g" + i] = gs; r.bar.style.transform = "scaleX(" + gs + ")"; }
+    });
+    radar.style.setProperty("--thr", (thr / 24 * 100).toFixed(2));
+    setText(thrOut, "thro", months(thr));
+    setText(alertsEl, "al", sub(T.alerts, { n: alertN }));
+    slider.setAttribute("aria-valuetext", months(thr));
+
+    // ---- playbooks ----
+    var pq = seg(p, T2, 1), ran = 0;
+    var nonUsdDown = L.filter(function (l) { return l.cur !== "USD" && l.p10 < 0; });
+    rules.forEach(function (r, i) {
+      var on = r.cb.checked, evald = pq >= r.at;
+      var txt;
+      if (!on) txt = T.off;
+      else if (!evald) txt = T.notRun;
+      else if (i === 0) {
+        var movers = L.filter(function (l) { return l.name !== "pool"; }).length;
+        txt = openN === 0 ? sub(T.r0ok, { n: movers }) : sub(T.r0wait, { n: openN });
+      } else if (i === 1) {
+        txt = sub(T.r1, { n: nonUsdDown.length, who: nonUsdDown.map(function (l) { return l.label + " \u2066" + l.pct + "\u2069"; }).join(T.sep) });
+      } else txt = sub(T.r2, { n: alertN, m: months(thrNow) });
+      var run = on && evald; if (run) ran++;
+      setText(r.res, "rr" + i, txt);
+      setCls(r.li, "rl" + i, "is-run", run);
+      setCls(r.li, "ro" + i, "is-off", !on);
+      setText(r.li.querySelector(".lbl"), "lb" + i, on ? T.on : T.off);
+    });
+
+    // ---- chrome ----
+    var fr = $("first-run").getBoundingClientRect().top < innerHeight * 0.5;
+    if (cache.away !== fr) { cache.away = fr; bar.setAttribute("data-away", fr ? "true" : "false"); $("openA").toggleAttribute("aria-current", fr); }
+
+    // ---- what the harness checks: values that actually paint ----
+    var hold = p < HOLD || (p >= REC1 && p < T1);
+    var gq = Math.round(grow * 10);
+    stage.setAttribute("data-sc-verify-state", [tab, total, active, tab === 1 ? thr + "/" + gq : "", tab === 2 ? ran : ""].join("|"));
+    if (hold) stage.setAttribute("data-sc-verify-hold", "true"); else stage.removeAttribute("data-sc-verify-hold");
+  }
+
+  // labels for rule 2 come from the markup
+  L.forEach(function (l) { l.label = l.tr.dataset.label; l.pct = l.tr.dataset.pct; });
+
+  // ---- drive from the act's own scroll progress ----
+  var shown = 0;
+  function readP() {
+    var r = act.getBoundingClientRect(), travel = act.offsetHeight - innerHeight;
+    return travel > 0 ? clamp(-r.top / travel, 0, 1) : 0;
+  }
+  function goTo(p) {
+    var top = act.getBoundingClientRect().top + scrollY, travel = act.offsetHeight - innerHeight;
+    scrollTo({ top: top + p * travel, behavior: reduce ? "auto" : "smooth" });
+  }
+  var lastP = -1, lastFr = -1;
+  function tick() {
+    var p = readP(), fr = Math.round($("first-run").getBoundingClientRect().top);
+    if (Math.abs(p - lastP) > 1e-5 || fr !== lastFr || cache.force) { lastP = p; lastFr = fr; shown = p; render(p); }
+    requestAnimationFrame(tick);
+  }
+  render(0); requestAnimationFrame(tick);
+
+  // ---- controls ----
+  var STARTS = [0, T1 + 0.012, T2 + 0.07];
+  tabs.forEach(function (t, i) {
+    t.addEventListener("click", function () { goTo(STARTS[i]); });
+    t.addEventListener("keydown", function (e) {
+      var rtl = document.documentElement.dir === "rtl", k = e.key, n = -1;
+      if (k === "ArrowRight") n = i + (rtl ? -1 : 1); else if (k === "ArrowLeft") n = i + (rtl ? 1 : -1);
+      else if (k === "Home") n = 0; else if (k === "End") n = tabs.length - 1;
+      if (n >= 0) { e.preventDefault(); n = (n + tabs.length) % tabs.length; tabs[n].tabIndex = 0; tabs[n].focus(); }
+    });
+  });
+  $("reconcile").addEventListener("click", function () { goTo(REC1 + 0.015); });
+  $("reset").addEventListener("click", function () { manual = false; goTo(0); });
+
+  // ---- first run stepper ----
+  var form = $("fr-form"), fsets = [].slice.call(form.querySelectorAll("fieldset")), steps = [].slice.call(document.querySelectorAll(".lg-steps li"));
+  var back = $("fr-back"), next = $("fr-next"), stepOf = $("fr-of"), email = $("f-email"), emailErr = $("f-email-err");
+  var PLANS = JSON.parse($("plans-json").textContent), step = 0;
+  function planIdx() { var c = form.querySelector("input[name=entities]:checked"); return c ? +c.value : 1; }
+  function drawPlan() {
+    var P = PLANS[planIdx()];
+    $("plan-n").textContent = P.name; $("plan-p").textContent = P.price; $("plan-per").textContent = P.per;
+    var ul = $("plan-pts"); ul.innerHTML = ""; P.points.forEach(function (s) { var li = document.createElement("li"); li.textContent = s; ul.appendChild(li); });
+  }
+  function showStep(n) {
+    step = n;
+    fsets.forEach(function (f, i) { f.hidden = i !== n; });
+    steps.forEach(function (s, i) { s.classList.toggle("is-now", i === n); s.classList.toggle("is-done", i < n); if (i === n) s.setAttribute("aria-current", "step"); else s.removeAttribute("aria-current"); });
+    back.hidden = n === 0;
+    next.textContent = n === 2 ? T.submit : T.next;
+    stepOf.textContent = sub(T.stepOf, { n: n + 1, t: 3 });
+    if (n === 2) {
+      $("s-email").textContent = email.value.trim(); $("s-company").textContent = $("f-company").value.trim() || T.none;
+      var P = PLANS[planIdx()]; $("s-ent").textContent = P.option + " (" + P.name + T.sep + "\u2066" + P.price + "\u2069 " + P.per + ")";
+    }
+  }
+  form.querySelectorAll("input[name=entities]").forEach(function (r) { r.addEventListener("change", drawPlan); });
+  back.addEventListener("click", function () { showStep(step - 1); });
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (step === 0) {
+      var v = email.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { email.setAttribute("aria-invalid", "true"); emailErr.textContent = T.emailErr; email.focus(); return; }
+      email.removeAttribute("aria-invalid"); emailErr.textContent = "";
+    }
+    if (step < 2) { showStep(step + 1); var f = fsets[step].querySelector("input,textarea"); if (f) f.focus({ preventScroll: true }); return; }
+    form.hidden = true; $("fr-ok").hidden = false; stepOf.hidden = true;
+    steps.forEach(function (s) { s.classList.remove("is-now"); s.classList.add("is-done"); s.removeAttribute("aria-current"); });
+  });
+  drawPlan(); showStep(0);
+})();
+
+</script>
+</body>
+</html>
